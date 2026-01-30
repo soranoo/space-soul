@@ -79,7 +79,7 @@ public class PauseMenuUI : MonoBehaviour
 			return;
 		}
 
-		var shouldShow = newState is PausedState;
+		bool shouldShow = newState is PausedState;
 		root.SetActive(shouldShow);
 	}
 }
