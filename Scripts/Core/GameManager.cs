@@ -48,6 +48,7 @@ public class GameManager : SingletonBase<GameManager>
         upgradeSelectionState = new UpgradeSelectionState(this);
         pausedState = new PausedState(this);
         gameOverState = new GameOverState(this);
+
     }
 
     private void Start()
@@ -67,10 +68,7 @@ public class GameManager : SingletonBase<GameManager>
 
     private void OnDisable()
     {
-        if (inputActions != null)
-        {
-            inputActions.Disable();
-        }
+        inputActions?.Disable();
     }
 
     private void OnDestroy()
@@ -171,7 +169,7 @@ public class GameManager : SingletonBase<GameManager>
     {
         if (stateMachine.CurrentState != gameplayState)
         {
-          // If not in gameplay, do not pause.
+            // If not in gameplay, do not pause.
             return;
         }
 

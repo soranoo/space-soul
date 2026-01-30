@@ -3,26 +3,38 @@
 /// </summary>
 public class GameStateMachine
 {
-    private IGameState _currentState;
+    /// <summary>
+    /// Fired after a state transition completes.
+    /// Parameters: previous state, current state.
+    /// </summary>
+    public event System.Action<IGameState, IGameState> StateChanged;
 
     /// <summary>
     /// Currently active state.
     /// </summary>
-    public IGameState CurrentState => _currentState;
+    public IGameState CurrentState { get; private set; }
+
+    /// <summary>
+    /// Most recent state prior to the current one.
+    /// </summary>
+    public IGameState PreviousState { get; private set; }
 
     /// <summary>
     /// Transition to a new state.
     /// </summary>
     public void ChangeState(IGameState newState)
     {
-        if (newState == null || newState == _currentState)
+        if (newState == null || newState == CurrentState)
         {
             return;
         }
 
-        _currentState?.Exit();
-        _currentState = newState;
-        _currentState.Enter();
+        PreviousState = CurrentState;
+        CurrentState?.Exit();
+        CurrentState = newState;
+        CurrentState.Enter();
+
+        StateChanged?.Invoke(PreviousState, CurrentState);
     }
 
     /// <summary>
@@ -30,7 +42,7 @@ public class GameStateMachine
     /// </summary>
     public void Update()
     {
-        _currentState?.Update();
+        CurrentState?.Update();
     }
 
     /// <summary>
@@ -38,6 +50,6 @@ public class GameStateMachine
     /// </summary>
     public void HandleInput()
     {
-        _currentState?.HandleInput();
+        CurrentState?.HandleInput();
     }
 }
