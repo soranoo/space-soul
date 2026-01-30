@@ -169,6 +169,12 @@ public class GameManager : SingletonBase<GameManager>
     /// </summary>
     public void PauseGame()
     {
+        if (stateMachine.CurrentState != gameplayState)
+        {
+          // If not in gameplay, do not pause.
+            return;
+        }
+
         stateMachine.ChangeState(pausedState);
     }
 
