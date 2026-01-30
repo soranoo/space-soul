@@ -97,19 +97,28 @@ public class WeaponController : MonoBehaviour
 
     private void SpawnBullet(Vector3 position, Quaternion rotation, float damageMultiplier)
     {
-        if (bulletPrefab == null)
+        Bullet bullet = null;
+
+        // Try to get from pool first
+        if (PoolManager.Instance != null)
         {
-            Debug.LogWarning("Bullet prefab not assigned to WeaponController.");
-            return;
+            bullet = PoolManager.Instance.Get<Bullet>(Bullet.POOL_ID, position, rotation);
         }
 
-        // TODO: Replace with object pool once Stage 3 is implemented.
-        GameObject bullet = Instantiate(bulletPrefab, position, rotation);
-        Bullet bulletComponent = bullet.GetComponent<Bullet>();
-
-        if (bulletComponent != null)
+        // Fallback to instantiation if pool not available
+        if (bullet == null && bulletPrefab != null)
         {
-            bulletComponent.SetDamageMultiplier(damageMultiplier);
+            GameObject bulletObject = Instantiate(bulletPrefab, position, rotation);
+            bullet = bulletObject.GetComponent<Bullet>();
+        }
+
+        if (bullet != null)
+        {
+            bullet.SetDamageMultiplier(damageMultiplier);
+        }
+        else
+        {
+            Debug.LogWarning("Failed to spawn bullet. Ensure bullet pool is configured or bulletPrefab is assigned.");
         }
     }
 

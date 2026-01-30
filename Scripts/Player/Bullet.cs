@@ -2,9 +2,12 @@ using UnityEngine;
 
 /// <summary>
 /// Basic bullet behavior.
+/// Implements IPoolable for object pooling support.
 /// </summary>
-public class Bullet : MonoBehaviour
+public class Bullet : MonoBehaviour, IPoolable
 {
+    public const string POOL_ID = "Bullet";
+
     [Header("Bullet Settings")]
     [SerializeField] private float speed = 15f;
     [SerializeField] private float lifetime = 3f;
@@ -27,6 +30,23 @@ public class Bullet : MonoBehaviour
     public int GetDamage()
     {
         return Mathf.RoundToInt(baseDamage * damageMultiplier);
+    }
+
+    /// <summary>
+    /// Called when retrieved from pool.
+    /// </summary>
+    public void OnSpawn()
+    {
+        damageMultiplier = 1f;
+        spawnTime = Time.time;
+    }
+
+    /// <summary>
+    /// Called when returned to pool.
+    /// </summary>
+    public void OnDespawn()
+    {
+        // Reset state if needed
     }
 
     private void OnEnable()
@@ -55,7 +75,14 @@ public class Bullet : MonoBehaviour
 
     private void Despawn()
     {
-        // TODO: Replace with object pool return once Stage 3 is implemented.
-        Destroy(gameObject);
+        // Use object pool if PoolManager exists, otherwise fallback to Destroy
+        if (PoolManager.Instance != null)
+        {
+            PoolManager.Instance.Release(POOL_ID, this);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
     }
 }
