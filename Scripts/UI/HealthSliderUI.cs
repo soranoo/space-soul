@@ -11,14 +11,10 @@ public class HealthSliderUI : MonoBehaviour
     [SerializeField] private PlayerController player;
     [SerializeField] private Slider healthSlider;
     [SerializeField] private TMP_Text healthText;
+    [SerializeField] private Image fillImage;
 
-    private void Awake()
-    {
-        if (healthSlider == null)
-        {
-            healthSlider = GetComponent<Slider>();
-        }
-    }
+    [Header("Appearance")]
+    [SerializeField] private Gradient healthGradient;
 
     private void OnEnable()
     {
@@ -68,17 +64,15 @@ public class HealthSliderUI : MonoBehaviour
 
     private void OnHealthChanged(int current, int max)
     {
-        if (healthSlider == null)
-        {
-            return;
-        }
-
         healthSlider.maxValue = max;
         healthSlider.value = current;
 
-        if (healthText != null)
+        healthText.text = $"{current}/{max}";
+
+        if (healthGradient != null)
         {
-            healthText.text = $"{current}/{max}";
+            float percent = max > 0 ? Mathf.Clamp01((float)current / max) : 0f;
+            fillImage.color = healthGradient.Evaluate(percent);
         }
     }
 }
