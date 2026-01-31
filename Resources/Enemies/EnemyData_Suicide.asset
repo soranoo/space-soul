@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3cde25d693330624f9e1273dd47188fe, type: 3}
+  m_Name: EnemyData_Suicide
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyData
+  baseHealth: 1
+  baseSpeed: 6
+  contactDamage: 3
+  detectionRange: 20
+  preferredDistance: 0
+  selfDestructOnContact: 1
+  canFireProjectiles: 0
+  attackRange: 50
+  fireRate: 1
+  projectileDamage: 1
+  projectileSpeed: 8
+  canSpawnEnemies: 0
+  spawnInterval: 3
+  spawnCount: 1
+  spawnedEnemyData: {fileID: 0}
+  pointValue: 100
+  powerUpDropChance: 0.1
+  prefab: {fileID: 662773263525930302, guid: ec79b485219d0c54cb9e385a3b1a7cf4, type: 3}
+  tintColor: {r: 1, g: 0, b: 0, a: 1}
