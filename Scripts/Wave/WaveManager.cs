@@ -385,7 +385,7 @@ public class WaveManager : SingletonBase<WaveManager>
         enemiesAlive--;
         EnemyDied?.Invoke(enemy);
 
-        if (enemy != null && enemy.Data != null)
+        if (enemy != null && enemy.Data != null && !enemy.Data.SelfDestructOnContact)
         {
             ScoreManager.Instance?.AddScore(enemy.Data.ScoreValue);
         }
