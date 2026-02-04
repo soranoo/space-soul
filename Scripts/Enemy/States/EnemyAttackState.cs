@@ -66,6 +66,7 @@ public class EnemyAttackState : BaseEnemyState
         {
             Vector2 awayDir = -enemy.GetDirectionToPlayer();
             enemy.transform.Translate(awayDir * enemy.EffectiveSpeed * 0.5f * Time.deltaTime, Space.World);
+            enemy.MarkMovedThisFrame();
         }
 
         // Fire at player when in range
