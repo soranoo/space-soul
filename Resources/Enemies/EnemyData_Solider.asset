@@ -23,11 +23,13 @@ MonoBehaviour:
   fireRate: 1
   projectileDamage: 1
   projectileSpeed: 8
+  projectilePrefab: {fileID: 2790041247049111195, guid: 919eff5c351eeab4ab394af01673c1a1, type: 3}
   canSpawnEnemies: 0
   spawnInterval: 3
   spawnCount: 1
-  spawnedEnemyData: {fileID: 0}
+  spawnList: []
   pointValue: 100
   powerUpDropChance: 0.1
   prefab: {fileID: 662773263525930302, guid: cc29873a8acb8774fb6c009f39935646, type: 3}
-  tintColor: {r: 1, g: 1, b: 1, a: 1}
+  damageTintColor: {r: 1, g: 0, b: 0, a: 1}
+  damageTintDuration: 0.1

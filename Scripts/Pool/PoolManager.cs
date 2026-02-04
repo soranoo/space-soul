@@ -20,9 +20,6 @@ public class PoolManager : SingletonBase<PoolManager>
     [Serializable]
     public class PoolConfig
     {
-        [Tooltip("Unique identifier for this pool.")]
-        public string poolId;
-
         [Tooltip("Prefab to pool.")]
         public GameObject prefab;
 
@@ -60,7 +57,7 @@ public class PoolManager : SingletonBase<PoolManager>
             PoolConfig config = poolConfigs[i];
             if (config.prefab == null)
             {
-                Debug.LogWarning($"Pool config '{config.poolId}' has no prefab assigned.");
+                Debug.LogWarning($"Pool config at index {i} has no prefab assigned.");
                 continue;
             }
 
@@ -81,8 +78,20 @@ public class PoolManager : SingletonBase<PoolManager>
             return;
         }
 
+        if (!TryGetPoolId(poolable, out string poolId))
+        {
+            Debug.LogError($"Prefab '{config.prefab.name}' has an invalid pool id.");
+            return;
+        }
+
+        if (pools.ContainsKey(poolId))
+        {
+            Debug.LogWarning($"Pool '{poolId}' already exists. Skipping duplicate prefab '{config.prefab.name}'.");
+            return;
+        }
+
         // Create pool container for this type
-        Transform typeContainer = new GameObject(config.poolId).transform;
+        Transform typeContainer = new GameObject(poolId).transform;
         typeContainer.SetParent(poolContainer);
 
         // Use reflection to create the generic pool
@@ -100,20 +109,25 @@ public class PoolManager : SingletonBase<PoolManager>
             config.canExpand
         );
 
-        pools[config.poolId] = pool;
+        pools[poolId] = pool;
     }
 
     /// <summary>
     /// Register a pool at runtime.
     /// </summary>
     /// <typeparam name="T">Type of poolable object.</typeparam>
-    /// <param name="poolId">Unique identifier for this pool.</param>
     /// <param name="prefab">Prefab to pool.</param>
     /// <param name="initialSize">Initial pool size.</param>
     /// <param name="canExpand">Can pool grow beyond initial size.</param>
-    public void RegisterPool<T>(string poolId, T prefab, int initialSize = 10, bool canExpand = true)
+    public void RegisterPool<T>(T prefab, int initialSize = 10, bool canExpand = true)
         where T : MonoBehaviour, IPoolable
     {
+        if (!TryGetPoolId(prefab, out string poolId))
+        {
+            Debug.LogError("Prefab has an invalid pool id.");
+            return;
+        }
+
         if (pools.ContainsKey(poolId))
         {
             Debug.LogWarning($"Pool '{poolId}' already exists.");
@@ -128,6 +142,20 @@ public class PoolManager : SingletonBase<PoolManager>
     }
 
     /// <summary>
+    /// Get a pool by prefab instance.
+    /// </summary>
+    public ObjectPool<T> GetPool<T>(T prefab) where T : MonoBehaviour, IPoolable
+    {
+        if (!TryGetPoolId(prefab, out string poolId))
+        {
+            Debug.LogWarning("Prefab has an invalid pool id.");
+            return null;
+        }
+
+        return GetPool<T>(poolId);
+    }
+
+    /// <summary>
     /// Get a pool by its identifier.
     /// </summary>
     /// <typeparam name="T">Type of poolable object.</typeparam>
@@ -135,6 +163,12 @@ public class PoolManager : SingletonBase<PoolManager>
     /// <returns>The object pool, or null if not found.</returns>
     public ObjectPool<T> GetPool<T>(string poolId) where T : MonoBehaviour, IPoolable
     {
+        if (string.IsNullOrWhiteSpace(poolId))
+        {
+            Debug.LogWarning("Pool id is null or empty.");
+            return null;
+        }
+
         if (pools.TryGetValue(poolId, out object pool))
         {
             return pool as ObjectPool<T>;
@@ -157,6 +191,15 @@ public class PoolManager : SingletonBase<PoolManager>
     }
 
     /// <summary>
+    /// Get an object from a pool using the prefab's pool id.
+    /// </summary>
+    public T Get<T>(T prefab) where T : MonoBehaviour, IPoolable
+    {
+        ObjectPool<T> pool = GetPool(prefab);
+        return pool?.Get();
+    }
+
+    /// <summary>
     /// Get an object from a pool and position it.
     /// </summary>
     /// <typeparam name="T">Type of poolable object.</typeparam>
@@ -171,6 +214,15 @@ public class PoolManager : SingletonBase<PoolManager>
     }
 
     /// <summary>
+    /// Get an object from a pool using the prefab's pool id and position it.
+    /// </summary>
+    public T Get<T>(T prefab, Vector3 position, Quaternion rotation) where T : MonoBehaviour, IPoolable
+    {
+        ObjectPool<T> pool = GetPool(prefab);
+        return pool?.Get(position, rotation);
+    }
+
+    /// <summary>
     /// Return an object to its pool.
     /// </summary>
     /// <typeparam name="T">Type of poolable object.</typeparam>
@@ -180,6 +232,26 @@ public class PoolManager : SingletonBase<PoolManager>
     {
         ObjectPool<T> pool = GetPool<T>(poolId);
         pool?.Release(instance);
+    }
+
+    /// <summary>
+    /// Return an object to its pool using the instance's pool id.
+    /// </summary>
+    public void Release<T>(T instance) where T : MonoBehaviour, IPoolable
+    {
+        if (!TryGetPoolId(instance, out string poolId))
+        {
+            Debug.LogWarning("Instance has an invalid pool id.");
+            return;
+        }
+
+        Release(poolId, instance);
+    }
+
+    private static bool TryGetPoolId(IPoolable poolable, out string poolId)
+    {
+        poolId = poolable?.GetPoolId();
+        return !string.IsNullOrWhiteSpace(poolId);
     }
 
     /// <summary>

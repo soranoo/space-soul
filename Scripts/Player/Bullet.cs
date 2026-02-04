@@ -6,7 +6,7 @@ using UnityEngine;
 /// </summary>
 public class Bullet : MonoBehaviour, IPoolable
 {
-    public const string POOL_ID = "Bullet";
+    [SerializeField] private string poolIdOverride;
 
     [Header("Bullet Settings")]
     [SerializeField] private float speed = 15f;
@@ -30,6 +30,27 @@ public class Bullet : MonoBehaviour, IPoolable
     public int GetDamage()
     {
         return Mathf.RoundToInt(baseDamage * damageMultiplier);
+    }
+
+    /// <summary>
+    /// Get the pool identifier for this prefab type.
+    /// </summary>
+    public string GetPoolId()
+    {
+        if (!string.IsNullOrWhiteSpace(poolIdOverride))
+        {
+            return poolIdOverride;
+        }
+
+        return gameObject.name;
+    }
+
+    /// <summary>
+    /// Assign the pool identifier for this instance.
+    /// </summary>
+    public void SetPoolId(string poolId)
+    {
+        poolIdOverride = poolId;
     }
 
     /// <summary>
@@ -78,7 +99,7 @@ public class Bullet : MonoBehaviour, IPoolable
         // Use object pool if PoolManager exists, otherwise fallback to Destroy
         if (PoolManager.Instance != null)
         {
-            PoolManager.Instance.Release(POOL_ID, this);
+            PoolManager.Instance.Release(this);
         }
         else
         {

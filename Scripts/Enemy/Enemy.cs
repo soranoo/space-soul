@@ -9,10 +9,14 @@ using UnityEngine;
 /// </summary>
 public class Enemy : MonoBehaviour, IPoolable
 {
-    public const string POOL_ID = "Enemy";
+    [SerializeField] private string poolIdOverride;
+    private const string ANIM_TRIGGER_DEAD = "Dead";
+    private const string ANIM_TRIGGER_FIRE = "Fire";
 
     [Header("References")]
     [SerializeField] private SpriteRenderer spriteRenderer;
+    [SerializeField] private Animator animator;
+    [SerializeField] private Collider2D hitCollider;
 
     private EnemyData data;
     private EnemyStateMachine stateMachine;
@@ -23,6 +27,7 @@ public class Enemy : MonoBehaviour, IPoolable
     private float effectiveSpeed;
     private Color defaultColor;
     private Coroutine damageTintCoroutine;
+    private bool isDead;
 
     // Role-specific variables
     private float attackCooldown;
@@ -63,11 +68,42 @@ public class Enemy : MonoBehaviour, IPoolable
     /// </summary>
     public event Action<Enemy, EnemyData, int> SpawnSoldiersRequested;
 
+    /// <summary>
+    /// Get the pool identifier for this prefab type.
+    /// </summary>
+    public string GetPoolId()
+    {
+        if (!string.IsNullOrWhiteSpace(poolIdOverride))
+        {
+            return poolIdOverride;
+        }
+
+        return gameObject.name;
+    }
+
+    /// <summary>
+    /// Assign the pool identifier for this instance.
+    /// </summary>
+    public void SetPoolId(string poolId)
+    {
+        poolIdOverride = poolId;
+    }
+
     private void Awake()
     {
         if (spriteRenderer == null)
         {
             spriteRenderer = GetComponent<SpriteRenderer>();
+        }
+
+        if (animator == null)
+        {
+            animator = GetComponent<Animator>();
+        }
+
+        if (hitCollider == null)
+        {
+            hitCollider = GetComponent<Collider2D>();
         }
 
         if (spriteRenderer != null)
@@ -89,11 +125,23 @@ public class Enemy : MonoBehaviour, IPoolable
         effectiveSpeed = data.BaseSpeed * speedMultiplier;
         attackCooldown = 0f;
         spawnCooldown = 0f;
+        isDead = false;
+
+        if (hitCollider != null)
+        {
+            hitCollider.enabled = true;
+        }
 
         // Reset visual tint
         if (spriteRenderer != null)
         {
+            spriteRenderer.enabled = true;
             spriteRenderer.color = defaultColor;
+        }
+
+        if (animator != null)
+        {
+            animator.enabled = true;
         }
 
         // Setup movement pattern (always chase)
@@ -168,6 +216,7 @@ public class Enemy : MonoBehaviour, IPoolable
         data = null;
         attackCooldown = 0f;
         spawnCooldown = 0f;
+        isDead = false;
 
         if (damageTintCoroutine != null)
         {
@@ -177,12 +226,28 @@ public class Enemy : MonoBehaviour, IPoolable
 
         if (spriteRenderer != null)
         {
+            spriteRenderer.enabled = true;
             spriteRenderer.color = defaultColor;
+        }
+
+        if (animator != null)
+        {
+            animator.enabled = true;
+        }
+
+        if (hitCollider != null)
+        {
+            hitCollider.enabled = true;
         }
     }
 
     private void Update()
     {
+        if (isDead)
+        {
+            return;
+        }
+
         if (stateMachine != null)
         {
             stateMachine.Update();
@@ -253,7 +318,7 @@ public class Enemy : MonoBehaviour, IPoolable
     /// </summary>
     public void UpdateMovement()
     {
-        if (movementPattern != null)
+        if (!isDead && movementPattern != null)
         {
             movementPattern.UpdateMovement(transform, effectiveSpeed);
         }
@@ -278,6 +343,11 @@ public class Enemy : MonoBehaviour, IPoolable
             return;
         }
 
+        if (animator != null)
+        {
+            animator.SetTrigger(ANIM_TRIGGER_FIRE);
+        }
+
         // Set cooldown
         attackCooldown = 1f / data.FireRate;
 
@@ -291,12 +361,50 @@ public class Enemy : MonoBehaviour, IPoolable
     /// </summary>
     private void SpawnEnemyProjectile()
     {
+        if (data.ProjectilePrefab == null)
+        {
+            Debug.LogWarning("[Enemy] No projectile prefab assigned in EnemyData.");
+            return;
+        }
+
         // Get direction to player
         Vector2 direction = GetDirectionToPlayer();
 
-        // Spawn bullet from pool or instantiate
-        // TODO: Integrate with bullet pool when enemy bullets are implemented
-        Debug.Log($"[Enemy] Firing projectile at player");
+        // Spawn position slightly in front of enemy
+        Vector3 spawnPos = transform.position + (Vector3)(direction * 0.5f);
+
+        // Try to get from pool first
+        EnemyProjectile projectile = null;
+
+        if (PoolManager.Instance != null)
+        {
+            EnemyProjectile prefabComponent = data.ProjectilePrefab.GetComponent<EnemyProjectile>();
+            if (prefabComponent != null)
+            {
+                projectile = PoolManager.Instance.Get(prefabComponent, spawnPos, Quaternion.identity);
+            }
+            else
+            {
+                Debug.LogWarning("[Enemy] Projectile prefab does not have an EnemyProjectile component.");
+            }
+        }
+
+        // If no pool or pool empty, instantiate
+        if (projectile == null)
+        {
+            GameObject projObj = Instantiate(data.ProjectilePrefab, spawnPos, Quaternion.identity);
+            projectile = projObj.GetComponent<EnemyProjectile>();
+        }
+        else if (projectile != null)
+        {
+            projectile.transform.position = spawnPos;
+            projectile.gameObject.SetActive(true);
+        }
+
+        if (projectile != null)
+        {
+            projectile.Initialize(data.ProjectileDamage, data.ProjectileSpeed, direction);
+        }
     }
 
     /// <summary>
@@ -305,7 +413,7 @@ public class Enemy : MonoBehaviour, IPoolable
     /// <returns>True if can spawn.</returns>
     public bool CanSpawnEnemies()
     {
-        return spawnCooldown <= 0f && data != null && data.CanSpawnEnemies && data.SpawnedEnemyData != null;
+        return spawnCooldown <= 0f && data != null && data.CanSpawnEnemies && data.SpawnList != null && data.SpawnList.Length > 0;
     }
 
     /// <summary>
@@ -321,8 +429,15 @@ public class Enemy : MonoBehaviour, IPoolable
         // Set cooldown
         spawnCooldown = data.SpawnInterval;
 
-        // Request spawning through event
-        SpawnSoldiersRequested?.Invoke(this, data.SpawnedEnemyData, data.SpawnCount);
+        // Spawn each child using weighted random selection
+        for (int i = 0; i < data.SpawnCount; i++)
+        {
+            EnemyData spawnData = data.GetRandomSpawnData();
+            if (spawnData != null)
+            {
+                SpawnSoldiersRequested?.Invoke(this, spawnData, 1);
+            }
+        }
     }
 
     /// <summary>
@@ -344,7 +459,7 @@ public class Enemy : MonoBehaviour, IPoolable
     /// <param name="amount">Damage amount.</param>
     public void TakeDamage(int amount)
     {
-        if (amount <= 0)
+        if (amount <= 0 || isDead)
         {
             return;
         }
@@ -393,20 +508,55 @@ public class Enemy : MonoBehaviour, IPoolable
 
     /// <summary>
     /// Handle enemy death.
+    /// Fires Died event but does NOT destroy - external animation handler should call Cleanup() when done.
     /// </summary>
     private void Die()
     {
-        Died?.Invoke(this);
+        if (isDead)
+        {
+            return;
+        }
 
-        // Return to pool
-        if (PoolManager.Instance != null)
+        isDead = true;
+        if (hitCollider != null)
         {
-            PoolManager.Instance.Release(POOL_ID, this);
+            hitCollider.enabled = false;
         }
-        else
+        Died?.Invoke(this);
+        if (animator != null)
         {
-            Destroy(gameObject);
+            animator.SetTrigger(ANIM_TRIGGER_DEAD);
         }
+        // Do not destroy here - let death animation handler call Cleanup() when finished
+    }
+
+    /// <summary>
+    /// Clean up and return enemy to pool. Call this after death animation completes.
+    /// </summary>
+    public void Cleanup()
+    {
+        if (damageTintCoroutine != null)
+        {
+            StopCoroutine(damageTintCoroutine);
+            damageTintCoroutine = null;
+        }
+
+        if (spriteRenderer != null)
+        {
+            spriteRenderer.enabled = false;
+        }
+
+        if (animator != null)
+        {
+            animator.enabled = false;
+        }
+
+        if (hitCollider != null)
+        {
+            hitCollider.enabled = false;
+        }
+
+        PoolManager.Instance.Release(this);
     }
 
     private void OnTriggerEnter2D(Collider2D other)

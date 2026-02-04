@@ -70,6 +70,7 @@ public class ObjectPool<T> where T : MonoBehaviour, IPoolable
     {
         T instance = UnityEngine.Object.Instantiate(prefab, parent);
         instance.name = $"{prefab.name}_{TotalCount}";
+        instance.SetPoolId(prefab.GetPoolId());
         return instance;
     }
 

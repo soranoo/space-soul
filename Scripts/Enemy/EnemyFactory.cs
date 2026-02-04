@@ -53,9 +53,17 @@ public class EnemyFactory : SingletonBase<EnemyFactory>
         Enemy enemy = null;
 
         // Try to get from pool
-        if (PoolManager.Instance != null)
+        if (PoolManager.Instance != null && enemyData.Prefab != null)
         {
-            enemy = PoolManager.Instance.Get<Enemy>(Enemy.POOL_ID, position, rotation);
+            Enemy prefabComponent = enemyData.Prefab.GetComponent<Enemy>();
+            if (prefabComponent != null)
+            {
+                enemy = PoolManager.Instance.Get(prefabComponent, position, rotation);
+            }
+            else
+            {
+                Debug.LogWarning("EnemyFactory: enemyData.Prefab does not have an Enemy component.");
+            }
         }
 
         // Fallback to instantiation if pool not available

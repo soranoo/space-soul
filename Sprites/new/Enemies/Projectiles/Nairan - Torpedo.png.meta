@@ -1,10 +1,16 @@
 fileFormatVersion: 2
-guid: a28ced7c8ea031e478737782881f0499
+guid: f79b55d3c251b024099d980d5a4b920d
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -1162233375206758482
-    second: Nairan - Scout - Base_0
+      213: 6597511049316547579
+    second: Nairan - Torpedo_0
+  - first:
+      213: 6153043530902134319
+    second: Nairan - Torpedo_1
+  - first:
+      213: -3701369703261501765
+    second: Nairan - Torpedo_2
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -113,23 +119,67 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Nairan - Scout - Base_0
+      name: Nairan - Torpedo_0
       rect:
         serializedVersion: 2
-        x: 19
-        y: 18
-        width: 26
+        x: 0
+        y: 0
+        width: 9
         height: 24
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: ea7a2bc27eaeedfe0800000000000000
-      internalID: -1162233375206758482
+      spriteID: bfb3a3028511f8b50800000000000000
+      internalID: 6597511049316547579
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nairan - Torpedo_1
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 0
+        width: 9
+        height: 24
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f2edfeabd70046550800000000000000
+      internalID: 6153043530902134319
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nairan - Torpedo_2
+      rect:
+        serializedVersion: 2
+        x: 18
+        y: 0
+        width: 9
+        height: 24
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bb684b69dd712acc0800000000000000
+      internalID: -3701369703261501765
       vertices: []
       indices: 
       edges: []
@@ -138,7 +188,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 976cc7f9565312041a1f85f6780033ec
     internalID: 0
     vertices: []
     indices: 
@@ -146,9 +196,13 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     spriteCustomMetadata:
-      entries: []
+      entries:
+      - key: SpriteEditor.SliceSettings
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":9.0,"y":24.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":1,"keepEmptyRects":false,"isAlternate":false}'
     nameFileIdTable:
-      Nairan - Scout - Base_0: -1162233375206758482
+      Nairan - Torpedo_0: 6597511049316547579
+      Nairan - Torpedo_1: 6153043530902134319
+      Nairan - Torpedo_2: -3701369703261501765
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

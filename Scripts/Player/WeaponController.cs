@@ -100,9 +100,17 @@ public class WeaponController : MonoBehaviour
         Bullet bullet = null;
 
         // Try to get from pool first
-        if (PoolManager.Instance != null)
+        if (PoolManager.Instance != null && bulletPrefab != null)
         {
-            bullet = PoolManager.Instance.Get<Bullet>(Bullet.POOL_ID, position, rotation);
+            Bullet prefabComponent = bulletPrefab.GetComponent<Bullet>();
+            if (prefabComponent != null)
+            {
+                bullet = PoolManager.Instance.Get(prefabComponent, position, rotation);
+            }
+            else
+            {
+                Debug.LogWarning("WeaponController: bulletPrefab does not have a Bullet component.");
+            }
         }
 
         // Fallback to instantiation if pool not available

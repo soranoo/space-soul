@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: EnemyData_Suicide
   m_EditorClassIdentifier: Assembly-CSharp::EnemyData
   baseHealth: 1
-  baseSpeed: 6
-  contactDamage: 3
+  baseSpeed: 3
+  contactDamage: 30
   detectionRange: 20
   preferredDistance: 0
   selfDestructOnContact: 1
@@ -23,11 +23,13 @@ MonoBehaviour:
   fireRate: 1
   projectileDamage: 1
   projectileSpeed: 8
+  projectilePrefab: {fileID: 0}
   canSpawnEnemies: 0
   spawnInterval: 3
   spawnCount: 1
-  spawnedEnemyData: {fileID: 0}
+  spawnList: []
   pointValue: 100
   powerUpDropChance: 0.1
   prefab: {fileID: 662773263525930302, guid: ec79b485219d0c54cb9e385a3b1a7cf4, type: 3}
-  tintColor: {r: 1, g: 0, b: 0, a: 1}
+  damageTintColor: {r: 1, g: 0, b: 0, a: 1}
+  damageTintDuration: 0.1

@@ -1,6 +1,20 @@
 using UnityEngine;
 
 /// <summary>
+/// Weighted spawn entry for spawner enemies.
+/// </summary>
+[System.Serializable]
+public class SpawnEntry
+{
+    [Tooltip("Enemy data to spawn.")]
+    public EnemyData enemyData;
+
+    [Tooltip("Spawn weight (higher = more likely).")]
+    [Range(1, 100)]
+    public int weight = 1;
+}
+
+/// <summary>
 /// Defines enemy type properties using the Type Object pattern.
 /// Enables data-driven enemy design with configurable behaviors.
 /// Combine settings to create different enemy archetypes:
@@ -49,6 +63,9 @@ public class EnemyData : ScriptableObject
     [Tooltip("Projectile speed.")]
     [SerializeField] private float projectileSpeed = 8f;
 
+    [Tooltip("Custom projectile prefab (uses default if null).")]
+    [SerializeField] private GameObject projectilePrefab;
+
     [Header("Spawning Behavior")]
     [Tooltip("If true, enemy can spawn other enemies periodically.")]
     [SerializeField] private bool canSpawnEnemies = false;
@@ -59,8 +76,8 @@ public class EnemyData : ScriptableObject
     [Tooltip("Number of enemies to spawn at once.")]
     [SerializeField] private int spawnCount = 1;
 
-    [Tooltip("EnemyData for spawned enemies.")]
-    [SerializeField] private EnemyData spawnedEnemyData;
+    [Tooltip("Weighted list of enemies to spawn.")]
+    [SerializeField] private SpawnEntry[] spawnList;
 
     [Header("Rewards")]
     [Tooltip("Points awarded when destroyed.")]
@@ -98,12 +115,56 @@ public class EnemyData : ScriptableObject
     public float FireRate => fireRate;
     public int ProjectileDamage => projectileDamage;
     public float ProjectileSpeed => projectileSpeed;
+    public GameObject ProjectilePrefab => projectilePrefab;
 
     // Spawning Behavior Properties
     public bool CanSpawnEnemies => canSpawnEnemies;
     public float SpawnInterval => spawnInterval;
     public int SpawnCount => spawnCount;
-    public EnemyData SpawnedEnemyData => spawnedEnemyData;
+    public SpawnEntry[] SpawnList => spawnList;
+
+    /// <summary>
+    /// Get a random enemy data from spawn list based on weights.
+    /// </summary>
+    /// <returns>Selected EnemyData or null if list is empty.</returns>
+    public EnemyData GetRandomSpawnData()
+    {
+        if (spawnList == null || spawnList.Length == 0)
+        {
+            return null;
+        }
+
+        int totalWeight = 0;
+        for (int i = 0; i < spawnList.Length; i++)
+        {
+            if (spawnList[i] != null && spawnList[i].enemyData != null)
+            {
+                totalWeight += spawnList[i].weight;
+            }
+        }
+
+        if (totalWeight <= 0)
+        {
+            return null;
+        }
+
+        int randomValue = Random.Range(0, totalWeight);
+        int cumulative = 0;
+
+        for (int i = 0; i < spawnList.Length; i++)
+        {
+            if (spawnList[i] != null && spawnList[i].enemyData != null)
+            {
+                cumulative += spawnList[i].weight;
+                if (randomValue < cumulative)
+                {
+                    return spawnList[i].enemyData;
+                }
+            }
+        }
+
+        return spawnList[0]?.enemyData;
+    }
 
     // Rewards Properties
     public int PointValue => pointValue;

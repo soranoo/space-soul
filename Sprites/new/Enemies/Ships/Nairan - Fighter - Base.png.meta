@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 0316799a87917e041ba33ae407cc7912
+guid: 8ff9408e60c16954394d70fc0dd86001
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -6873448969812629586
-    second: Nairan - Torpedo Ship - Base_0
+      213: -8950951021390113103
+    second: Nairan - Fighter - Base_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -113,23 +113,23 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Nairan - Torpedo Ship - Base_0
+      name: Nairan - Fighter - Base_0
       rect:
         serializedVersion: 2
-        x: 4
-        y: 16
-        width: 56
-        height: 30
+        x: 0
+        y: 0
+        width: 64
+        height: 64
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: ea72b8c349a9c90a0800000000000000
-      internalID: -6873448969812629586
+      spriteID: 1b65f106875d7c380800000000000000
+      internalID: -8950951021390113103
       vertices: []
       indices: 
       edges: []
@@ -138,7 +138,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 5e97eb03825dee720800000000000000
     internalID: 0
     vertices: []
     indices: 
@@ -148,7 +148,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Nairan - Torpedo Ship - Base_0: -6873448969812629586
+      Nairan - Fighter - Base_0: -8950951021390113103
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
