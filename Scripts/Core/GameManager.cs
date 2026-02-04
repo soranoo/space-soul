@@ -135,6 +135,7 @@ public class GameManager : SingletonBase<GameManager>
     /// </summary>
     public void StartGame()
     {
+        ScoreManager.Instance?.ResetScore();
         stateMachine.ChangeState(gameplayState);
     }
 

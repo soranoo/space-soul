@@ -385,6 +385,11 @@ public class WaveManager : SingletonBase<WaveManager>
         enemiesAlive--;
         EnemyDied?.Invoke(enemy);
 
+        if (enemy != null && enemy.Data != null)
+        {
+            ScoreManager.Instance?.AddScore(enemy.Data.ScoreValue);
+        }
+
         // Check for wave completion
         if (!isSpawning && enemiesAlive <= 0 && isWaveActive)
         {

@@ -168,6 +168,7 @@ public class EnemyData : ScriptableObject
 
     // Rewards Properties
     public int PointValue => pointValue;
+    public int ScoreValue => pointValue;
     public float PowerUpDropChance => powerUpDropChance;
 
     // Visual Properties
