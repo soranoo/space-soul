@@ -57,6 +57,14 @@ public class PlayerStats
     }
 
     /// <summary>
+    /// Apply a modifier to max speed.
+    /// </summary>
+    public void ModifyMaxSpeed(float multiplier)
+    {
+        maxSpeed *= multiplier;
+    }
+
+    /// <summary>
     /// Apply a modifier to fire rate.
     /// </summary>
     public void ModifyFireRate(float multiplier)

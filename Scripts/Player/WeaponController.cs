@@ -15,6 +15,7 @@ public class WeaponController : MonoBehaviour
     private PlayerStats stats;
     private float lastFireTime;
     private AudioSource audioSource;
+    private float damageMultiplier = 1f;
 
     /// <summary>
     /// Initialize with player stats.
@@ -22,6 +23,19 @@ public class WeaponController : MonoBehaviour
     public void Initialize(PlayerStats stats)
     {
         this.stats = stats;
+    }
+
+    /// <summary>
+    /// Current damage multiplier applied to all shots.
+    /// </summary>
+    public float DamageMultiplier => damageMultiplier;
+
+    /// <summary>
+    /// Set damage multiplier applied to all shots.
+    /// </summary>
+    public void SetDamageMultiplier(float multiplier)
+    {
+        damageMultiplier = Mathf.Max(0f, multiplier);
     }
 
     private void Awake()
@@ -122,7 +136,8 @@ public class WeaponController : MonoBehaviour
 
         if (bullet != null)
         {
-            bullet.SetDamageMultiplier(damageMultiplier);
+            float finalMultiplier = this.damageMultiplier * damageMultiplier;
+            bullet.SetDamageMultiplier(finalMultiplier);
         }
         else
         {

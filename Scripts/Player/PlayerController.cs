@@ -13,6 +13,7 @@ public class PlayerController : MonoBehaviour
     [Header("Components")]
     [SerializeField] private WeaponController weaponController;
     [SerializeField] private InputHandler inputHandler;
+    [SerializeField] private PowerUpController powerUpController;
 
     private Rigidbody2D rb;
     private int currentHealth;
@@ -50,6 +51,11 @@ public class PlayerController : MonoBehaviour
         {
             inputHandler = GetComponent<InputHandler>();
         }
+
+        if (powerUpController == null)
+        {
+            powerUpController = GetComponent<PowerUpController>();
+        }
     }
 
     private void Start()
@@ -83,6 +89,15 @@ public class PlayerController : MonoBehaviour
         if (amount <= 0)
         {
             return;
+        }
+
+        if (powerUpController != null)
+        {
+            amount = powerUpController.ProcessIncomingDamage(amount);
+            if (amount <= 0)
+            {
+                return;
+            }
         }
 
         currentHealth -= amount;

@@ -23,6 +23,9 @@ public class WaveManager : SingletonBase<WaveManager>
     [SerializeField] private SpawnManager spawnManager;
     [SerializeField] private DifficultyScaler difficultyScaler;
 
+    [Header("Power-Ups")]
+    [SerializeField] private PowerUpPickup[] powerUpPickupPrefabs;
+
     private int currentWaveNumber;
     private int enemiesAlive;
     private int enemiesSpawned;
@@ -388,12 +391,59 @@ public class WaveManager : SingletonBase<WaveManager>
         if (enemy != null && enemy.Data != null && !enemy.Data.SelfDestructOnContact)
         {
             ScoreManager.Instance?.AddScore(enemy.Data.ScoreValue);
+            TrySpawnPowerUp(enemy);
         }
 
         // Check for wave completion
         if (!isSpawning && enemiesAlive <= 0 && isWaveActive)
         {
             CompleteWave();
+        }
+    }
+
+    private void TrySpawnPowerUp(Enemy enemy)
+    {
+        if (powerUpPickupPrefabs == null || powerUpPickupPrefabs.Length == 0)
+        {
+            return;
+        }
+
+        if (enemy == null || enemy.Data == null)
+        {
+            return;
+        }
+
+        float dropChance = Mathf.Clamp01(enemy.Data.PowerUpDropChance);
+        if (dropChance <= 0f || UnityEngine.Random.value > dropChance)
+        {
+            return;
+        }
+
+        PowerUpPickup selectedPrefab = powerUpPickupPrefabs[UnityEngine.Random.Range(0, powerUpPickupPrefabs.Length)];
+        if (selectedPrefab == null)
+        {
+            return;
+        }
+
+        Vector3 spawnPosition = enemy.transform.position;
+
+        if (selectedPrefab != null)
+        {
+            PowerUpPickup pickup = null;
+
+            if (PoolManager.Instance != null)
+            {
+                PowerUpPickup prefabComponent = selectedPrefab.GetComponent<PowerUpPickup>();
+                if (prefabComponent != null)
+                {
+                    pickup = PoolManager.Instance.Get(prefabComponent, spawnPosition, Quaternion.identity);
+                }
+            }
+
+            if (pickup == null)
+            {
+                pickup = Instantiate(selectedPrefab, spawnPosition, Quaternion.identity);
+            }
         }
     }
 
