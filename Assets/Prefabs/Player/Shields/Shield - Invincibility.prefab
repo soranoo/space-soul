@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 2630274188643935938}
   - component: {fileID: 2104249487400716139}
   - component: {fileID: 3391819571449117947}
+  - component: {fileID: 7790528094550932639}
   m_Layer: 0
   m_Name: Shield - Invincibility
   m_TagString: Untagged
@@ -114,3 +115,70 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!68 &7790528094550932639
+EdgeCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9103733753264467936}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: 0, y: 0}
+  m_EdgeRadius: 0
+  m_Points:
+  - {x: -0.53954077, y: -0.16557164}
+  - {x: -0.21509469, y: 0.14847113}
+  - {x: -0.12125717, y: 0.37839848}
+  - {x: 0.0003047064, y: 0.46454996}
+  - {x: 0.1546906, y: 0.33770928}
+  - {x: 0.25640148, y: 0.1035727}
+  - {x: 0.48997784, y: -0.09998618}
+  - {x: 0.5412076, y: -0.18066265}
+  - {x: 0.54780513, y: -0.37309414}
+  - {x: 0.43818253, y: -0.40853512}
+  - {x: 0.20884013, y: -0.29201102}
+  - {x: 0.1361073, y: -0.27953458}
+  - {x: 0.14164278, y: -0.41900262}
+  - {x: 0.097010046, y: -0.48407647}
+  - {x: 0.0074058175, y: -0.47497547}
+  - {x: 0.008403689, y: -0.4318504}
+  - {x: -0.03800015, y: -0.43570906}
+  - {x: -0.0305451, y: -0.47934702}
+  - {x: -0.15107739, y: -0.45429307}
+  - {x: -0.1389846, y: -0.26985273}
+  - {x: -0.21520342, y: -0.2719453}
+  - {x: -0.4168501, y: -0.38270319}
+  - {x: -0.48949215, y: -0.40931746}
+  - {x: -0.5432304, y: -0.35955197}
+  - {x: -0.54196465, y: -0.27537245}
+  - {x: -0.53160655, y: -0.1790877}
+  m_AdjacentStartPoint: {x: 0, y: 0}
+  m_AdjacentEndPoint: {x: 0, y: 0}
+  m_UseAdjacentStartPoint: 0
+  m_UseAdjacentEndPoint: 0

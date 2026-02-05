@@ -23,7 +23,13 @@ public class PowerUpData : ScriptableObject
     [Tooltip("If true, this power-up will override the player engine type while active.")]
     [SerializeField] private bool overrideEngineType;
 
-    [SerializeField] private EngineType engineType = EngineType.Base;
+    [SerializeField] private EngineType engineType = 0;
+
+    [Header("Shield FX")]
+    [Tooltip("If true, this power-up will override the player shield type while active.")]
+    [SerializeField] private bool overrideShieldType;
+
+    [SerializeField] private ShieldType shieldType = 0;
 
     public PowerUpType PowerUpType => powerUpType;
     public float Duration => duration;
@@ -32,4 +38,6 @@ public class PowerUpData : ScriptableObject
     public int ShieldAmount => shieldAmount;
     public bool OverrideEngineType => overrideEngineType;
     public EngineType EngineType => engineType;
+    public bool OverrideShieldType => overrideShieldType;
+    public ShieldType ShieldType => shieldType;
 }

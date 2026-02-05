@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 2730944894373848375}
   - component: {fileID: 5218018756833415128}
   - component: {fileID: 6309372889111091885}
+  - component: {fileID: 1476456459516233338}
   m_Layer: 0
   m_Name: Shield - Front
   m_TagString: Untagged
@@ -114,3 +115,52 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!68 &1476456459516233338
+EdgeCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7013342366441143561}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: 0, y: 0}
+  m_EdgeRadius: 0
+  m_Points:
+  - {x: -0.1478188, y: 0.11125065}
+  - {x: -0.588701, y: 0.46972495}
+  - {x: -0.42332545, y: 0.62870735}
+  - {x: -0.19100487, y: 0.6910697}
+  - {x: 0.19492486, y: 0.7054012}
+  - {x: 0.3321239, y: 0.6594162}
+  - {x: 0.5995722, y: 0.460311}
+  - {x: 0.118976, y: 0.09888946}
+  m_AdjacentStartPoint: {x: 0, y: 0}
+  m_AdjacentEndPoint: {x: 0, y: 0}
+  m_UseAdjacentStartPoint: 0
+  m_UseAdjacentEndPoint: 0

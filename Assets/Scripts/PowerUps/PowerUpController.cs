@@ -13,11 +13,14 @@ public class PowerUpController : MonoBehaviour
         public float Remaining;
         public bool OverridesEngine;
         public EngineType PreviousEngine;
+        public bool OverridesShield;
+        public ShieldType PreviousShield;
     }
 
     [Header("References")]
     [SerializeField] private PlayerController player;
     [SerializeField] private PlayerEngineController engineController;
+    [SerializeField] private PlayerShieldController shieldController;
 
     private readonly List<ActivePowerUp> activePowerUps = new List<ActivePowerUp>();
     private int shieldPoints;
@@ -32,6 +35,11 @@ public class PowerUpController : MonoBehaviour
         if (engineController == null)
         {
             engineController = GetComponentInChildren<PlayerEngineController>(true);
+        }
+
+        if (shieldController == null)
+        {
+            shieldController = GetComponentInChildren<PlayerShieldController>(true);
         }
     }
 
@@ -52,6 +60,10 @@ public class PowerUpController : MonoBehaviour
                 if (active.OverridesEngine && engineController != null)
                 {
                     engineController.SetEngineType(active.PreviousEngine);
+                }
+                if (active.OverridesShield && shieldController != null)
+                {
+                    shieldController.SetShieldType(active.PreviousShield);
                 }
                 activePowerUps.RemoveAt(i);
             }
@@ -84,6 +96,10 @@ public class PowerUpController : MonoBehaviour
                 {
                     engineController.SetEngineType(data.EngineType);
                 }
+                if (data.OverrideShieldType && shieldController != null)
+                {
+                    shieldController.SetShieldType(data.ShieldType);
+                }
                 return;
             }
         }
@@ -96,13 +112,22 @@ public class PowerUpController : MonoBehaviour
             engineController.SetEngineType(data.EngineType);
         }
 
+        bool overridesShield = data.OverrideShieldType && shieldController != null;
+        ShieldType previousShield = overridesShield ? shieldController.CurrentShieldType : ShieldType.None;
+        if (overridesShield)
+        {
+            shieldController.SetShieldType(data.ShieldType);
+        }
+
         activePowerUps.Add(new ActivePowerUp
         {
             Type = data.PowerUpType,
             Effect = effect,
             Remaining = effect.GetDuration(),
             OverridesEngine = overridesEngine,
-            PreviousEngine = previousEngine
+            PreviousEngine = previousEngine,
+            OverridesShield = overridesShield,
+            PreviousShield = previousShield
         });
     }
 
