@@ -1614,6 +1614,7 @@ MonoBehaviour:
   invincibilityShieldPrefab: {fileID: 9103733753264467936, guid: 471601431b9603a42bfbb7b3b047a534, type: 3}
   roundShieldPrefab: {fileID: 4761427242984576644, guid: 56ad93c6aa54df9429a014b0c3d46076, type: 3}
   defaultShieldType: 0
+  playerCollider: {fileID: 1935055144}
 --- !u!1 &632940563
 GameObject:
   m_ObjectHideFlags: 0

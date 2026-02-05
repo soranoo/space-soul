@@ -107,6 +107,12 @@ public class EnemyProjectile : MonoBehaviour, IPoolable
 
     private void OnTriggerEnter2D(Collider2D other)
     {
+        if (other.GetComponent<ShieldBlocker>() != null)
+        {
+            Despawn();
+            return;
+        }
+
         // Ignore enemy collisions
         if (other.CompareTag("Enemy"))
         {

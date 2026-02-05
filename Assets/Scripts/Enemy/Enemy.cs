@@ -600,22 +600,35 @@ public class Enemy : MonoBehaviour, IPoolable
 
     private void OnTriggerEnter2D(Collider2D other)
     {
+        if (data == null) {
+            return;
+        }
+
+        if (other.GetComponent<ShieldBlocker>() != null && data.SelfDestructOnContact)
+        {
+            // If we hit a shield blocker and are a self-destruct type, just execute self-destruct without damaging player (since shield blocks it)
+            ExecuteSelfDestruct(null);
+            return;
+        }
+
         // Handle collision with player
         if (other.CompareTag("Player"))
         {
             PlayerController player = other.GetComponent<PlayerController>();
-            if (player != null && data != null)
+            if (player == null)
             {
-                // Self-destruct enemies die on contact
-                if (data.SelfDestructOnContact)
-                {
-                    ExecuteSelfDestruct(player);
-                }
-                else
-                {
-                    // Other enemies just deal contact damage
-                    player.TakeDamage(data.ContactDamage);
-                }
+                // If we can't find player, just ignore collision
+                return;
+            }
+            // Self-destruct enemies die on contact
+            if (data.SelfDestructOnContact)
+            {
+                ExecuteSelfDestruct(player);
+            }
+            else
+            {
+                // Other enemies just deal contact damage
+                player.TakeDamage(data.ContactDamage);
             }
         }
 

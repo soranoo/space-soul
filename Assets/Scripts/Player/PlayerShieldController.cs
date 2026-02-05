@@ -15,11 +15,19 @@ public class PlayerShieldController : MonoBehaviour
     [Header("Settings")]
     [SerializeField] private ShieldType defaultShieldType = ShieldType.None;
 
+    [Header("Player Collision")]
+    [SerializeField] private Collider2D playerCollider;
+
     private readonly Dictionary<ShieldType, GameObject> spawnedShields = new Dictionary<ShieldType, GameObject>();
     private ShieldType currentShieldType;
 
     private void Awake()
     {
+        if (playerCollider == null)
+        {
+            playerCollider = GetComponentInParent<Collider2D>();
+        }
+
         SpawnAllShields();
         SetShieldType(defaultShieldType);
     }
@@ -36,6 +44,11 @@ public class PlayerShieldController : MonoBehaviour
 
         DeactivateCurrentShield();
 
+        if (playerCollider != null)
+        {
+            playerCollider.enabled = shieldType != ShieldType.Invincibility;
+        }
+
         if (shieldType == ShieldType.None)
         {
             currentShieldType = shieldType;
@@ -46,12 +59,23 @@ public class PlayerShieldController : MonoBehaviour
         if (shieldInstance != null)
         {
             shieldInstance.SetActive(true);
+            EnsureShieldBlocker(shieldInstance);
         }
 
         currentShieldType = shieldType;
     }
 
     public ShieldType CurrentShieldType => currentShieldType;
+
+    /// <summary>
+    /// Whether a shield visual is currently active.
+    /// </summary>
+    public bool IsShieldActive => currentShieldType != ShieldType.None;
+
+    /// <summary>
+    /// Whether invincibility shield is active.
+    /// </summary>
+    public bool IsInvincible => currentShieldType == ShieldType.Invincibility;
 
     private void SpawnAllShields()
     {
@@ -98,6 +122,25 @@ public class PlayerShieldController : MonoBehaviour
         if (spawnedShields.TryGetValue(currentShieldType, out GameObject existing) && existing != null)
         {
             existing.SetActive(false);
+        }
+    }
+
+    private void EnsureShieldBlocker(GameObject shieldInstance)
+    {
+        if (shieldInstance == null)
+        {
+            return;
+        }
+
+        if (shieldInstance.GetComponentInChildren<ShieldBlocker>() != null)
+        {
+            return;
+        }
+
+        Collider2D col = shieldInstance.GetComponentInChildren<Collider2D>();
+        if (col != null)
+        {
+            col.gameObject.AddComponent<ShieldBlocker>();
         }
     }
 }
