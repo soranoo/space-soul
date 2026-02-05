@@ -19,6 +19,11 @@ public class InputHandler : MonoBehaviour
     private Vector2 aimPosition;
     private bool isFiring;
 
+    /// <summary>
+    /// Whether the player is currently applying thrust input.
+    /// </summary>
+    public bool IsThrusting => moveInput.y > 0f;
+
     private void Awake()
     {
         inputActions = new InputSystem_Actions();

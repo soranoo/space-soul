@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// Controls player engine visuals and powering animation based on movement.
+/// Controls player engine visuals and powering animation based on input.
 /// Attach to the engine pivot.
 /// </summary>
 public class PlayerEngineController : MonoBehaviour
@@ -10,7 +10,7 @@ public class PlayerEngineController : MonoBehaviour
     private const string ANIM_BOOL_POWERING = "Powering";
 
     [Header("References")]
-    [SerializeField] private Rigidbody2D playerRigidbody;
+    [SerializeField] private InputHandler inputHandler;
 
     [Header("Engine Prefabs")]
     [SerializeField] private GameObject baseEnginePrefab;
@@ -20,17 +20,15 @@ public class PlayerEngineController : MonoBehaviour
 
     [Header("Settings")]
     [SerializeField] private EngineType defaultEngineType = EngineType.Base;
-    [SerializeField] private float moveThreshold = 0.05f;
-
     private readonly Dictionary<EngineType, GameObject> spawnedEngines = new Dictionary<EngineType, GameObject>();
     private EngineType currentEngineType;
     private Animator currentAnimator;
 
     private void Awake()
     {
-        if (playerRigidbody == null)
+        if (inputHandler == null)
         {
-            playerRigidbody = GetComponentInParent<Rigidbody2D>();
+            inputHandler = GetComponentInParent<InputHandler>();
         }
 
         // Spawn all engine types at start to avoid runtime instantiation
@@ -40,15 +38,11 @@ public class PlayerEngineController : MonoBehaviour
 
     private void Update()
     {
-        bool isMoving = false;
-        if (playerRigidbody != null)
-        {
-            isMoving = playerRigidbody.linearVelocity.sqrMagnitude > moveThreshold * moveThreshold;
-        }
+        bool isPowering = inputHandler != null && inputHandler.IsThrusting;
 
         if (currentAnimator != null)
         {
-            currentAnimator.SetBool(ANIM_BOOL_POWERING, isMoving);
+            currentAnimator.SetBool(ANIM_BOOL_POWERING, isPowering);
         }
     }
 
