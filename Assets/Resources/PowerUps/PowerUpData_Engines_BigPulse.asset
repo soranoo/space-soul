@@ -17,5 +17,5 @@ MonoBehaviour:
   spawnChance: 0.1
   multiplier: 1.5
   shieldAmount: 1
-  overrideEngineType: 0
+  overrideEngineType: 1
   engineType: 1
