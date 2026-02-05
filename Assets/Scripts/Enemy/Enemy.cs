@@ -633,7 +633,7 @@ public class Enemy : MonoBehaviour, IPoolable
         }
 
         // Handle collision with bullets
-        if (other.CompareTag("Bullet"))
+        if (other.CompareTag("PlayerProjectile"))
         {
             Bullet bullet = other.GetComponent<Bullet>();
             if (bullet != null)

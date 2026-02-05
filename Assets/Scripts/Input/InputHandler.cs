@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -13,8 +14,6 @@ public class InputHandler : MonoBehaviour
 
     private ICommand moveForwardCommand;
     private RotateAimCommand rotateAimCommand;
-    private ICommand fireCommand;
-
     private Vector2 moveInput;
     private Vector2 aimPosition;
     private bool isFiring;
@@ -23,6 +22,21 @@ public class InputHandler : MonoBehaviour
     /// Whether the player is currently applying thrust input.
     /// </summary>
     public bool IsThrusting => moveInput.y > 0f;
+
+    /// <summary>
+    /// Whether the player is currently holding the fire input.
+    /// </summary>
+    public bool IsFiring => isFiring;
+
+    /// <summary>
+    /// Fired when the fire input starts.
+    /// </summary>
+    public event Action FireStarted;
+
+    /// <summary>
+    /// Fired when the fire input stops.
+    /// </summary>
+    public event Action FireStopped;
 
     private void Awake()
     {
@@ -59,21 +73,12 @@ public class InputHandler : MonoBehaviour
     /// <summary>
     /// Initialize commands with player references.
     /// </summary>
-    public void Initialize(PlayerController player, Rigidbody2D rigidbody, PlayerStats stats, WeaponController weapon)
+    public void Initialize(PlayerController player, Rigidbody2D rigidbody, PlayerStats stats)
     {
         this.player = player;
 
         moveForwardCommand = new MoveForwardCommand(rigidbody, stats);
         rotateAimCommand = new RotateAimCommand(player.transform, stats);
-        fireCommand = new FireWeaponCommand(weapon);
-    }
-
-    /// <summary>
-    /// Swap the fire command (for upgrades).
-    /// </summary>
-    public void SetFireCommand(ICommand command)
-    {
-        fireCommand = command;
     }
 
     private void FixedUpdate()
@@ -81,10 +86,6 @@ public class InputHandler : MonoBehaviour
         HandleMovement();
     }
 
-    private void Update()
-    {
-        HandleFiring();
-    }
 
     private void HandleMovement()
     {
@@ -102,14 +103,6 @@ public class InputHandler : MonoBehaviour
         }
     }
 
-    private void HandleFiring()
-    {
-        if (isFiring)
-        {
-            fireCommand?.Execute();
-        }
-    }
-
     private void OnMovePerformed(InputAction.CallbackContext context)
     {
         moveInput = context.ReadValue<Vector2>();
@@ -123,11 +116,13 @@ public class InputHandler : MonoBehaviour
     private void OnAttackPerformed(InputAction.CallbackContext context)
     {
         isFiring = true;
+        FireStarted?.Invoke();
     }
 
     private void OnAttackCanceled(InputAction.CallbackContext context)
     {
         isFiring = false;
+        FireStopped?.Invoke();
     }
 
     private void OnPointPerformed(InputAction.CallbackContext context)

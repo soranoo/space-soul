@@ -11,7 +11,6 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private PlayerStats stats = new PlayerStats();
 
     [Header("Components")]
-    [SerializeField] private WeaponController weaponController;
     [SerializeField] private InputHandler inputHandler;
     [SerializeField] private PowerUpController powerUpController;
 
@@ -29,6 +28,11 @@ public class PlayerController : MonoBehaviour
     public PlayerStats Stats => stats;
 
     /// <summary>
+    /// Input handler reference.
+    /// </summary>
+    public InputHandler InputHandler => inputHandler;
+
+    /// <summary>
     /// Event fired when health changes.
     /// </summary>
     public event Action<int, int> HealthChanged;
@@ -41,11 +45,6 @@ public class PlayerController : MonoBehaviour
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
-
-        if (weaponController == null)
-        {
-            weaponController = GetComponentInChildren<WeaponController>();
-        }
 
         if (inputHandler == null)
         {
@@ -64,8 +63,7 @@ public class PlayerController : MonoBehaviour
 
         HealthChanged?.Invoke(currentHealth, stats.MaxHealth);
 
-        weaponController?.Initialize(stats);
-        inputHandler?.Initialize(this, rb, stats, weaponController);
+        inputHandler?.Initialize(this, rb, stats);
     }
 
     private void FixedUpdate()

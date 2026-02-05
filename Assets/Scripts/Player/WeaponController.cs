@@ -3,10 +3,11 @@ using UnityEngine;
 /// <summary>
 /// Manages player weapon firing.
 /// </summary>
+[RequireComponent(typeof(AudioSource))]
 public class WeaponController : MonoBehaviour
 {
     [Header("Weapon Settings")]
-    [SerializeField] private Transform firePoint;
+    [SerializeField] private Transform[] firePoints;
     [SerializeField] private GameObject bulletPrefab;
 
     [Header("Audio")]
@@ -42,9 +43,10 @@ public class WeaponController : MonoBehaviour
     {
         audioSource = GetComponent<AudioSource>();
 
-        if (firePoint == null)
+        // If firePoints array is not set up, use transform as fallback
+        if (firePoints == null || firePoints.Length == 0)
         {
-            firePoint = transform;
+            firePoints = new Transform[] { transform };
         }
     }
 
@@ -62,7 +64,7 @@ public class WeaponController : MonoBehaviour
     }
 
     /// <summary>
-    /// Fire a single projectile.
+    /// Fire a single projectile from a random firing point.
     /// </summary>
     public void Fire()
     {
@@ -71,13 +73,14 @@ public class WeaponController : MonoBehaviour
             return;
         }
 
-        SpawnBullet(firePoint.position, firePoint.rotation, 1f);
+        Transform selectedFirePoint = GetRandomFirePoint();
+        SpawnBullet(selectedFirePoint.position, selectedFirePoint.rotation, 1f);
         lastFireTime = Time.time;
         PlayFireSound();
     }
 
     /// <summary>
-    /// Fire multiple projectiles in a spread pattern.
+    /// Fire multiple projectiles in a spread pattern from each firing point.
     /// </summary>
     public void FireSpread(int count, float spreadAngle)
     {
@@ -91,8 +94,9 @@ public class WeaponController : MonoBehaviour
         for (int i = 0; i < count; i++)
         {
             float angle = -halfSpread + (spreadAngle * i);
-            Quaternion rotation = firePoint.rotation * Quaternion.Euler(0f, 0f, angle);
-            SpawnBullet(firePoint.position, rotation, 1f);
+            Transform selectedFirePoint = GetRandomFirePoint();
+            Quaternion rotation = selectedFirePoint.rotation * Quaternion.Euler(0f, 0f, angle);
+            SpawnBullet(selectedFirePoint.position, rotation, 1f);
         }
 
         lastFireTime = Time.time;
@@ -100,11 +104,12 @@ public class WeaponController : MonoBehaviour
     }
 
     /// <summary>
-    /// Fire a charged projectile with damage multiplier.
+    /// Fire a charged projectile with damage multiplier from a random firing point.
     /// </summary>
-    public void FireCharged(float damageMultiplier)
+    public void FireCharged(float chargeMultiplier)
     {
-        SpawnBullet(firePoint.position, firePoint.rotation, damageMultiplier);
+        Transform selectedFirePoint = GetRandomFirePoint();
+        SpawnBullet(selectedFirePoint.position, selectedFirePoint.rotation, chargeMultiplier);
         lastFireTime = Time.time;
         PlayFireSound();
     }
@@ -147,9 +152,23 @@ public class WeaponController : MonoBehaviour
 
     private void PlayFireSound()
     {
-        if (audioSource != null && fireSound != null)
+        if (fireSound != null)
         {
             audioSource.PlayOneShot(fireSound);
         }
+    }
+
+    /// <summary>
+    /// Get a random firing point from the available firing points.
+    /// </summary>
+    private Transform GetRandomFirePoint()
+    {
+        if (firePoints == null || firePoints.Length == 0)
+        {
+            return transform;
+        }
+
+        int randomIndex = Random.Range(0, firePoints.Length);
+        return firePoints[randomIndex] ?? transform;
     }
 }
