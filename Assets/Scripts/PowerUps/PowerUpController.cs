@@ -11,10 +11,13 @@ public class PowerUpController : MonoBehaviour
         public PowerUpType Type;
         public IPowerUp Effect;
         public float Remaining;
+        public bool OverridesEngine;
+        public EngineType PreviousEngine;
     }
 
     [Header("References")]
     [SerializeField] private PlayerController player;
+    [SerializeField] private PlayerEngineController engineController;
 
     private readonly List<ActivePowerUp> activePowerUps = new List<ActivePowerUp>();
     private int shieldPoints;
@@ -24,6 +27,11 @@ public class PowerUpController : MonoBehaviour
         if (player == null)
         {
             player = GetComponent<PlayerController>();
+        }
+
+        if (engineController == null)
+        {
+            engineController = GetComponentInChildren<PlayerEngineController>(true);
         }
     }
 
@@ -41,6 +49,10 @@ public class PowerUpController : MonoBehaviour
             if (active.Remaining <= 0f)
             {
                 active.Effect.Deactivate(player);
+                if (active.OverridesEngine && engineController != null)
+                {
+                    engineController.SetEngineType(active.PreviousEngine);
+                }
                 activePowerUps.RemoveAt(i);
             }
         }
@@ -68,16 +80,29 @@ public class PowerUpController : MonoBehaviour
             if (activePowerUps[i].Type == data.PowerUpType)
             {
                 activePowerUps[i].Remaining = effect.GetDuration();
+                if (data.OverrideEngineType && engineController != null)
+                {
+                    engineController.SetEngineType(data.EngineType);
+                }
                 return;
             }
         }
 
         effect.Activate(player);
+        bool overridesEngine = data.OverrideEngineType && engineController != null;
+        EngineType previousEngine = overridesEngine ? engineController.CurrentEngineType : EngineType.Base;
+        if (overridesEngine)
+        {
+            engineController.SetEngineType(data.EngineType);
+        }
+
         activePowerUps.Add(new ActivePowerUp
         {
             Type = data.PowerUpType,
             Effect = effect,
-            Remaining = effect.GetDuration()
+            Remaining = effect.GetDuration(),
+            OverridesEngine = overridesEngine,
+            PreviousEngine = previousEngine
         });
     }
 

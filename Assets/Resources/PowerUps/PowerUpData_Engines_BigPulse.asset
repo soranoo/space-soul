@@ -14,7 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PowerUpData
   powerUpType: 0
   duration: 5
-  icon: {fileID: 0}
   spawnChance: 0.1
   multiplier: 1.5
   shieldAmount: 1
+  overrideEngineType: 0
+  engineType: 1
