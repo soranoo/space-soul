@@ -33,6 +33,8 @@ public class PlayerEngineController : MonoBehaviour
             playerRigidbody = GetComponentInParent<Rigidbody2D>();
         }
 
+        // Spawn all engine types at start to avoid runtime instantiation
+        SpawnAllEngines();
         SetEngineType(defaultEngineType);
     }
 
@@ -62,7 +64,7 @@ public class PlayerEngineController : MonoBehaviour
 
         DeactivateCurrentEngine();
 
-        GameObject engineInstance = GetOrCreateEngine(engineType);
+        GameObject engineInstance = GetEngine(engineType);
         if (engineInstance != null)
         {
             engineInstance.SetActive(true);
@@ -78,17 +80,24 @@ public class PlayerEngineController : MonoBehaviour
 
     public EngineType CurrentEngineType => currentEngineType;
 
-    private GameObject GetOrCreateEngine(EngineType engineType)
+    private void SpawnAllEngines()
     {
-        if (spawnedEngines.TryGetValue(engineType, out GameObject existing) && existing != null)
-        {
-            return existing;
-        }
+        SpawnEngine(EngineType.Base, baseEnginePrefab);
+        SpawnEngine(EngineType.BigPulse, bigPulseEnginePrefab);
+        SpawnEngine(EngineType.Burst, burstEnginePrefab);
+        SpawnEngine(EngineType.Supercharged, superchargedEnginePrefab);
+    }
 
-        GameObject prefab = GetPrefabForType(engineType);
+    private void SpawnEngine(EngineType engineType, GameObject prefab)
+    {
         if (prefab == null)
         {
-            return null;
+            return;
+        }
+
+        if (spawnedEngines.ContainsKey(engineType) && spawnedEngines[engineType] != null)
+        {
+            return;
         }
 
         GameObject instance = Instantiate(prefab, transform);
@@ -98,7 +107,16 @@ public class PlayerEngineController : MonoBehaviour
         instance.SetActive(false);
 
         spawnedEngines[engineType] = instance;
-        return instance;
+    }
+
+    private GameObject GetEngine(EngineType engineType)
+    {
+        if (spawnedEngines.TryGetValue(engineType, out GameObject existing) && existing != null)
+        {
+            return existing;
+        }
+
+        return null;
     }
 
     private void DeactivateCurrentEngine()
