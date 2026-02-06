@@ -19,3 +19,7 @@ MonoBehaviour:
   shieldAmount: 1
   overrideEngineType: 1
   engineType: 3
+  overrideShieldType: 0
+  shieldType: 1
+  overrideWeaponType: 0
+  weaponType: 0

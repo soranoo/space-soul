@@ -15,12 +15,15 @@ public class PowerUpController : MonoBehaviour
         public EngineType PreviousEngine;
         public bool OverridesShield;
         public ShieldType PreviousShield;
+        public bool OverridesWeapon;
+        public WeaponType PreviousWeapon;
     }
 
     [Header("References")]
     [SerializeField] private PlayerController player;
     [SerializeField] private PlayerEngineController engineController;
     [SerializeField] private PlayerShieldController shieldController;
+    [SerializeField] private PlayerWeaponManager weaponManager;
 
     private readonly List<ActivePowerUp> activePowerUps = new List<ActivePowerUp>();
     private int shieldPoints;
@@ -40,6 +43,11 @@ public class PowerUpController : MonoBehaviour
         if (shieldController == null)
         {
             shieldController = GetComponentInChildren<PlayerShieldController>(true);
+        }
+
+        if (weaponManager == null)
+        {
+            weaponManager = GetComponentInChildren<PlayerWeaponManager>(true);
         }
     }
 
@@ -64,6 +72,10 @@ public class PowerUpController : MonoBehaviour
                 if (active.OverridesShield && shieldController != null)
                 {
                     shieldController.SetShieldType(active.PreviousShield);
+                }
+                if (active.OverridesWeapon && weaponManager != null)
+                {
+                    weaponManager.SetWeaponType(active.PreviousWeapon);
                 }
                 activePowerUps.RemoveAt(i);
             }
@@ -100,6 +112,10 @@ public class PowerUpController : MonoBehaviour
                 {
                     shieldController.SetShieldType(data.ShieldType);
                 }
+                if (data.OverrideWeaponType && weaponManager != null)
+                {
+                    weaponManager.SetWeaponType(data.WeaponType);
+                }
                 return;
             }
         }
@@ -119,6 +135,13 @@ public class PowerUpController : MonoBehaviour
             shieldController.SetShieldType(data.ShieldType);
         }
 
+        bool overridesWeapon = data.OverrideWeaponType && weaponManager != null;
+        WeaponType previousWeapon = overridesWeapon ? weaponManager.CurrentWeaponType : WeaponType.AutoCannon;
+        if (overridesWeapon)
+        {
+            weaponManager.SetWeaponType(data.WeaponType);
+        }
+
         activePowerUps.Add(new ActivePowerUp
         {
             Type = data.PowerUpType,
@@ -127,7 +150,9 @@ public class PowerUpController : MonoBehaviour
             OverridesEngine = overridesEngine,
             PreviousEngine = previousEngine,
             OverridesShield = overridesShield,
-            PreviousShield = previousShield
+            PreviousShield = previousShield,
+            OverridesWeapon = overridesWeapon,
+            PreviousWeapon = previousWeapon
         });
     }
 

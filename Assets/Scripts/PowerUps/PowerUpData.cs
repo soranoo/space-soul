@@ -31,6 +31,12 @@ public class PowerUpData : ScriptableObject
 
     [SerializeField] private ShieldType shieldType = 0;
 
+    [Header("Weapon FX")]
+    [Tooltip("If true, this power-up will override the player weapon type while active.")]
+    [SerializeField] private bool overrideWeaponType;
+
+    [SerializeField] private WeaponType weaponType = 0;
+
     public PowerUpType PowerUpType => powerUpType;
     public float Duration => duration;
     public float SpawnChance => spawnChance;
@@ -40,4 +46,6 @@ public class PowerUpData : ScriptableObject
     public EngineType EngineType => engineType;
     public bool OverrideShieldType => overrideShieldType;
     public ShieldType ShieldType => shieldType;
+    public bool OverrideWeaponType => overrideWeaponType;
+    public WeaponType WeaponType => weaponType;
 }
