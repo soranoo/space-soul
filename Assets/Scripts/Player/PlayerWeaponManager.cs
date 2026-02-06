@@ -62,7 +62,14 @@ public class PlayerWeaponManager : MonoBehaviour
 
     private void Update()
     {
-        if (isFiring && currentWeapon != null)
+        if (currentWeapon == null)
+        {
+            return;
+        }
+
+        currentWeapon.SetFiring(isFiring);
+
+        if (isFiring)
         {
             currentWeapon.Fire();
         }
@@ -159,6 +166,7 @@ public class PlayerWeaponManager : MonoBehaviour
     {
         if (currentWeapon != null)
         {
+            currentWeapon.SetFiring(false);
             currentWeapon.gameObject.SetActive(false);
         }
     }
