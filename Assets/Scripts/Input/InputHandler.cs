@@ -24,6 +24,11 @@ public class InputHandler : MonoBehaviour
     public bool IsThrusting => moveInput.y > 0f;
 
     /// <summary>
+    /// Current movement input vector.
+    /// </summary>
+    public Vector2 MoveInput => moveInput;
+
+    /// <summary>
     /// Whether the player is currently holding the fire input.
     /// </summary>
     public bool IsFiring => isFiring;

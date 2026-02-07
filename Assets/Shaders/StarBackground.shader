@@ -1,0 +1,270 @@
+Shader "Custom/ProceduralStarBackground"
+{
+    Properties
+    {
+        _MainTex("Sprite Texture", 2D) = "white" {}
+        _BackgroundColor("Background Color", Color) = (0.1, 0.04, 0.15, 1)
+        _Layer1Color("Layer 1 Color", Color) = (1, 1, 1, 1)
+        _Layer2Color("Layer 2 Color", Color) = (0.8, 0.85, 1, 1)
+        _Layer3Color("Layer 3 Color", Color) = (1, 0.95, 0.8, 1)
+        _Layer1Brightness("Layer 1 Brightness", Float) = 0.6
+        _Layer2Brightness("Layer 2 Brightness", Float) = 0.9
+        _Layer3Brightness("Layer 3 Brightness", Float) = 1.4
+        _Layer1Density("Layer 1 Density (stars/unit)", Float) = 5
+        _Layer2Density("Layer 2 Density (stars/unit)", Float) = 3
+        _Layer3Density("Layer 3 Density (stars/unit)", Float) = 2
+        _Layer1Threshold("Layer 1 Threshold", Range(0.9, 0.999)) = 0.985
+        _Layer2Threshold("Layer 2 Threshold", Range(0.9, 0.999)) = 0.993
+        _Layer3Threshold("Layer 3 Threshold", Range(0.9, 0.999)) = 0.997
+        _Layer1ParallaxFactor("Layer 1 Parallax (far)", Float) = 0.15
+        _Layer2ParallaxFactor("Layer 2 Parallax (mid)", Float) = 0.4
+        _Layer3ParallaxFactor("Layer 3 Parallax (near)", Float) = 0.8
+        _PixelSize("Pixel Size (world units)", Float) = 0.08
+        _TwinkleAmount("Twinkle Amount", Range(0, 1)) = 0.3
+        _TwinkleSpeed("Twinkle Speed", Float) = 2
+        _ScrollOffset("Scroll Offset", Vector) = (0, 0, 0, 0)
+    }
+
+    SubShader
+    {
+        Tags { "RenderPipeline" = "UniversalPipeline" "Queue" = "Background" "RenderType" = "Transparent" "IgnoreProjector" = "True" "CanUseSpriteAtlas" = "True" }
+        LOD 100
+        ZWrite Off
+        Cull Off
+        Blend SrcAlpha OneMinusSrcAlpha
+
+        Pass
+        {
+            Name "Universal2DPass"
+            Tags { "LightMode" = "Universal2D" }
+
+            HLSLPROGRAM
+            #pragma vertex vert
+            #pragma fragment frag
+
+            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
+
+            struct Attributes
+            {
+                float4 positionOS : POSITION;
+                float2 uv : TEXCOORD0;
+            };
+
+            struct Varyings
+            {
+                float4 positionHCS : SV_POSITION;
+                float3 positionWS : TEXCOORD0;
+            };
+
+            CBUFFER_START(UnityPerMaterial)
+                float4 _MainTex_ST;
+                float4 _BackgroundColor;
+                float4 _Layer1Color;
+                float4 _Layer2Color;
+                float4 _Layer3Color;
+                float _Layer1Brightness;
+                float _Layer2Brightness;
+                float _Layer3Brightness;
+                float _Layer1Density;
+                float _Layer2Density;
+                float _Layer3Density;
+                float _Layer1Threshold;
+                float _Layer2Threshold;
+                float _Layer3Threshold;
+                float _Layer1ParallaxFactor;
+                float _Layer2ParallaxFactor;
+                float _Layer3ParallaxFactor;
+                float _PixelSize;
+                float _TwinkleAmount;
+                float _TwinkleSpeed;
+                float4 _ScrollOffset;
+            CBUFFER_END
+
+            TEXTURE2D(_MainTex);
+            SAMPLER(sampler_MainTex);
+
+            Varyings vert(Attributes input)
+            {
+                Varyings output;
+                output.positionHCS = TransformObjectToHClip(input.positionOS.xyz);
+                output.positionWS = TransformObjectToWorld(input.positionOS.xyz);
+                return output;
+            }
+
+            float Hash21(float2 p)
+            {
+                p = frac(p * float2(123.34, 456.21));
+                p += dot(p, p + 45.32);
+                return frac(p.x * p.y);
+            }
+
+            float StarLayer(float2 rawWorldPos, float density, float threshold, float parallaxFactor, float time, float pixelSize)
+            {
+                float2 scroll = _ScrollOffset.xy * parallaxFactor;
+                float2 scrolledPos = rawWorldPos + scroll;
+
+                // Snap to pixel grid
+                float2 pixelPos = floor(scrolledPos / pixelSize) * pixelSize;
+
+                // Determine which star-cell this pixel falls in
+                float2 layerPos = pixelPos * density;
+                float2 cell = floor(layerPos);
+                float rnd = Hash21(cell);
+                float hasStar = step(threshold, rnd);
+
+                // Place the star at a random sub-position inside the cell, snapped to pixel grid
+                float2 starSub = float2(Hash21(cell + float2(51.31, 82.47)),
+                                        Hash21(cell + float2(27.69, 63.14)));
+                float2 starWorld = (cell + starSub) / density - scroll;
+                float2 starPixel = floor(starWorld / pixelSize) * pixelSize;
+                float2 curPixel  = floor(rawWorldPos / pixelSize) * pixelSize;
+
+                // Light up only the single pixel that matches the star position
+                float eps = pixelSize * 0.1;
+                float match = step(abs(starPixel.x - curPixel.x), eps)
+                            * step(abs(starPixel.y - curPixel.y), eps);
+
+                // Individual twinkle per star
+                float phase = Hash21(cell + float2(7.93, 3.17)) * 6.28318;
+                float spd   = lerp(0.5, 1.5, Hash21(cell + float2(13.73, 9.21))) * _TwinkleSpeed;
+                float twinkle = lerp(1.0 - _TwinkleAmount, 1.0, 0.5 + 0.5 * sin(time * spd + phase));
+
+                return hasStar * match * twinkle;
+            }
+
+            half4 frag(Varyings input) : SV_Target
+            {
+                float2 worldPos = input.positionWS.xy;
+                float pixelSize = max(_PixelSize, 0.001);
+                float time = _Time.y;
+
+                float3 color = _BackgroundColor.rgb;
+
+                float layer1 = StarLayer(worldPos, _Layer1Density, _Layer1Threshold, _Layer1ParallaxFactor, time, pixelSize);
+                float layer2 = StarLayer(worldPos, _Layer2Density, _Layer2Threshold, _Layer2ParallaxFactor, time, pixelSize);
+                float layer3 = StarLayer(worldPos, _Layer3Density, _Layer3Threshold, _Layer3ParallaxFactor, time, pixelSize);
+
+                color += layer1 * _Layer1Color.rgb * _Layer1Brightness;
+                color += layer2 * _Layer2Color.rgb * _Layer2Brightness;
+                color += layer3 * _Layer3Color.rgb * _Layer3Brightness;
+
+                return half4(color, 1.0);
+            }
+            ENDHLSL
+        }
+
+        Pass
+        {
+            Name "UnlitFallback"
+            Tags { "LightMode" = "SRPDefaultUnlit" }
+
+            HLSLPROGRAM
+            #pragma vertex vert
+            #pragma fragment frag
+
+            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
+
+            struct Attributes
+            {
+                float4 positionOS : POSITION;
+                float2 uv : TEXCOORD0;
+            };
+
+            struct Varyings
+            {
+                float4 positionHCS : SV_POSITION;
+                float3 positionWS : TEXCOORD0;
+            };
+
+            CBUFFER_START(UnityPerMaterial)
+                float4 _MainTex_ST;
+                float4 _BackgroundColor;
+                float4 _Layer1Color;
+                float4 _Layer2Color;
+                float4 _Layer3Color;
+                float _Layer1Brightness;
+                float _Layer2Brightness;
+                float _Layer3Brightness;
+                float _Layer1Density;
+                float _Layer2Density;
+                float _Layer3Density;
+                float _Layer1Threshold;
+                float _Layer2Threshold;
+                float _Layer3Threshold;
+                float _Layer1ParallaxFactor;
+                float _Layer2ParallaxFactor;
+                float _Layer3ParallaxFactor;
+                float _PixelSize;
+                float _TwinkleAmount;
+                float _TwinkleSpeed;
+                float4 _ScrollOffset;
+            CBUFFER_END
+
+            TEXTURE2D(_MainTex);
+            SAMPLER(sampler_MainTex);
+
+            Varyings vert(Attributes input)
+            {
+                Varyings output;
+                output.positionHCS = TransformObjectToHClip(input.positionOS.xyz);
+                output.positionWS = TransformObjectToWorld(input.positionOS.xyz);
+                return output;
+            }
+
+            float Hash21(float2 p)
+            {
+                p = frac(p * float2(123.34, 456.21));
+                p += dot(p, p + 45.32);
+                return frac(p.x * p.y);
+            }
+
+            float StarLayer(float2 rawWorldPos, float density, float threshold, float parallaxFactor, float time, float pixelSize)
+            {
+                float2 scroll = _ScrollOffset.xy * parallaxFactor;
+                float2 scrolledPos = rawWorldPos + scroll;
+
+                float2 pixelPos = floor(scrolledPos / pixelSize) * pixelSize;
+                float2 layerPos = pixelPos * density;
+                float2 cell = floor(layerPos);
+                float rnd = Hash21(cell);
+                float hasStar = step(threshold, rnd);
+
+                float2 starSub = float2(Hash21(cell + float2(51.31, 82.47)),
+                                        Hash21(cell + float2(27.69, 63.14)));
+                float2 starWorld = (cell + starSub) / density - scroll;
+                float2 starPixel = floor(starWorld / pixelSize) * pixelSize;
+                float2 curPixel  = floor(rawWorldPos / pixelSize) * pixelSize;
+
+                float eps = pixelSize * 0.1;
+                float match = step(abs(starPixel.x - curPixel.x), eps)
+                            * step(abs(starPixel.y - curPixel.y), eps);
+
+                float phase = Hash21(cell + float2(7.93, 3.17)) * 6.28318;
+                float spd   = lerp(0.5, 1.5, Hash21(cell + float2(13.73, 9.21))) * _TwinkleSpeed;
+                float twinkle = lerp(1.0 - _TwinkleAmount, 1.0, 0.5 + 0.5 * sin(time * spd + phase));
+
+                return hasStar * match * twinkle;
+            }
+
+            half4 frag(Varyings input) : SV_Target
+            {
+                float2 worldPos = input.positionWS.xy;
+                float pixelSize = max(_PixelSize, 0.001);
+                float time = _Time.y;
+
+                float3 color = _BackgroundColor.rgb;
+
+                float layer1 = StarLayer(worldPos, _Layer1Density, _Layer1Threshold, _Layer1ParallaxFactor, time, pixelSize);
+                float layer2 = StarLayer(worldPos, _Layer2Density, _Layer2Threshold, _Layer2ParallaxFactor, time, pixelSize);
+                float layer3 = StarLayer(worldPos, _Layer3Density, _Layer3Threshold, _Layer3ParallaxFactor, time, pixelSize);
+
+                color += layer1 * _Layer1Color.rgb * _Layer1Brightness;
+                color += layer2 * _Layer2Color.rgb * _Layer2Brightness;
+                color += layer3 * _Layer3Color.rgb * _Layer3Brightness;
+
+                return half4(color, 1.0);
+            }
+            ENDHLSL
+        }
+    }
+}
