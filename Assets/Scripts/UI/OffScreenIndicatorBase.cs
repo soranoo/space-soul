@@ -1,3 +1,5 @@
+using System;
+using DG.Tweening;
 using UnityEngine;
 
 /// <summary>
@@ -14,8 +16,21 @@ public abstract class OffScreenIndicatorBase : MonoBehaviour, IPoolable
     [Tooltip("Extra rotation offset in degrees. Use -90 if the sprite points up.")]
     [SerializeField] private float rotationOffset = -90f;
 
+    [Header("Pop Animation")]
+    [SerializeField] private float popScaleFrom = 0f;
+    [SerializeField] private float popScaleTo = 1f;
+    [SerializeField] private float popScaleOut = 0f;
+    [SerializeField] private float popInDuration = 0.15f;
+    [SerializeField] private float popOutDuration = 0.12f;
+    [SerializeField] private Ease popInEase = Ease.OutBack;
+    [SerializeField] private Ease popOutEase = Ease.InBack;
+
     protected RectTransform rectTransform;
     protected float lastAngleDeg;
+    private Tween scaleTween;
+    private bool isDespawning;
+
+    public bool IsDespawning => isDespawning;
 
     protected virtual void Awake()
     {
@@ -44,6 +59,11 @@ public abstract class OffScreenIndicatorBase : MonoBehaviour, IPoolable
     /// </summary>
     public void UpdateIndicator(Camera cam, RectTransform canvasRect, float edgePadding)
     {
+        if (isDespawning)
+        {
+            return;
+        }
+
         Vector3? targetPos = GetTrackedWorldPosition();
         if (targetPos == null || cam == null || canvasRect == null)
         {
@@ -129,12 +149,62 @@ public abstract class OffScreenIndicatorBase : MonoBehaviour, IPoolable
 
     public virtual void OnSpawn()
     {
+        isDespawning = false;
+        scaleTween?.Kill();
+
+        if (rectTransform != null)
+        {
+            rectTransform.localScale = Vector3.one * popScaleFrom;
+
+            if (popInDuration > 0f)
+            {
+                scaleTween = rectTransform.DOScale(popScaleTo, popInDuration).SetEase(popInEase);
+            }
+            else
+            {
+                rectTransform.localScale = Vector3.one * popScaleTo;
+            }
+        }
+
         gameObject.SetActive(true);
     }
 
     public virtual void OnDespawn()
     {
+        scaleTween?.Kill();
+        isDespawning = false;
+        if (rectTransform != null)
+        {
+            rectTransform.localScale = Vector3.one * popScaleTo;
+        }
+
         gameObject.SetActive(false);
+    }
+
+    public void PlayDespawn(Action onComplete)
+    {
+        if (isDespawning)
+        {
+            return;
+        }
+
+        isDespawning = true;
+        scaleTween?.Kill();
+
+        if (rectTransform == null || popOutDuration <= 0f)
+        {
+            isDespawning = false;
+            onComplete?.Invoke();
+            return;
+        }
+
+        scaleTween = rectTransform.DOScale(popScaleOut, popOutDuration)
+            .SetEase(popOutEase)
+            .OnComplete(() =>
+            {
+                isDespawning = false;
+                onComplete?.Invoke();
+            });
     }
 
     #endregion

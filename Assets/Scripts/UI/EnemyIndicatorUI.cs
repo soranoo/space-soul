@@ -118,7 +118,7 @@ public class EnemyIndicatorUI : MonoBehaviour
             {
                 if (activeIndicators.TryGetValue(enemy, out EnemyOffScreenIndicator existing))
                 {
-                    pool.Release(existing);
+                    BeginDespawn(existing);
                     activeIndicators.Remove(enemy);
                 }
 
@@ -148,7 +148,7 @@ public class EnemyIndicatorUI : MonoBehaviour
 
             if (activeIndicators.TryGetValue(enemy, out EnemyOffScreenIndicator indicator))
             {
-                pool.Release(indicator);
+                BeginDespawn(indicator);
                 activeIndicators.Remove(enemy);
             }
         }
@@ -175,7 +175,7 @@ public class EnemyIndicatorUI : MonoBehaviour
 
         if (activeIndicators.TryGetValue(enemy, out EnemyOffScreenIndicator indicator))
         {
-            pool.Release(indicator);
+            BeginDespawn(indicator);
             activeIndicators.Remove(enemy);
         }
     }
@@ -196,5 +196,26 @@ public class EnemyIndicatorUI : MonoBehaviour
         }
 
         activeIndicators.Clear();
+    }
+
+    private void BeginDespawn(EnemyOffScreenIndicator indicator)
+    {
+        if (indicator == null || pool == null)
+        {
+            return;
+        }
+
+        if (indicator.IsDespawning)
+        {
+            return;
+        }
+
+        indicator.PlayDespawn(() =>
+        {
+            if (pool != null)
+            {
+                pool.Release(indicator);
+            }
+        });
     }
 }

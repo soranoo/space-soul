@@ -101,7 +101,7 @@ public class PowerUpIndicatorUI : MonoBehaviour
             {
                 if (activeIndicators.TryGetValue(pickup, out PowerUpOffScreenIndicator existing))
                 {
-                    pool.Release(existing);
+                    BeginDespawn(existing);
                     activeIndicators.Remove(pickup);
                 }
 
@@ -137,7 +137,7 @@ public class PowerUpIndicatorUI : MonoBehaviour
             PowerUpPickup key = removeList[i];
             if (activeIndicators.TryGetValue(key, out PowerUpOffScreenIndicator ind))
             {
-                pool.Release(ind);
+                BeginDespawn(ind);
             }
 
             activeIndicators.Remove(key);
@@ -161,5 +161,26 @@ public class PowerUpIndicatorUI : MonoBehaviour
         }
 
         activeIndicators.Clear();
+    }
+
+    private void BeginDespawn(PowerUpOffScreenIndicator indicator)
+    {
+        if (indicator == null || pool == null)
+        {
+            return;
+        }
+
+        if (indicator.IsDespawning)
+        {
+            return;
+        }
+
+        indicator.PlayDespawn(() =>
+        {
+            if (pool != null)
+            {
+                pool.Release(indicator);
+            }
+        });
     }
 }
