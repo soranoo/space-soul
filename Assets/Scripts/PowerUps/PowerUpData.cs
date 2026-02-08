@@ -8,6 +8,8 @@ public class PowerUpData : ScriptableObject
 {
     [Header("General")]
     [SerializeField] private PowerUpType powerUpType = 0;
+    [SerializeField] private string displayName = "";
+    [SerializeField] private Sprite icon;
     [SerializeField] private float duration = 5f;
     [Range(0f, 1f)]
     [SerializeField] private float spawnChance = 0.1f;
@@ -38,6 +40,8 @@ public class PowerUpData : ScriptableObject
     [SerializeField] private WeaponType weaponType = 0;
 
     public PowerUpType PowerUpType => powerUpType;
+    public string DisplayName => displayName;
+    public Sprite Icon => icon;
     public float Duration => duration;
     public float SpawnChance => spawnChance;
     public float Multiplier => multiplier;

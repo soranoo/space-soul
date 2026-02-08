@@ -13,6 +13,8 @@ MonoBehaviour:
   m_Name: PowerUpData_Weapons_Zapper
   m_EditorClassIdentifier: Assembly-CSharp::PowerUpData
   powerUpType: 2
+  displayName: Zapper
+  icon: {fileID: 6482822384215342590, guid: fb59953182dbf8b4fbb2e852954801c4, type: 3}
   duration: 5
   spawnChance: 0.1
   multiplier: 1.5

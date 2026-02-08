@@ -13,6 +13,8 @@ MonoBehaviour:
   m_Name: PowerUpData_Weapons_AutoCannons
   m_EditorClassIdentifier: Assembly-CSharp::PowerUpData
   powerUpType: 2
+  displayName: Auto Cannons
+  icon: {fileID: -7834522491049537586, guid: 88f2d137a412eb94190f779ec48f8787, type: 3}
   duration: 5
   spawnChance: 0.1
   multiplier: 1.5

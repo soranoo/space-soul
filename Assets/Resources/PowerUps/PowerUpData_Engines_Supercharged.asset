@@ -13,6 +13,8 @@ MonoBehaviour:
   m_Name: PowerUpData_Engines_Supercharged
   m_EditorClassIdentifier: Assembly-CSharp::PowerUpData
   powerUpType: 0
+  displayName: Supercharged Engine
+  icon: {fileID: 277385070867472838, guid: 78366785227101d49ba8e52bb1a0046f, type: 3}
   duration: 5
   spawnChance: 0.1
   multiplier: 1.5

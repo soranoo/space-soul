@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,10 +7,20 @@ using UnityEngine;
 /// </summary>
 public class PowerUpController : MonoBehaviour
 {
+    public struct PowerUpStatus
+    {
+        public PowerUpType Type;
+        public PowerUpData Data;
+        public float Remaining;
+        public float Duration;
+    }
+
     private class ActivePowerUp
     {
         public PowerUpType Type;
+        public PowerUpData Data;
         public IPowerUp Effect;
+        public float Duration;
         public float Remaining;
         public bool OverridesEngine;
         public EngineType PreviousEngine;
@@ -27,6 +38,30 @@ public class PowerUpController : MonoBehaviour
 
     private readonly List<ActivePowerUp> activePowerUps = new List<ActivePowerUp>();
     private int shieldPoints;
+
+    public event Action<PowerUpData, float> PowerUpApplied;
+    public event Action<PowerUpType> PowerUpExpired;
+
+    public void GetActivePowerUps(List<PowerUpStatus> results)
+    {
+        if (results == null)
+        {
+            return;
+        }
+
+        results.Clear();
+        for (int i = 0; i < activePowerUps.Count; i++)
+        {
+            ActivePowerUp active = activePowerUps[i];
+            results.Add(new PowerUpStatus
+            {
+                Type = active.Type,
+                Data = active.Data,
+                Remaining = active.Remaining,
+                Duration = active.Duration
+            });
+        }
+    }
 
     private void Awake()
     {
@@ -78,6 +113,7 @@ public class PowerUpController : MonoBehaviour
                     weaponManager.SetWeaponType(active.PreviousWeapon);
                 }
                 activePowerUps.RemoveAt(i);
+                PowerUpExpired?.Invoke(active.Type);
             }
         }
     }
@@ -98,12 +134,16 @@ public class PowerUpController : MonoBehaviour
             return;
         }
 
+        float duration = effect.GetDuration();
+
         // If same type already active, refresh duration instead of stacking.
         for (int i = 0; i < activePowerUps.Count; i++)
         {
             if (activePowerUps[i].Type == data.PowerUpType)
             {
-                activePowerUps[i].Remaining = effect.GetDuration();
+                activePowerUps[i].Remaining = duration;
+                activePowerUps[i].Duration = duration;
+                activePowerUps[i].Data = data;
                 if (data.OverrideEngineType && engineController != null)
                 {
                     engineController.SetEngineType(data.EngineType);
@@ -116,6 +156,7 @@ public class PowerUpController : MonoBehaviour
                 {
                     weaponManager.SetWeaponType(data.WeaponType);
                 }
+                PowerUpApplied?.Invoke(data, duration);
                 return;
             }
         }
@@ -145,8 +186,10 @@ public class PowerUpController : MonoBehaviour
         activePowerUps.Add(new ActivePowerUp
         {
             Type = data.PowerUpType,
+            Data = data,
             Effect = effect,
-            Remaining = effect.GetDuration(),
+            Duration = duration,
+            Remaining = duration,
             OverridesEngine = overridesEngine,
             PreviousEngine = previousEngine,
             OverridesShield = overridesShield,
@@ -154,6 +197,8 @@ public class PowerUpController : MonoBehaviour
             OverridesWeapon = overridesWeapon,
             PreviousWeapon = previousWeapon
         });
+
+        PowerUpApplied?.Invoke(data, duration);
     }
 
     /// <summary>

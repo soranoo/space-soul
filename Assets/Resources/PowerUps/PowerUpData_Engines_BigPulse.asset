@@ -13,6 +13,8 @@ MonoBehaviour:
   m_Name: PowerUpData_Engines_BigPulse
   m_EditorClassIdentifier: Assembly-CSharp::PowerUpData
   powerUpType: 0
+  displayName: Big Pulse Engine
+  icon: {fileID: -8523528239184093349, guid: 542b2d2d20a70014faa0294d065605d7, type: 3}
   duration: 5
   spawnChance: 0.1
   multiplier: 1.5

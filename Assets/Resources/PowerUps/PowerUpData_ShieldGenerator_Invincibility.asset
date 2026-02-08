@@ -13,6 +13,8 @@ MonoBehaviour:
   m_Name: PowerUpData_ShieldGenerator_Invincibility
   m_EditorClassIdentifier: Assembly-CSharp::PowerUpData
   powerUpType: 1
+  displayName: Invincibility Shield
+  icon: {fileID: -5311436260645357221, guid: 8c002076b6cd1c34b860e630e76be831, type: 3}
   duration: 5
   spawnChance: 0.1
   multiplier: 1.5
@@ -21,3 +23,5 @@ MonoBehaviour:
   engineType: 0
   overrideShieldType: 1
   shieldType: 3
+  overrideWeaponType: 0
+  weaponType: 0

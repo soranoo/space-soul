@@ -13,6 +13,8 @@ MonoBehaviour:
   m_Name: PowerUpData_Weapons_Rocket
   m_EditorClassIdentifier: Assembly-CSharp::PowerUpData
   powerUpType: 2
+  displayName: Rockets
+  icon: {fileID: 4858854400659717820, guid: cad891e16bb499443a37ff7c8f612088, type: 3}
   duration: 5
   spawnChance: 0.1
   multiplier: 1.5
