@@ -25,6 +25,32 @@ public class PowerUpPickup : MonoBehaviour, IPoolable
     private Transform cachedTransform;
     private SpriteRenderer spriteRenderer;
     private bool spawnedFromPool;
+    private float spawnTime;
+
+    /// <summary>
+    /// The power-up data assigned to this pickup.
+    /// </summary>
+    public PowerUpData PowerUpDataRef => powerUpData;
+
+    /// <summary>
+    /// Total time before this pickup despawns.
+    /// </summary>
+    public float DespawnTime => despawnTime;
+
+    /// <summary>
+    /// Time.time when this pickup was spawned / enabled.
+    /// </summary>
+    public float SpawnTime => spawnTime;
+
+    /// <summary>
+    /// Remaining time before despawn (clamped to 0).
+    /// </summary>
+    public float RemainingTime => Mathf.Max(0f, despawnTime - (Time.time - spawnTime));
+
+    /// <summary>
+    /// Normalized remaining time (1 = just spawned, 0 = about to despawn).
+    /// </summary>
+    public float RemainingNormalized => despawnTime > 0f ? Mathf.Clamp01(RemainingTime / despawnTime) : 0f;
 
     private void Awake()
     {
@@ -163,6 +189,8 @@ public class PowerUpPickup : MonoBehaviour, IPoolable
 
     private void StartSpawnVisuals()
     {
+        spawnTime = Time.time;
+
         if (spriteRenderer != null)
         {
             Color c = spriteRenderer.color;

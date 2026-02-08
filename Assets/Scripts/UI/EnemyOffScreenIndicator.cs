@@ -1,15 +1,10 @@
 using UnityEngine;
-using UnityEngine.UI;
-
 /// <summary>
-/// A poolable UI indicator arrow that points toward an off-screen item.
+/// A poolable UI indicator arrow that points toward an off-screen enemy.
 /// Inherits edge-clamping and pooling from OffScreenIndicatorBase.
 /// </summary>
-public class OffScreenIndicator : OffScreenIndicatorBase
+public class EnemyOffScreenIndicator : OffScreenIndicatorBase
 {
-    [Header("Arrow")]
-    [SerializeField] private Image arrowImage;
-
     private Transform trackedTarget;
 
     /// <summary>
@@ -35,20 +30,9 @@ public class OffScreenIndicator : OffScreenIndicatorBase
         return trackedTarget.position;
     }
 
-    public override void OnSpawn()
-    {
-        base.OnSpawn();
-
-        if (arrowImage != null)
-        {
-            arrowImage.enabled = true;
-        }
-    }
-
     public override void OnDespawn()
     {
         trackedTarget = null;
-
         base.OnDespawn();
     }
 }

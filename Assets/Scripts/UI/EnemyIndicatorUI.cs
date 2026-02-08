@@ -8,7 +8,7 @@ using UnityEngine;
 public class EnemyIndicatorUI : MonoBehaviour
 {
     [Header("References")]
-    [SerializeField] private OffScreenIndicator indicatorPrefab;
+    [SerializeField] private EnemyOffScreenIndicator indicatorPrefab;
     [SerializeField] private RectTransform canvasRect;
 
     [Header("Pool Settings")]
@@ -20,9 +20,11 @@ public class EnemyIndicatorUI : MonoBehaviour
 
     private Camera mainCamera;
     private WaveManager waveManager;
-    private ObjectPool<OffScreenIndicator> pool;
+    private ObjectPool<EnemyOffScreenIndicator> pool;
 
-    private readonly Dictionary<Enemy, OffScreenIndicator> activeIndicators = new Dictionary<Enemy, OffScreenIndicator>();
+    private readonly Dictionary<Enemy, EnemyOffScreenIndicator> activeIndicators = new Dictionary<Enemy, EnemyOffScreenIndicator>();
+    private readonly HashSet<Enemy> trackedEnemies = new HashSet<Enemy>();
+    private readonly List<Enemy> removeList = new List<Enemy>();
 
     private void Awake()
     {
@@ -84,7 +86,7 @@ public class EnemyIndicatorUI : MonoBehaviour
         Transform poolParent = new GameObject("IndicatorPool").transform;
         poolParent.SetParent(transform);
 
-        pool = new ObjectPool<OffScreenIndicator>(indicatorPrefab, initialPoolSize, poolParent, true);
+        pool = new ObjectPool<EnemyOffScreenIndicator>(indicatorPrefab, initialPoolSize, poolParent, true);
     }
 
     private void LateUpdate()
@@ -100,9 +102,55 @@ public class EnemyIndicatorUI : MonoBehaviour
         }
 
         // Iterate and update every active indicator
-        foreach (KeyValuePair<Enemy, OffScreenIndicator> kvp in activeIndicators)
+        removeList.Clear();
+
+        foreach (Enemy enemy in trackedEnemies)
         {
-            kvp.Value.UpdateIndicator(mainCamera, canvasRect, edgePadding);
+            if (enemy == null)
+            {
+                removeList.Add(enemy);
+                continue;
+            }
+
+            bool onScreen = OffScreenIndicatorBase.IsOnScreen(mainCamera, enemy.transform.position);
+
+            if (onScreen)
+            {
+                if (activeIndicators.TryGetValue(enemy, out EnemyOffScreenIndicator existing))
+                {
+                    pool.Release(existing);
+                    activeIndicators.Remove(enemy);
+                }
+
+                continue;
+            }
+
+            if (!activeIndicators.TryGetValue(enemy, out EnemyOffScreenIndicator indicator))
+            {
+                indicator = pool.Get();
+                if (indicator == null)
+                {
+                    continue;
+                }
+
+                indicator.transform.SetParent(transform, false);
+                indicator.SetTarget(enemy.transform);
+                activeIndicators[enemy] = indicator;
+            }
+
+            indicator.UpdateIndicator(mainCamera, canvasRect, edgePadding);
+        }
+
+        for (int i = 0; i < removeList.Count; i++)
+        {
+            Enemy enemy = removeList[i];
+            trackedEnemies.Remove(enemy);
+
+            if (activeIndicators.TryGetValue(enemy, out EnemyOffScreenIndicator indicator))
+            {
+                pool.Release(indicator);
+                activeIndicators.Remove(enemy);
+            }
         }
     }
 
@@ -113,21 +161,7 @@ public class EnemyIndicatorUI : MonoBehaviour
             return;
         }
 
-        if (activeIndicators.ContainsKey(enemy))
-        {
-            return;
-        }
-
-        OffScreenIndicator indicator = pool.Get();
-        if (indicator == null)
-        {
-            return;
-        }
-
-        // Reparent into the canvas so the RectTransform renders correctly
-        indicator.transform.SetParent(transform, false);
-        indicator.SetTarget(enemy.transform);
-        activeIndicators[enemy] = indicator;
+        trackedEnemies.Add(enemy);
     }
 
     private void OnEnemyDied(Enemy enemy)
@@ -137,13 +171,13 @@ public class EnemyIndicatorUI : MonoBehaviour
             return;
         }
 
-        if (!activeIndicators.TryGetValue(enemy, out OffScreenIndicator indicator))
-        {
-            return;
-        }
+        trackedEnemies.Remove(enemy);
 
-        pool.Release(indicator);
-        activeIndicators.Remove(enemy);
+        if (activeIndicators.TryGetValue(enemy, out EnemyOffScreenIndicator indicator))
+        {
+            pool.Release(indicator);
+            activeIndicators.Remove(enemy);
+        }
     }
 
     private void ReleaseAll()
@@ -153,7 +187,7 @@ public class EnemyIndicatorUI : MonoBehaviour
             return;
         }
 
-        foreach (KeyValuePair<Enemy, OffScreenIndicator> kvp in activeIndicators)
+        foreach (KeyValuePair<Enemy, EnemyOffScreenIndicator> kvp in activeIndicators)
         {
             if (kvp.Value != null)
             {
