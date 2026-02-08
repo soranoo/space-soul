@@ -4,21 +4,15 @@ using UnityEngine;
 /// <summary>
 /// Spawns and manages power-up timer items in the UI.
 /// </summary>
-[RequireComponent(typeof(Transform))]
 public class PowerUpsDisplayUI : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] private PowerUpController powerUpController;
     [SerializeField] private PowerUpDisplayItem itemPrefab;
-    private Transform container;
+    [SerializeField] private Transform container;
 
     private readonly Dictionary<PowerUpType, PowerUpDisplayItem> items = new Dictionary<PowerUpType, PowerUpDisplayItem>();
     private readonly List<PowerUpController.PowerUpStatus> cachedStatuses = new List<PowerUpController.PowerUpStatus>();
-
-    private void Awake()
-    {
-        container = transform;
-    }
 
     private void OnEnable()
     {
@@ -100,7 +94,7 @@ public class PowerUpsDisplayUI : MonoBehaviour
 
     private void CreateOrRefreshItem(PowerUpType type, PowerUpData data, float remaining, float duration)
     {
-        if (itemPrefab == null)
+        if (itemPrefab == null || container == null)
         {
             return;
         }
