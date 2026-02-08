@@ -12,8 +12,7 @@ public class StarfieldBackground : MonoBehaviour
     [Tooltip("The player's Rigidbody2D. If left empty, found automatically at Start.")]
     [SerializeField] private Rigidbody2D playerRigidbody;
 
-    [Tooltip("Optional direct reference to the renderer. Auto-detected if null.")]
-    [SerializeField] private Renderer targetRenderer;
+    private Renderer targetRenderer;
 
     [Header("Parallax")]
     [Tooltip("Global multiplier for how much player velocity scrolls the stars.")]
@@ -32,17 +31,14 @@ public class StarfieldBackground : MonoBehaviour
 
     private void Awake()
     {
-        if (targetRenderer == null)
-        {
-            targetRenderer = GetComponent<Renderer>();
-        }
+        targetRenderer = GetComponent<Renderer>();
     }
 
     private void Start()
     {
         if (playerRigidbody == null)
         {
-            PlayerController pc = FindObjectOfType<PlayerController>();
+            PlayerController pc = FindFirstObjectByType<PlayerController>();
             if (pc != null)
             {
                 playerRigidbody = pc.GetComponent<Rigidbody2D>();

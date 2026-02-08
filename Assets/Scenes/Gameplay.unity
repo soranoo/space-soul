@@ -2533,8 +2533,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 816fdcb1c6bc167458f0d89ea5d3b567, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StarfieldBackground
-  playerRigidbody: {fileID: 0}
-  targetRenderer: {fileID: 777253839}
+  playerRigidbody: {fileID: 1935055140}
   scrollSensitivity: 0.15
   scrollDirectionMultiplier: {x: 1, y: 1}
   invertScroll: 1
@@ -5338,7 +5337,7 @@ SpriteRenderer:
   m_Size: {x: 1, y: 1}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_SpriteSortPoint: 0
 --- !u!1 &1812110578
 GameObject:
