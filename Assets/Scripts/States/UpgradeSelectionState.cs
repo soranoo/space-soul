@@ -5,6 +5,8 @@ using UnityEngine;
 /// </summary>
 public class UpgradeSelectionState : BaseGameState
 {
+    private UpgradeSelectionUI upgradeUI;
+
     public UpgradeSelectionState(GameManager gameManager) : base(gameManager)
     {
     }
@@ -13,18 +15,39 @@ public class UpgradeSelectionState : BaseGameState
     {
         Time.timeScale = 0f;
         base.Enter();
+
+        upgradeUI = Object.FindAnyObjectByType<UpgradeSelectionUI>();
+
+        if (upgradeUI != null)
+        {
+            upgradeUI.UpgradeSelected += OnUpgradeSelected;
+            upgradeUI.Show();
+        }
+        else
+        {
+            // No UI found — just proceed
+            GameManager.StartNextWave();
+        }
+    }
+
+    public override void Exit()
+    {
+        if (upgradeUI != null)
+        {
+            upgradeUI.UpgradeSelected -= OnUpgradeSelected;
+            upgradeUI.Hide();
+        }
+
+        base.Exit();
     }
 
     public override void HandleInput()
     {
-        // Placeholder input: choose any upgrade using mapped actions.
-        if (GameManager.IsPreviousPressed() ||
-            GameManager.IsNextPressed() ||
-            GameManager.IsInteractPressed() ||
-            GameManager.IsSubmitPressed() ||
-            GameManager.IsAttackPressed())
-        {
-            GameManager.StartNextWave();
-        }
+        // Input is handled by UI buttons on the upgrade cards.
+    }
+
+    private void OnUpgradeSelected()
+    {
+        GameManager.StartNextWave();
     }
 }

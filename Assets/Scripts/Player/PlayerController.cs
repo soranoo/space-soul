@@ -16,6 +16,7 @@ public class PlayerController : MonoBehaviour
 
     private Rigidbody2D rb;
     private int currentHealth;
+    private float regenAccumulator;
 
     /// <summary>
     /// Current health points.
@@ -69,6 +70,28 @@ public class PlayerController : MonoBehaviour
     private void FixedUpdate()
     {
         ClampVelocity();
+    }
+
+    private void Update()
+    {
+        TickHealthRegen();
+    }
+
+    private void TickHealthRegen()
+    {
+        if (stats.HealthRegenRate <= 0f || currentHealth >= stats.MaxHealth)
+        {
+            return;
+        }
+
+        regenAccumulator += stats.HealthRegenRate * Time.deltaTime;
+
+        if (regenAccumulator >= 1f)
+        {
+            int points = Mathf.FloorToInt(regenAccumulator);
+            regenAccumulator -= points;
+            Heal(points);
+        }
     }
 
     private void ClampVelocity()

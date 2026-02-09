@@ -16,10 +16,10 @@ MonoBehaviour:
   waveNumber: 1
   enemySpawns:
   - enemyData: {fileID: 11400000, guid: ee59eba43fe5ec74daaf86303e381258, type: 2}
-    count: 10
+    count: 1
     spawnDelay: 3
   - enemyData: {fileID: 11400000, guid: dbe8f70d4bc2ee049b458fe7907b5fc1, type: 2}
-    count: 20
+    count: 1
     spawnDelay: 2
   spawnInterval: 0.5
   waveStartDelay: 2

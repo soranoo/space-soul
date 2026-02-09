@@ -13,14 +13,13 @@ public class WaveCompleteState : BaseGameState
     {
         Time.timeScale = 0f;
         base.Enter();
+
+        // Immediately show upgrades when a wave completes.
+        GameManager.ShowUpgradeSelection();
     }
 
     public override void HandleInput()
     {
-        // Placeholder: advance to upgrade selection.
-        if (GameManager.IsSubmitPressed() || GameManager.IsInteractPressed())
-        {
-            GameManager.ShowUpgradeSelection();
-        }
+        // Input no longer needed; upgrade selection is shown on Enter.
     }
 }

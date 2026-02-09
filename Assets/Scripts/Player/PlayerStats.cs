@@ -15,6 +15,10 @@ public class PlayerStats
     [SerializeField] private float fireRate = 0.25f;
     [SerializeField] private int maxHealth = 3;
 
+    [Header("Regeneration")]
+    [Tooltip("Health points restored per second. 0 = no regen.")]
+    [SerializeField] private float healthRegenRate = 0f;
+
     /// <summary>
     /// Force applied when thrusting forward.
     /// </summary>
@@ -39,6 +43,11 @@ public class PlayerStats
     /// Maximum health points.
     /// </summary>
     public int MaxHealth => maxHealth;
+
+    /// <summary>
+    /// Health points restored per second (0 = disabled).
+    /// </summary>
+    public float HealthRegenRate => healthRegenRate;
 
     /// <summary>
     /// Apply a modifier to thrust force.
@@ -78,5 +87,29 @@ public class PlayerStats
     public void IncreaseMaxHealth(int amount)
     {
         maxHealth += amount;
+    }
+
+    /// <summary>
+    /// Add to health regen rate (HP per second).
+    /// </summary>
+    public void IncreaseHealthRegenRate(float amount)
+    {
+        healthRegenRate += amount;
+    }
+
+    /// <summary>
+    /// Increase rotation speed by a flat amount.
+    /// </summary>
+    public void IncreaseRotationSpeed(float amount)
+    {
+        rotationSpeed += amount;
+    }
+
+    /// <summary>
+    /// Decrease fire rate cooldown by a flat amount (clamped to min 0.05).
+    /// </summary>
+    public void DecreaseFireRate(float amount)
+    {
+        fireRate = Mathf.Max(0.05f, fireRate - amount);
     }
 }
