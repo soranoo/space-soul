@@ -14,8 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::UpgradeData
   title: Nano Repair Bots
   description: Regenerates 0.5 HP per second passively.
-  icon: {fileID: 0}
+  icon: {fileID: -8190766542202065177, guid: 33b5d23e5d387844cb42b15e140001b9, type: 3}
   upgradeType: 3
   stepValue: 0.5
+  maxLevel: 0
   targetEngineType: 0
   targetWeaponType: 0

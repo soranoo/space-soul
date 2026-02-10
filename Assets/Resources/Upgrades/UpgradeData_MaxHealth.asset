@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::UpgradeData
   title: Reinforced Hull
   description: Increase maximum health by 10.
-  icon: {fileID: 6482822384215342590, guid: fb59953182dbf8b4fbb2e852954801c4, type: 3}
+  icon: {fileID: 6461306742260422479, guid: 2e18f0fef57c02b43bab76a550e3cc3a, type: 3}
   upgradeType: 6
   stepValue: 10
   maxLevel: 10

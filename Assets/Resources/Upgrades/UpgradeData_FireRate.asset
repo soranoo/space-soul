@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::UpgradeData
   title: Overclocked Loader
   description: Decreases weapon cooldown by 0.03s.
-  icon: {fileID: 0}
+  icon: {fileID: 7156567994714024990, guid: 1d5b5566c57275941a564d1c693d447f, type: 3}
   upgradeType: 5
   stepValue: 0.03
   maxLevel: 5

@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::UpgradeData
   title: Improved Gyroscope
   description: Increases turn speed by 2 deg/s. Allowing more granular control.
-  icon: {fileID: 0}
+  icon: {fileID: -492197525433278608, guid: 298c09dad68e29f4a9c0c1a8a3610a38, type: 3}
   upgradeType: 2
   stepValue: 2
   maxLevel: 5

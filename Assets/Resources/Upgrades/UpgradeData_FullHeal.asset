@@ -14,8 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::UpgradeData
   title: Emergency Repair
   description: Fully restores hull integrity.
-  icon: {fileID: 0}
+  icon: {fileID: -5603313296360692711, guid: be3c11e576f298a4194a639e239674e7, type: 3}
   upgradeType: 4
   stepValue: 0
+  maxLevel: 0
   targetEngineType: 0
   targetWeaponType: 0
