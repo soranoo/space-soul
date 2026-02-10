@@ -9,12 +9,14 @@ public class InputHandler : MonoBehaviour
 {
     private PlayerController player;
     private InputSystem_Actions inputActions;
+    private GameManager gameManager;
 
     private ICommand moveForwardCommand;
     private RotateAimCommand rotateAimCommand;
     private Vector2 moveInput;
     private Vector2 aimPosition;
     private bool isFiring;
+    private bool allowFire;
 
     /// <summary>
     /// Whether the player is currently applying thrust input.
@@ -44,11 +46,15 @@ public class InputHandler : MonoBehaviour
     private void Awake()
     {
         inputActions = new InputSystem_Actions();
+        gameManager = GameManager.Instance;
     }
 
     private void OnEnable()
     {
         inputActions.Player.Enable();
+        
+        gameManager.StateMachine.StateChanged += OnStateChanged;
+        UpdateFireAllowed(gameManager.StateMachine.CurrentState);
 
         inputActions.Player.Move.performed += OnMovePerformed;
         inputActions.Player.Move.canceled += OnMoveCanceled;
@@ -64,6 +70,8 @@ public class InputHandler : MonoBehaviour
         inputActions.Player.Attack.performed -= OnAttackPerformed;
         inputActions.Player.Attack.canceled -= OnAttackCanceled;
         inputActions.Player.Point.performed -= OnPointPerformed;
+
+        gameManager.StateMachine.StateChanged -= OnStateChanged;
 
         inputActions.Player.Disable();
     }
@@ -118,12 +126,22 @@ public class InputHandler : MonoBehaviour
 
     private void OnAttackPerformed(InputAction.CallbackContext context)
     {
+        if (!allowFire)
+        {
+            return;
+        }
+
         isFiring = true;
         FireStarted?.Invoke();
     }
 
     private void OnAttackCanceled(InputAction.CallbackContext context)
     {
+        if (!allowFire)
+        {
+            return;
+        }
+
         isFiring = false;
         FireStopped?.Invoke();
     }
@@ -131,5 +149,21 @@ public class InputHandler : MonoBehaviour
     private void OnPointPerformed(InputAction.CallbackContext context)
     {
         aimPosition = context.ReadValue<Vector2>();
+    }
+
+    private void OnStateChanged(IGameState previousState, IGameState currentState)
+    {
+        UpdateFireAllowed(currentState);
+    }
+
+    private void UpdateFireAllowed(IGameState currentState)
+    {
+        allowFire = currentState is GameplayState;
+
+        if (!allowFire && isFiring)
+        {
+            isFiring = false;
+            FireStopped?.Invoke();
+        }
     }
 }
