@@ -88,7 +88,7 @@ public class PowerUpIndicatorUI : MonoBehaviour
         for (int i = 0; i < pickups.Length; i++)
         {
             PowerUpPickup pickup = pickups[i];
-            if (pickup == null || !pickup.gameObject.activeInHierarchy)
+            if (pickup == null || !pickup.gameObject.activeInHierarchy || pickup.RemainingTime <= 0f)
             {
                 continue;
             }
