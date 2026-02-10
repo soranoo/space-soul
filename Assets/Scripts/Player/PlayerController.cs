@@ -5,15 +5,16 @@ using System;
 /// Main player ship behavior.
 /// </summary>
 [RequireComponent(typeof(Rigidbody2D))]
-[RequireComponent(typeof(InputHandler))]
 [RequireComponent(typeof(PowerUpController))]
 public class PlayerController : MonoBehaviour
 {
     [Header("Stats")]
     [SerializeField] private PlayerStats stats = new PlayerStats();
 
+    [Header("Compoents")]
+    [SerializeField] private InputHandler inputHandler;
+
     private PowerUpController powerUpController;
-    private InputHandler inputHandler;
     private Rigidbody2D rb;
     private int currentHealth;
     private float regenAccumulator;
@@ -46,11 +47,11 @@ public class PlayerController : MonoBehaviour
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
-        inputHandler = GetComponent<InputHandler>();
+        powerUpController = GetComponent<PowerUpController>();
 
-        if (powerUpController == null)
+        if (powerUpController != null)
         {
-            powerUpController = GetComponent<PowerUpController>();
+            inputHandler = GetComponent<InputHandler>();
         }
     }
 
@@ -60,7 +61,7 @@ public class PlayerController : MonoBehaviour
 
         HealthChanged?.Invoke(currentHealth, stats.MaxHealth);
 
-        inputHandler?.Initialize(this, rb, stats);
+        inputHandler.Initialize(this, rb, stats);
     }
 
     private void FixedUpdate()
@@ -117,7 +118,7 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        currentHealth -= amount;
+        currentHealth = Math.Max(currentHealth - amount, 0);
         HealthChanged?.Invoke(currentHealth, stats.MaxHealth);
 
         if (currentHealth <= 0)
