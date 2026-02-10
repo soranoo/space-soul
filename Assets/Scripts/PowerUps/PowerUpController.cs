@@ -5,6 +5,7 @@ using UnityEngine;
 /// <summary>
 /// Manages active power-ups on the player.
 /// </summary>
+[RequireComponent(typeof(PlayerController))]
 public class PowerUpController : MonoBehaviour
 {
     public struct PowerUpStatus
@@ -31,10 +32,11 @@ public class PowerUpController : MonoBehaviour
     }
 
     [Header("References")]
-    [SerializeField] private PlayerController player;
     [SerializeField] private PlayerEngineController engineController;
     [SerializeField] private PlayerShieldController shieldController;
     [SerializeField] private PlayerWeaponManager weaponManager;
+
+    private PlayerController player;
 
     private readonly List<ActivePowerUp> activePowerUps = new List<ActivePowerUp>();
     private int shieldPoints;
@@ -65,10 +67,7 @@ public class PowerUpController : MonoBehaviour
 
     private void Awake()
     {
-        if (player == null)
-        {
-            player = GetComponent<PlayerController>();
-        }
+        player = GetComponent<PlayerController>();
 
         if (engineController == null)
         {

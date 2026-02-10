@@ -5,15 +5,15 @@ using System;
 /// Main player ship behavior.
 /// </summary>
 [RequireComponent(typeof(Rigidbody2D))]
+[RequireComponent(typeof(InputHandler))]
+[RequireComponent(typeof(PowerUpController))]
 public class PlayerController : MonoBehaviour
 {
     [Header("Stats")]
     [SerializeField] private PlayerStats stats = new PlayerStats();
 
-    [Header("Components")]
-    [SerializeField] private InputHandler inputHandler;
-    [SerializeField] private PowerUpController powerUpController;
-
+    private PowerUpController powerUpController;
+    private InputHandler inputHandler;
     private Rigidbody2D rb;
     private int currentHealth;
     private float regenAccumulator;
@@ -46,11 +46,7 @@ public class PlayerController : MonoBehaviour
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
-
-        if (inputHandler == null)
-        {
-            inputHandler = GetComponent<InputHandler>();
-        }
+        inputHandler = GetComponent<InputHandler>();
 
         if (powerUpController == null)
         {

@@ -5,11 +5,10 @@ using UnityEngine.InputSystem;
 /// <summary>
 /// Maps input to commands and executes them using Unity Input System.
 /// </summary>
+[RequireComponent(typeof(PlayerController))]
 public class InputHandler : MonoBehaviour
 {
-    [Header("References")]
-    [SerializeField] private PlayerController player;
-
+    private PlayerController player;
     private InputSystem_Actions inputActions;
 
     private ICommand moveForwardCommand;
@@ -46,6 +45,7 @@ public class InputHandler : MonoBehaviour
     private void Awake()
     {
         inputActions = new InputSystem_Actions();
+        player = gameObject.GetComponent<PlayerController>();
     }
 
     private void OnEnable()

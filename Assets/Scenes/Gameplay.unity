@@ -3965,7 +3965,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1623734841
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4367,10 +4367,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 485282398}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 950, y: -46.66537}
+  m_SizeDelta: {x: 1900, y: 93.33074}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1710156600
 MonoBehaviour:
@@ -4504,10 +4504,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 485282398}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 950, y: -116.665375}
+  m_SizeDelta: {x: 1900, y: 46.66926}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1803955165
 MonoBehaviour:
@@ -4755,7 +4755,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca722f6d7737b974699b8e924e8e23e1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::InputHandler
-  player: {fileID: 1935055138}
 --- !u!114 &1935055138
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4775,8 +4774,6 @@ MonoBehaviour:
     fireRate: 0.1
     maxHealth: 100
     healthRegenRate: 0
-  inputHandler: {fileID: 1935055137}
-  powerUpController: {fileID: 1935055143}
 --- !u!50 &1935055140
 Rigidbody2D:
   serializedVersion: 5
@@ -4836,7 +4833,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 303962ac4b426204aa532c427f540255, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PowerUpController
-  player: {fileID: 1935055138}
   engineController: {fileID: 1841945177}
   shieldController: {fileID: 627430026}
   weaponManager: {fileID: 1645446585}
