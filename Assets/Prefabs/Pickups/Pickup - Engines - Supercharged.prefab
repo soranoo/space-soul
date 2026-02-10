@@ -175,5 +175,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PowerUpPickup
   powerUpData: {fileID: 11400000, guid: b9f858623673ff64696bf0c5be1f83fa, type: 2}
-  rotateSpeed: 90
   poolIdOverride: 
+  despawnTime: 10
+  spawnScaleDuration: 0.2
+  despawnScaleDuration: 0.2
+  blinkStartTime: 2
+  blinkInterval: 0.15

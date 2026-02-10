@@ -154,7 +154,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 0.8, y: 0.8}
+    oldSize: {x: 0.64, y: 0.64}
     newSize: {x: 1, y: 1}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -175,5 +175,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PowerUpPickup
   powerUpData: {fileID: 11400000, guid: a95d1b4318ac55f4181437b2701b1b40, type: 2}
-  rotateSpeed: 90
   poolIdOverride: 
+  despawnTime: 10
+  spawnScaleDuration: 0.2
+  despawnScaleDuration: 0.2
+  blinkStartTime: 2
+  blinkInterval: 0.15
