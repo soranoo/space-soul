@@ -50,7 +50,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fc1106d868a669d42888fd321057885a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PowerUpOffScreenIndicator
+  poolIdOverride: PowerUpIndicator
   rotationOffset: 90
+  popScaleFrom: 0
+  popScaleTo: 1
+  popScaleOut: 0
+  popInDuration: 0.15
+  popOutDuration: 0.12
+  popInEase: 27
+  popOutEase: 26
   iconFillImage: {fileID: 5590199391371651597}
   keepIconUpright: 1
 --- !u!1 &2372809395478557839

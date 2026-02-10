@@ -10,14 +10,12 @@ using UnityEngine;
 public class Enemy : MonoBehaviour, IPoolable
 {
     [SerializeField] private string poolIdOverride;
-    private const string ANIM_BOOL_MOVE = "Move";
     private const string ANIM_TRIGGER_DEAD = "Dead";
     private const string ANIM_TRIGGER_FIRE = "Fire";
 
     [Header("References")]
     [SerializeField] private SpriteRenderer spriteRenderer;
     [SerializeField] private Animator animator;
-    [SerializeField] private GameObject engine;
     [SerializeField] private Collider2D hitCollider;
 
     private EnemyData data;
@@ -30,7 +28,6 @@ public class Enemy : MonoBehaviour, IPoolable
     private Color defaultColor;
     private Coroutine damageTintCoroutine;
     private bool isDead;
-    private bool movedThisFrame;
 
     // Role-specific variables
     private float attackCooldown;
@@ -145,10 +142,7 @@ public class Enemy : MonoBehaviour, IPoolable
         if (animator != null)
         {
             animator.enabled = true;
-            animator.SetBool(ANIM_BOOL_MOVE, false);
         }
-
-        SetMoveAnimation(false);
 
         // Setup movement pattern (always chase)
         SetupMovementPattern();
@@ -239,28 +233,21 @@ public class Enemy : MonoBehaviour, IPoolable
         if (animator != null)
         {
             animator.enabled = true;
-            animator.SetBool(ANIM_BOOL_MOVE, false);
         }
-
-        SetMoveAnimation(false);
 
         if (hitCollider != null)
         {
             hitCollider.enabled = true;
         }
 
-        movedThisFrame = false;
     }
 
     private void Update()
     {
         if (isDead)
         {
-            SetMoveAnimation(false);
             return;
         }
-
-        movedThisFrame = false;
 
         if (stateMachine != null)
         {
@@ -278,7 +265,6 @@ public class Enemy : MonoBehaviour, IPoolable
             spawnCooldown -= Time.deltaTime;
         }
 
-        SetMoveAnimation(movedThisFrame);
     }
 
     /// <summary>
@@ -336,30 +322,7 @@ public class Enemy : MonoBehaviour, IPoolable
     {
         if (!isDead && movementPattern != null)
         {
-            Vector3 before = transform.position;
             movementPattern.UpdateMovement(transform, effectiveSpeed);
-            Vector3 after = transform.position;
-
-            if ((after - before).sqrMagnitude > 0.0001f)
-            {
-                MarkMovedThisFrame();
-            }
-        }
-    }
-
-    /// <summary>
-    /// Mark this enemy as having moved this frame.
-    /// </summary>
-    public void MarkMovedThisFrame()
-    {
-        movedThisFrame = true;
-    }
-
-    private void SetMoveAnimation(bool isMoving)
-    {
-        if (engine != null)
-        {
-            engine.SetActive(isMoving);
         }
     }
 

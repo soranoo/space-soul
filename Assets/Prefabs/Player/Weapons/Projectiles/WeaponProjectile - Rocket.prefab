@@ -156,7 +156,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bc6e0acb7435df44fa50b0b7e48aefc2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Bullet
-  poolIdOverride: 
+  poolIdOverride: WeaponProjectile - Rocket
   speed: 15
   lifetime: 3
   baseDamage: 1

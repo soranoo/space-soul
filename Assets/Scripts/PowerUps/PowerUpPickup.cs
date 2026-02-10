@@ -135,6 +135,14 @@ public class PowerUpPickup : MonoBehaviour, IPoolable
         }
     }
 
+    private void OnDisable()
+    {
+        spawnTween?.Kill();
+        blinkSequence?.Kill();
+        despawnTween?.Kill();
+        spawnTime = 0f;
+    }
+
     private void ScheduleDespawn()
     {
         despawnTween?.Kill();

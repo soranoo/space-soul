@@ -143,8 +143,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c331d4fe4abd0394584fc51118d6b932, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyProjectile
+  poolIdOverride: EnemyProjectile - Rocket
   spriteRenderer: {fileID: 7832405672107143125}
-  rb: {fileID: 0}
+  rb: {fileID: 7095130780186660097}
 --- !u!1 &7871463112787085852
 GameObject:
   m_ObjectHideFlags: 0

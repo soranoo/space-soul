@@ -175,7 +175,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PowerUpPickup
   powerUpData: {fileID: 11400000, guid: ff5f105e24800a843ad5fd711a8b6a72, type: 2}
-  poolIdOverride: 
+  poolIdOverride: Pickup -  Weapons - Zapper
   despawnTime: 10
   spawnScaleDuration: 0.2
   despawnScaleDuration: 0.2

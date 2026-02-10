@@ -175,7 +175,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PowerUpPickup
   powerUpData: {fileID: 11400000, guid: 478d1e2fd58513548a115e9c49ffc61d, type: 2}
-  poolIdOverride: 
+  poolIdOverride: Pickup -  ShieldGenerator - Invincibility
   despawnTime: 10
   spawnScaleDuration: 0.2
   despawnScaleDuration: 0.2

@@ -234,5 +234,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c331d4fe4abd0394584fc51118d6b932, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyProjectile
+  poolIdOverride: EnemyProjectile - Torpedo
   spriteRenderer: {fileID: 4382990368879401910}
-  rb: {fileID: 0}
+  rb: {fileID: 6604193806788228538}

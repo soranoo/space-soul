@@ -10,7 +10,7 @@ using UnityEngine;
 [RequireComponent(typeof(RectTransform))]
 public abstract class OffScreenIndicatorBase : MonoBehaviour, IPoolable
 {
-    private string poolIdOverride;
+    [SerializeField] private string poolIdOverride;
 
     [Header("Rotation")]
     [Tooltip("Extra rotation offset in degrees. Use -90 if the sprite points up.")]

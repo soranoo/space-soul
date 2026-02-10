@@ -133,6 +133,11 @@ public class ObjectPool<T> where T : MonoBehaviour, IPoolable
 
         if (!activeObjects.Contains(instance))
         {
+            // Debug.LogWarning($"Trying to release object {instance.name} that is not actived.");
+            return;
+        }
+        if (!activeObjects.Contains(instance) && !inactiveObjects.Contains(instance))
+        {
             Debug.LogWarning($"Trying to release object {instance.name} that is not managed by this pool.");
             return;
         }

@@ -187,7 +187,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 92ce990d675b70047b409fcfb8219953, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyIndicator
+  poolIdOverride: EnemyIndicator
   rotationOffset: 90
+  popScaleFrom: 0
+  popScaleTo: 1
+  popScaleOut: 0
+  popInDuration: 0.15
+  popOutDuration: 0.12
+  popInEase: 27
+  popOutEase: 26
 --- !u!1 &5742074738620505105
 GameObject:
   m_ObjectHideFlags: 0

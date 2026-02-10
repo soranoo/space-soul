@@ -175,7 +175,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PowerUpPickup
   powerUpData: {fileID: 11400000, guid: 1ef4676aecf90814b9a2d23dc838552f, type: 2}
-  poolIdOverride: 
+  poolIdOverride: Pickup - Engines - Burst
   despawnTime: 10
   spawnScaleDuration: 0.2
   despawnScaleDuration: 0.2

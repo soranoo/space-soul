@@ -87,7 +87,6 @@ public class Bullet : MonoBehaviour, IPoolable
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        // TODO: Add enemy collision once Stage 5 is implemented.
         if (other.CompareTag("Enemy"))
         {
             Despawn();

@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: -3483264844584941969}
   - component: {fileID: 8643245004056564624}
   m_Layer: 7
-  m_Name: Enemy - Soldier
+  m_Name: Enemy - Solider
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -94,7 +94,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e0e8a5d5107c8154d9a261e92f91f44e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Enemy
-  poolIdOverride: 
+  poolIdOverride: Enemy - Solider
   spriteRenderer: {fileID: 2810711479129718282}
   animator: {fileID: 8643245004056564624}
   engine: {fileID: 5958507953568675465}
