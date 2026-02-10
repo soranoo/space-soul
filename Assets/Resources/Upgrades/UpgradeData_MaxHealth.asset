@@ -10,13 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b4ec99f5df81c7e4eb1dbb8a2a7347d4, type: 3}
-  m_Name: UpgradeData_RotationSpeed
+  m_Name: UpgradeData_MaxHealth
   m_EditorClassIdentifier: Assembly-CSharp::UpgradeData
-  title: Improved Gyroscope
-  description: Increases turn speed by 2 deg/s. Allowing more granular control.
-  icon: {fileID: 0}
-  upgradeType: 2
-  stepValue: 2
-  maxLevel: 5
+  title: Reinforced Hull
+  description: Increase maximum health by 10.
+  icon: {fileID: 6482822384215342590, guid: fb59953182dbf8b4fbb2e852954801c4, type: 3}
+  upgradeType: 6
+  stepValue: 10
+  maxLevel: 10
   targetEngineType: 0
-  targetWeaponType: 0
+  targetWeaponType: 3

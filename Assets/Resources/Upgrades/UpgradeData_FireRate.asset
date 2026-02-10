@@ -17,5 +17,6 @@ MonoBehaviour:
   icon: {fileID: 0}
   upgradeType: 5
   stepValue: 0.03
+  maxLevel: 5
   targetEngineType: 0
   targetWeaponType: 0

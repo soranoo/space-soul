@@ -17,6 +17,7 @@ public class UpgradeManager : SingletonBase<UpgradeManager>
     [SerializeField] private PlayerWeaponManager weaponManager;
 
     private UpgradeData[] allUpgrades;
+    private readonly Dictionary<UpgradeData, int> upgradeLevels = new Dictionary<UpgradeData, int>();
 
     /// <summary>
     /// Number of cards offered each wave.
@@ -60,6 +61,11 @@ public class UpgradeManager : SingletonBase<UpgradeManager>
             return;
         }
 
+        if (!IsUpgradeValid(upgrade))
+        {
+            return;
+        }
+
         PlayerStats stats = player.Stats;
 
         switch (upgrade.UpgradeType)
@@ -80,10 +86,12 @@ public class UpgradeManager : SingletonBase<UpgradeManager>
 
             case UpgradeType.RotationSpeed:
                 stats.IncreaseRotationSpeed(upgrade.StepValue);
+                IncrementLevel(upgrade);
                 break;
 
             case UpgradeType.HealthRegen:
                 stats.IncreaseHealthRegenRate(upgrade.StepValue);
+                IncrementLevel(upgrade);
                 break;
 
             case UpgradeType.FullHeal:
@@ -92,6 +100,11 @@ public class UpgradeManager : SingletonBase<UpgradeManager>
 
             case UpgradeType.FireRate:
                 stats.DecreaseFireRate(upgrade.StepValue);
+                IncrementLevel(upgrade);
+                break;
+            case UpgradeType.MaxHealth:
+                stats.IncreaseMaxHealth(Mathf.RoundToInt(upgrade.StepValue));
+                IncrementLevel(upgrade);
                 break;
         }
     }
@@ -126,9 +139,44 @@ public class UpgradeManager : SingletonBase<UpgradeManager>
                     return false;
                 }
                 break;
+            case UpgradeType.RotationSpeed:
+            case UpgradeType.HealthRegen:
+            case UpgradeType.FireRate:
+            case UpgradeType.MaxHealth:
+                if (upgrade.MaxLevel > 0 && GetLevel(upgrade) >= upgrade.MaxLevel)
+                {
+                    return false;
+                }
+                break;
         }
 
         return true;
+    }
+
+    private int GetLevel(UpgradeData upgrade)
+    {
+        if (upgrade == null)
+        {
+            return 0;
+        }
+
+        if (upgradeLevels.TryGetValue(upgrade, out int level))
+        {
+            return level;
+        }
+
+        return 0;
+    }
+
+    private void IncrementLevel(UpgradeData upgrade)
+    {
+        if (upgrade == null)
+        {
+            return;
+        }
+
+        int level = GetLevel(upgrade);
+        upgradeLevels[upgrade] = level + 1;
     }
 
     private void ShuffleList<T>(List<T> list)

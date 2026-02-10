@@ -8,5 +8,6 @@ public enum UpgradeType
     RotationSpeed = 2,
     HealthRegen = 3,
     FullHeal = 4,
-    FireRate = 5
+    FireRate = 5,
+    MaxHealth = 6
 }

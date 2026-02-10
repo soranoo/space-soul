@@ -14,8 +14,11 @@ public class UpgradeData : ScriptableObject
     [Header("Upgrade Settings")]
     [SerializeField] private UpgradeType upgradeType;
 
-    [Tooltip("Step value used by RotationSpeed, HealthRegen, and FireRate upgrades.")]
+    [Tooltip("Step value used by RotationSpeed, HealthRegen, FireRate, and MaxHealth upgrades.")]
     [SerializeField] private float stepValue;
+
+    [Tooltip("Max times this upgrade can be taken (0 = unlimited).")]
+    [SerializeField] private int maxLevel;
 
     [Tooltip("Target engine type for EngineUpgrade.")]
     [SerializeField] private EngineType targetEngineType;
@@ -37,6 +40,9 @@ public class UpgradeData : ScriptableObject
 
     /// <summary>Numeric step value (meaning depends on UpgradeType).</summary>
     public float StepValue => stepValue;
+
+    /// <summary>Max times this upgrade can be taken (0 = unlimited).</summary>
+    public int MaxLevel => maxLevel;
 
     /// <summary>Engine type to switch to (only used when UpgradeType == EngineUpgrade).</summary>
     public EngineType TargetEngineType => targetEngineType;
