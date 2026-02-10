@@ -4913,6 +4913,7 @@ MonoBehaviour:
     fireRate: 0.1
     maxHealth: 100
     healthRegenRate: 0
+  inputHandler: {fileID: 1935055137}
 --- !u!50 &1935055140
 Rigidbody2D:
   serializedVersion: 5

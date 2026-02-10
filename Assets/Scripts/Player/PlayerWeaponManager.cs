@@ -42,22 +42,14 @@ public class PlayerWeaponManager : MonoBehaviour
 
     private void OnEnable()
     {
-        InputHandler handler = player != null ? player.InputHandler : null;
-        if (handler != null)
-        {
-            handler.FireStarted += OnFireStarted;
-            handler.FireStopped += OnFireStopped;
-        }
+        player.InputHandler.FireStarted += OnFireStarted;
+        player.InputHandler.FireStopped += OnFireStopped;
     }
 
     private void OnDisable()
     {
-        InputHandler handler = player != null ? player.InputHandler : null;
-        if (handler != null)
-        {
-            handler.FireStarted -= OnFireStarted;
-            handler.FireStopped -= OnFireStopped;
-        }
+        player.InputHandler.FireStarted -= OnFireStarted;
+        player.InputHandler.FireStopped -= OnFireStopped;
     }
 
     private void Update()

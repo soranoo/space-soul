@@ -128,7 +128,7 @@ public class WaveUI : MonoBehaviour
     {
         if (enemiesLeftText != null)
         {
-            enemiesLeftText.text = $"Enemies: {Mathf.Max(0, enemiesLeft)}";
+            enemiesLeftText.text = Mathf.Max(0, enemiesLeft).ToString();
         }
     }
 
