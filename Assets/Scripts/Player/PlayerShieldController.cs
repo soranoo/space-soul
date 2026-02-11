@@ -18,6 +18,11 @@ public class PlayerShieldController : MonoBehaviour
     [Header("Player Collision")]
     [SerializeField] private Collider2D playerCollider;
 
+    [Header("Audio")]
+    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioClip shieldUpClip;
+    [SerializeField] private AudioClip shieldDownClip;
+
     private readonly Dictionary<ShieldType, GameObject> spawnedShields = new Dictionary<ShieldType, GameObject>();
     private ShieldType currentShieldType;
 
@@ -26,6 +31,11 @@ public class PlayerShieldController : MonoBehaviour
         if (playerCollider == null)
         {
             playerCollider = GetComponentInParent<Collider2D>();
+        }
+
+        if (audioSource == null)
+        {
+            audioSource = GetComponentInParent<AudioSource>();
         }
 
         SpawnAllShields();
@@ -42,6 +52,8 @@ public class PlayerShieldController : MonoBehaviour
             return;
         }
 
+        ShieldType previousShieldType = currentShieldType;
+
         DeactivateCurrentShield();
 
         if (playerCollider != null)
@@ -52,6 +64,10 @@ public class PlayerShieldController : MonoBehaviour
         if (shieldType == ShieldType.None)
         {
             currentShieldType = shieldType;
+            if (previousShieldType != ShieldType.None)
+            {
+                PlayShieldDown();
+            }
             return;
         }
 
@@ -63,6 +79,11 @@ public class PlayerShieldController : MonoBehaviour
         }
 
         currentShieldType = shieldType;
+
+        if (previousShieldType == ShieldType.None)
+        {
+            PlayShieldUp();
+        }
     }
 
     public ShieldType CurrentShieldType => currentShieldType;
@@ -141,6 +162,22 @@ public class PlayerShieldController : MonoBehaviour
         if (col != null)
         {
             col.gameObject.AddComponent<ShieldBlocker>();
+        }
+    }
+
+    private void PlayShieldUp()
+    {
+        if (audioSource != null && shieldUpClip != null)
+        {
+            audioSource.PlayOneShot(shieldUpClip);
+        }
+    }
+
+    private void PlayShieldDown()
+    {
+        if (audioSource != null && shieldDownClip != null)
+        {
+            audioSource.PlayOneShot(shieldDownClip);
         }
     }
 }
