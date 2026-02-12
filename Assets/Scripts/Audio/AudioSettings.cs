@@ -19,7 +19,6 @@ public class AudioSourceConfig
     [Range(0f, 1f)]
     [SerializeField] private float spatialBlend = 0f;
 
-    [SerializeField] private bool loop;
     [SerializeField] private bool mute;
     [SerializeField] private AudioMixerGroup mixerGroup;
 
@@ -27,7 +26,6 @@ public class AudioSourceConfig
     public float Pitch => pitch;
     public float StereoPan => stereoPan;
     public float SpatialBlend => spatialBlend;
-    public bool Loop => loop;
     public bool Mute => mute;
     public AudioMixerGroup MixerGroup => mixerGroup;
 
@@ -42,7 +40,6 @@ public class AudioSourceConfig
         source.pitch = pitch;
         source.panStereo = stereoPan;
         source.spatialBlend = spatialBlend;
-        source.loop = loop;
         source.mute = mute;
 
         if (mixerGroup != null)
