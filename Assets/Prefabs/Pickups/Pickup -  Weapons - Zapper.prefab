@@ -181,3 +181,4 @@ MonoBehaviour:
   despawnScaleDuration: 0.2
   blinkStartTime: 2
   blinkInterval: 0.15
+  pickupSfx: {fileID: 11400000, guid: 6648a53e15b927845b483aedfe09de4f, type: 2}

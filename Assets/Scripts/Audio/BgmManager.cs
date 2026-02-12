@@ -3,48 +3,33 @@ using UnityEngine;
 using UnityEngine.Audio;
 
 /// <summary>
-/// Handles gameplay BGM with smooth crossfades between normal and low-health tracks.
-/// Enforces a minimum play duration before switching to prevent rapid toggles.
+/// Handles BGM playback and crossfades between requested tracks.
+/// Track selection is driven by external systems.
 /// </summary>
-public class BgmManager : MonoBehaviour
+public class BgmManager : SingletonBase<BgmManager>
 {
-    public enum BgmState
-    {
-        Normal,
-        LowHealth
-    }
-
-    [Header("Settings")]
-    [SerializeField] private AudioSettings normalBgmSettings;
-    [SerializeField] private AudioSettings lowHealthBgmSettings;
-
-    [Header("References")]
-    [SerializeField] private PlayerController player;
-
     [Header("Mixer")]
     [SerializeField] private AudioMixerGroup bgmMixerGroup;
-
-    [Header("Thresholds")]
-    [Range(0.05f, 1f)]
-    [SerializeField] private float lowHealthThresholdPercent = 0.3f;
 
     [Header("Timing")]
     [SerializeField] private float fadeDuration = 1.0f;
     [SerializeField] private float minClipPlaySeconds = 10f;
-    [SerializeField] private bool playOnStart = true;
 
     private AudioSource primarySource;
     private AudioSource secondarySource;
     private AudioSource activeSource;
     private AudioSource inactiveSource;
 
-    private BgmState currentState = BgmState.Normal;
-    private BgmState pendingState = BgmState.Normal;
+    private AudioSettings currentTrackSettings;
+    private AudioSettings pendingTrackSettings;
     private float nextSwitchAllowedTime;
     private Coroutine fadeRoutine;
 
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
+        DontDestroyOnLoad(gameObject);
+
         primarySource = GetComponent<AudioSource>();
         if (primarySource == null)
         {
@@ -60,40 +45,11 @@ public class BgmManager : MonoBehaviour
         inactiveSource = secondarySource;
     }
 
-    private void OnEnable()
-    {
-        if (player == null)
-        {
-            player = FindFirstObjectByType<PlayerController>();
-        }
-
-        if (player != null)
-        {
-            player.HealthChanged += OnHealthChanged;
-        }
-    }
-
-    private void Start()
-    {
-        if (playOnStart)
-        {
-            PlayInitial();
-        }
-    }
-
-    private void OnDisable()
-    {
-        if (player != null)
-        {
-            player.HealthChanged -= OnHealthChanged;
-        }
-    }
-
     private void Update()
     {
-        if (pendingState != currentState && Time.time >= nextSwitchAllowedTime)
+        if (pendingTrackSettings != null && pendingTrackSettings != currentTrackSettings && Time.time >= nextSwitchAllowedTime)
         {
-            SwitchTo(pendingState);
+            SwitchTo(pendingTrackSettings);
         }
     }
 
@@ -113,54 +69,51 @@ public class BgmManager : MonoBehaviour
         }
     }
 
-    private void PlayInitial()
+    public void RequestTrack(AudioSettings trackSettings)
     {
-        if (normalBgmSettings == null || normalBgmSettings.Clip == null)
+        if (trackSettings == null || trackSettings.Clip == null)
         {
             return;
         }
 
-        currentState = BgmState.Normal;
-        pendingState = currentState;
+        pendingTrackSettings = trackSettings;
 
-        ApplySettingsToSource(activeSource, normalBgmSettings);
-        activeSource.clip = normalBgmSettings.Clip;
-        activeSource.volume = normalBgmSettings.Source != null ? normalBgmSettings.Source.Volume : 1f;
-        activeSource.Play();
-        nextSwitchAllowedTime = Time.time + minClipPlaySeconds;
-    }
-
-    private void OnHealthChanged(int current, int max)
-    {
-        if (max <= 0)
-        {
-            return;
-        }
-
-        float percent = (float)current / max;
-        BgmState desired = percent <= lowHealthThresholdPercent ? BgmState.LowHealth : BgmState.Normal;
-
-        RequestState(desired);
-    }
-
-    private void RequestState(BgmState desiredState)
-    {
-        pendingState = desiredState;
-
-        if (currentState == desiredState)
+        if (currentTrackSettings == trackSettings)
         {
             return;
         }
 
         if (Time.time >= nextSwitchAllowedTime)
         {
-            SwitchTo(desiredState);
+            SwitchTo(trackSettings);
         }
     }
 
-    private void SwitchTo(BgmState nextState)
+    public void SetTrackImmediate(AudioSettings trackSettings)
     {
-        AudioSettings nextSettings = nextState == BgmState.LowHealth ? lowHealthBgmSettings : normalBgmSettings;
+        if (trackSettings == null || trackSettings.Clip == null)
+        {
+            return;
+        }
+
+        pendingTrackSettings = trackSettings;
+
+        if (currentTrackSettings == trackSettings)
+        {
+            return;
+        }
+
+        if (fadeRoutine != null)
+        {
+            StopCoroutine(fadeRoutine);
+            fadeRoutine = null;
+        }
+
+        SwitchTo(trackSettings);
+    }
+
+    private void SwitchTo(AudioSettings nextSettings)
+    {
         if (nextSettings == null || nextSettings.Clip == null)
         {
             return;
@@ -179,7 +132,8 @@ public class BgmManager : MonoBehaviour
         float targetVolume = nextSettings.Source != null ? nextSettings.Source.Volume : 1f;
         fadeRoutine = StartCoroutine(Crossfade(activeSource, inactiveSource, fadeDuration, targetVolume));
 
-        currentState = nextState;
+        currentTrackSettings = nextSettings;
+        pendingTrackSettings = nextSettings;
         nextSwitchAllowedTime = Time.time + minClipPlaySeconds;
 
         // Swap roles

@@ -19,6 +19,9 @@ public class PowerUpPickup : MonoBehaviour, IPoolable
     [SerializeField] private float blinkStartTime = 2f;
     [SerializeField] private float blinkInterval = 0.15f;
 
+    [Header("Audio")]
+    [SerializeField] private AudioSettings pickupSfx;
+
     private Tween despawnTween;
     private Sequence blinkSequence;
     private Tween spawnTween;
@@ -116,7 +119,7 @@ public class PowerUpPickup : MonoBehaviour, IPoolable
 
         PowerUpController controller = other.GetComponent<PowerUpController>();
         controller?.ApplyPowerUp(powerUpData);
-        SfxManager.Instance?.PlayPowerUpCollected();
+        SfxManager.Instance?.Play(pickupSfx);
 
         if (PoolManager.Instance != null)
         {

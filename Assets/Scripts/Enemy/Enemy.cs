@@ -442,6 +442,9 @@ public class Enemy : MonoBehaviour, IPoolable
         }
     }
 
+    [Header("Audio")]
+    [SerializeField] private AudioSettings selfDestructSfx;
+
     /// <summary>
     /// Execute self-destruct behavior - deal damage and die.
     /// </summary>
@@ -452,7 +455,7 @@ public class Enemy : MonoBehaviour, IPoolable
             player.TakeDamage(data.ContactDamage);
         }
 
-        SfxManager.Instance?.PlayEnemySelfDestruct();
+        SfxManager.Instance?.Play(selfDestructSfx);
         Die();
     }
 

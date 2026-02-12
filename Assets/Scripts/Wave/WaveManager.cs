@@ -453,7 +453,6 @@ public class WaveManager : SingletonBase<WaveManager>
     private void CompleteWave()
     {
         isWaveActive = false;
-        SfxManager.Instance?.PlayWaveCompleted();
         WaveCompleted?.Invoke(currentWaveNumber);
     }
 

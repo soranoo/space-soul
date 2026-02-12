@@ -21,6 +21,9 @@ public class WaveUI : MonoBehaviour
     [SerializeField] private float splashScaleFrom = 0.9f;
     [SerializeField] private float splashScaleTo = 1f;
 
+    [Header("Audio")]
+    [SerializeField] private AudioSettings waveCompletedSfx;
+
     private WaveManager waveManager;
     private Sequence splashSequence;
 
@@ -104,6 +107,7 @@ public class WaveUI : MonoBehaviour
     private void OnWaveCompleted(int waveNumber)
     {
         UpdateEnemiesLeftText(0);
+        SfxManager.Instance?.Play(waveCompletedSfx);
     }
 
     private void OnEnemyCountChanged(Enemy _)

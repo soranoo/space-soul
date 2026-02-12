@@ -283,6 +283,7 @@ MonoBehaviour:
   splashFadeSeconds: 0.35
   splashScaleFrom: 0.9
   splashScaleTo: 1
+  waveCompletedSfx: {fileID: 11400000, guid: e2bafaaa36e5a3146a51e174aacd9f67, type: 2}
 --- !u!114 &32898869
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3994,14 +3995,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: debd41e82362de84d9bb944c5981c582, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BgmManager
-  normalBgmSettings: {fileID: 11400000, guid: 3b886e12f74bb67429462eecbbcddf66, type: 2}
-  lowHealthBgmSettings: {fileID: 11400000, guid: be68fc5fe0c15774d99d6662a882b437, type: 2}
-  player: {fileID: 1935055138}
   bgmMixerGroup: {fileID: 189639053355378729, guid: f5db16cd6e4205d40bf49a7863eceae3, type: 2}
-  lowHealthThresholdPercent: 0.3
   fadeDuration: 1
   minClipPlaySeconds: 10
-  playOnStart: 1
 --- !u!114 &1240790143
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4014,9 +4010,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 54ec5acf4c5488f4fb3494992bac945e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SfxManager
-  waveCompletedSettings: {fileID: 11400000, guid: e2bafaaa36e5a3146a51e174aacd9f67, type: 2}
-  powerUpCollectedSettings: {fileID: 11400000, guid: 6648a53e15b927845b483aedfe09de4f, type: 2}
-  enemySelfDestructSettings: {fileID: 11400000, guid: b72eb96f420dd3f42afa83bd294cd648, type: 2}
   sfxMixerGroup: {fileID: -2536850055105114216, guid: f5db16cd6e4205d40bf49a7863eceae3, type: 2}
   masterSfxVolume: 1
 --- !u!1 &1260369861
@@ -6451,6 +6444,7 @@ GameObject:
   - component: {fileID: 1935055137}
   - component: {fileID: 1935055143}
   - component: {fileID: 1935055145}
+  - component: {fileID: 1935055146}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -6709,6 +6703,22 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &1935055146
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1935055135}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fef27e49ba9323343b1b5e12ce369b33, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerBgmAudioController
+  player: {fileID: 1935055138}
+  normalBgmSettings: {fileID: 11400000, guid: 3b886e12f74bb67429462eecbbcddf66, type: 2}
+  lowHealthBgmSettings: {fileID: 11400000, guid: be68fc5fe0c15774d99d6662a882b437, type: 2}
+  lowHealthThresholdPercent: 0.3
 --- !u!1 &1967995966
 GameObject:
   m_ObjectHideFlags: 0

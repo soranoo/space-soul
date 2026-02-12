@@ -97,9 +97,9 @@ MonoBehaviour:
   poolIdOverride: Enemy - Attacker
   spriteRenderer: {fileID: 2810711479129718282}
   animator: {fileID: 3732279967339083217}
-  engine: {fileID: 915999101161495539}
   hitCollider: {fileID: 7131125013018640609}
   currentHealth: 0
+  selfDestructSfx: {fileID: 11400000, guid: b72eb96f420dd3f42afa83bd294cd648, type: 2}
 --- !u!95 &3732279967339083217
 Animator:
   serializedVersion: 7
