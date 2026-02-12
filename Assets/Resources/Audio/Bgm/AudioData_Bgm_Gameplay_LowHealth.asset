@@ -14,10 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::AudioSettings
   clip: {fileID: 8300000, guid: 054c4a4d004fb584c8181c7b400c1272, type: 3}
   source:
-    volume: 1
+    volume: 0.5
     pitch: 1
     stereoPan: 0
     spatialBlend: 0
-    loop: 1
     mute: 0
     mixerGroup: {fileID: 189639053355378729, guid: f5db16cd6e4205d40bf49a7863eceae3, type: 2}

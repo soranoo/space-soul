@@ -53,7 +53,7 @@ public class ScoreUI : MonoBehaviour
     {
         if (scoreText != null)
         {
-            scoreText.text = $"Score: {Mathf.Max(0, score)}";
+            scoreText.text = Mathf.Max(0, score).ToString();
         }
     }
 }
