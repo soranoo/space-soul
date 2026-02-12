@@ -116,6 +116,7 @@ public class PowerUpPickup : MonoBehaviour, IPoolable
 
         PowerUpController controller = other.GetComponent<PowerUpController>();
         controller?.ApplyPowerUp(powerUpData);
+        SfxManager.Instance?.PlayPowerUpCollected();
 
         if (PoolManager.Instance != null)
         {

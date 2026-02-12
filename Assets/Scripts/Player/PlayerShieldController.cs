@@ -20,8 +20,8 @@ public class PlayerShieldController : MonoBehaviour
 
     [Header("Audio")]
     [SerializeField] private AudioSource audioSource;
-    [SerializeField] private AudioClip shieldUpClip;
-    [SerializeField] private AudioClip shieldDownClip;
+    [SerializeField] private AudioSettings shieldUpSettings;
+    [SerializeField] private AudioSettings shieldDownSettings;
 
     private readonly Dictionary<ShieldType, GameObject> spawnedShields = new Dictionary<ShieldType, GameObject>();
     private ShieldType currentShieldType;
@@ -167,17 +167,27 @@ public class PlayerShieldController : MonoBehaviour
 
     private void PlayShieldUp()
     {
-        if (audioSource != null && shieldUpClip != null)
-        {
-            audioSource.PlayOneShot(shieldUpClip);
-        }
+        PlayFromSettings(shieldUpSettings);
     }
 
     private void PlayShieldDown()
     {
-        if (audioSource != null && shieldDownClip != null)
+        PlayFromSettings(shieldDownSettings);
+    }
+
+    private void PlayFromSettings(AudioSettings settings)
+    {
+        if (audioSource == null || settings == null || settings.Clip == null)
         {
-            audioSource.PlayOneShot(shieldDownClip);
+            return;
         }
+
+        if (settings.Source != null)
+        {
+            settings.Source.ApplyTo(audioSource);
+        }
+
+        float volume = settings.Source != null ? settings.Source.Volume : 1f;
+        audioSource.PlayOneShot(settings.Clip, volume);
     }
 }

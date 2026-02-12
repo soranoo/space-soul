@@ -452,6 +452,7 @@ public class Enemy : MonoBehaviour, IPoolable
             player.TakeDamage(data.ContactDamage);
         }
 
+        SfxManager.Instance?.PlayEnemySelfDestruct();
         Die();
     }
 

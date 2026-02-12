@@ -14,9 +14,9 @@ public class BgmManager : MonoBehaviour
         LowHealth
     }
 
-    [Header("Clips")]
-    [SerializeField] private AudioClip normalClip;
-    [SerializeField] private AudioClip lowHealthClip;
+    [Header("Settings")]
+    [SerializeField] private AudioSettings normalBgmSettings;
+    [SerializeField] private AudioSettings lowHealthBgmSettings;
 
     [Header("References")]
     [SerializeField] private PlayerController player;
@@ -32,10 +32,6 @@ public class BgmManager : MonoBehaviour
     [SerializeField] private float fadeDuration = 1.0f;
     [SerializeField] private float minClipPlaySeconds = 10f;
     [SerializeField] private bool playOnStart = true;
-
-    [Header("Volume")]
-    [Range(0f, 1f)]
-    [SerializeField] private float targetVolume = 0.8f;
 
     private AudioSource primarySource;
     private AudioSource secondarySource;
@@ -103,6 +99,11 @@ public class BgmManager : MonoBehaviour
 
     private void ConfigureSource(AudioSource source)
     {
+        if (source == null)
+        {
+            return;
+        }
+
         source.playOnAwake = false;
         source.loop = true;
         source.volume = 0f;
@@ -114,10 +115,17 @@ public class BgmManager : MonoBehaviour
 
     private void PlayInitial()
     {
+        if (normalBgmSettings == null || normalBgmSettings.Clip == null)
+        {
+            return;
+        }
+
         currentState = BgmState.Normal;
         pendingState = currentState;
-        activeSource.clip = normalClip;
-        activeSource.volume = targetVolume;
+
+        ApplySettingsToSource(activeSource, normalBgmSettings);
+        activeSource.clip = normalBgmSettings.Clip;
+        activeSource.volume = normalBgmSettings.Source != null ? normalBgmSettings.Source.Volume : 1f;
         activeSource.Play();
         nextSwitchAllowedTime = Time.time + minClipPlaySeconds;
     }
@@ -152,8 +160,8 @@ public class BgmManager : MonoBehaviour
 
     private void SwitchTo(BgmState nextState)
     {
-        AudioClip nextClip = nextState == BgmState.LowHealth ? lowHealthClip : normalClip;
-        if (nextClip == null)
+        AudioSettings nextSettings = nextState == BgmState.LowHealth ? lowHealthBgmSettings : normalBgmSettings;
+        if (nextSettings == null || nextSettings.Clip == null)
         {
             return;
         }
@@ -163,11 +171,13 @@ public class BgmManager : MonoBehaviour
             StopCoroutine(fadeRoutine);
         }
 
-        inactiveSource.clip = nextClip;
+        ApplySettingsToSource(inactiveSource, nextSettings);
+        inactiveSource.clip = nextSettings.Clip;
         inactiveSource.volume = 0f;
         inactiveSource.Play();
 
-        fadeRoutine = StartCoroutine(Crossfade(activeSource, inactiveSource, fadeDuration));
+        float targetVolume = nextSettings.Source != null ? nextSettings.Source.Volume : 1f;
+        fadeRoutine = StartCoroutine(Crossfade(activeSource, inactiveSource, fadeDuration, targetVolume));
 
         currentState = nextState;
         nextSwitchAllowedTime = Time.time + minClipPlaySeconds;
@@ -178,7 +188,7 @@ public class BgmManager : MonoBehaviour
         inactiveSource = temp;
     }
 
-    private IEnumerator Crossfade(AudioSource from, AudioSource to, float duration)
+    private IEnumerator Crossfade(AudioSource from, AudioSource to, float duration, float toTargetVolume)
     {
         float elapsed = 0f;
         float startFrom = from != null ? from.volume : 0f;
@@ -196,7 +206,7 @@ public class BgmManager : MonoBehaviour
 
             if (to != null)
             {
-                to.volume = Mathf.Lerp(startTo, targetVolume, t);
+                to.volume = Mathf.Lerp(startTo, toTargetVolume, t);
             }
 
             yield return null;
@@ -210,9 +220,27 @@ public class BgmManager : MonoBehaviour
 
         if (to != null)
         {
-            to.volume = targetVolume;
+            to.volume = toTargetVolume;
         }
 
         fadeRoutine = null;
+    }
+
+    private void ApplySettingsToSource(AudioSource source, AudioSettings settings)
+    {
+        if (source == null || settings == null)
+        {
+            return;
+        }
+
+        if (settings.Source != null)
+        {
+            settings.Source.ApplyTo(source);
+
+            if (settings.Source.MixerGroup == null && bgmMixerGroup != null)
+            {
+                source.outputAudioMixerGroup = bgmMixerGroup;
+            }
+        }
     }
 }
