@@ -13,10 +13,18 @@ public class EnemyEngine : MonoBehaviour
     [Header("Audio")]
     [SerializeField] private AudioSettings engineSfx;
     [SerializeField] private AudioSource engineAudioSource;
+    [SerializeField, Min(0.01f)] private float maxAudibleDistance = 20f;
 
     private bool forceDisabled;
     private bool movementCommandedThisFrame;
     private Enemy enemy;
+    private float maxEngineVolume = 1f;
+
+#if UNITY_EDITOR
+    [Header("Gizmos")]
+    [SerializeField] private bool showDistanceGizmo = true;
+    [SerializeField] private Color distanceGizmoColor = new Color(0.2f, 0.8f, 1f, 0.8f);
+#endif
 
     private void Awake()
     {
@@ -132,11 +140,14 @@ public class EnemyEngine : MonoBehaviour
         engineAudioSource.playOnAwake = false;
         engineAudioSource.loop = true;
 
+        maxEngineVolume = 1f;
+
         if (engineSfx != null)
         {
             engineAudioSource.clip = engineSfx.Clip;
             engineSfx.Source?.ApplyTo(engineAudioSource);
             engineAudioSource.loop = true;
+            maxEngineVolume = Mathf.Clamp01(engineSfx.Source != null ? engineSfx.Source.Volume : 1f);
         }
     }
 
@@ -166,6 +177,20 @@ public class EnemyEngine : MonoBehaviour
             engineAudioSource.loop = true;
             engineAudioSource.Play();
         }
+
+        UpdateEngineVolumeByDistance();
+    }
+
+    private void UpdateEngineVolumeByDistance()
+    {
+        if (engineAudioSource == null || enemy == null)
+        {
+            return;
+        }
+
+        float distance = enemy.GetDistanceToPlayer();
+        float normalized = 1f - Mathf.Clamp01(distance / maxAudibleDistance);
+        engineAudioSource.volume = Mathf.Clamp01(maxEngineVolume * normalized);
     }
 
     private void StopEngineAudio()
@@ -175,4 +200,17 @@ public class EnemyEngine : MonoBehaviour
             engineAudioSource.Stop();
         }
     }
+
+#if UNITY_EDITOR
+    private void OnDrawGizmosSelected()
+    {
+        if (!showDistanceGizmo)
+        {
+            return;
+        }
+
+        Gizmos.color = distanceGizmoColor;
+        Gizmos.DrawWireSphere(transform.position, Mathf.Max(0f, maxAudibleDistance));
+    }
+#endif
 }

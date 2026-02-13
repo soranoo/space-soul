@@ -138,6 +138,9 @@ MonoBehaviour:
   engineVisual: {fileID: 915999101161495539}
   engineSfx: {fileID: 11400000, guid: 40544cbd62ae2b74ebb1dda466d553b4, type: 2}
   engineAudioSource: {fileID: 1270837431221828760}
+  maxAudibleDistance: 7
+  showDistanceGizmo: 1
+  distanceGizmoColor: {r: 0.2, g: 0.8, b: 1, a: 0.8}
 --- !u!1 &915999101161495539
 GameObject:
   m_ObjectHideFlags: 0
