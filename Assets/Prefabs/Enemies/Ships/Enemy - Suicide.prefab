@@ -224,6 +224,7 @@ GameObject:
   - component: {fileID: 7131125013018640609}
   - component: {fileID: -3483264844584941969}
   - component: {fileID: 2870612331553790183}
+  - component: {fileID: 5904159828375518967}
   m_Layer: 7
   m_Name: Enemy - Suicide
   m_TagString: Enemy
@@ -310,10 +311,7 @@ MonoBehaviour:
   spriteRenderer: {fileID: 2810711479129718282}
   animator: {fileID: 2870612331553790183}
   hitCollider: {fileID: 7131125013018640609}
-  engine: {fileID: 649789483448042118}
-  engineSfx: {fileID: 11400000, guid: 2874904c38d7e5248b5c0a8847e01615, type: 2}
-  engineAudioSource: {fileID: 2506409819688435092}
-  movementSfxThreshold: 0.0001
+  enemyEngine: {fileID: 5904159828375518967}
   currentHealth: 0
   selfDestructSfx: {fileID: 11400000, guid: b72eb96f420dd3f42afa83bd294cd648, type: 2}
 --- !u!95 &2870612331553790183
@@ -338,6 +336,22 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &5904159828375518967
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 662773263525930302}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 64b549e5d94766a48b33b50a2ef5a81e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyEngine
+  engineVisual: {fileID: 649789483448042118}
+  engineSfx: {fileID: 11400000, guid: 2874904c38d7e5248b5c0a8847e01615, type: 2}
+  engineAudioSource: {fileID: 2506409819688435092}
+  movementThreshold: 0.0001
 --- !u!1 &4985781187373055775
 GameObject:
   m_ObjectHideFlags: 0

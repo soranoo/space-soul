@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 54f319b8ec16bfd41b81a2f4eb0e94d3, type: 3}
-  m_Name: AudioData_Sfx_Engine
+  m_Name: AudioData_Sfx_Engine_Fire
   m_EditorClassIdentifier: Assembly-CSharp::AudioSettings
   clip: {fileID: 8300000, guid: f5dfd2b937f8eea4ea5dbc4e7f77e271, type: 3}
   source:

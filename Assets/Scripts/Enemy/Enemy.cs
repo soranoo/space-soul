@@ -17,12 +17,6 @@ public class Enemy : MonoBehaviour, IPoolable
     [SerializeField] private SpriteRenderer spriteRenderer;
     [SerializeField] private Animator animator;
     [SerializeField] private Collider2D hitCollider;
-    [SerializeField] private GameObject engine;
-
-    [Header("Audio")]
-    [SerializeField] private AudioSettings engineSfx;
-    [SerializeField] private AudioSource engineAudioSource;
-    [SerializeField, Min(0f)] private float movementSfxThreshold = 0.0001f;
 
     private EnemyData data;
     private EnemyStateMachine stateMachine;
@@ -34,7 +28,6 @@ public class Enemy : MonoBehaviour, IPoolable
     private Color defaultColor;
     private Coroutine damageTintCoroutine;
     private bool isDead;
-    private Vector3 previousPosition;
 
     // Role-specific variables
     private float attackCooldown;
@@ -64,6 +57,21 @@ public class Enemy : MonoBehaviour, IPoolable
     /// Event fired when enemy dies.
     /// </summary>
     public event Action<Enemy> Died;
+
+    /// <summary>
+    /// Event fired after enemy is initialized.
+    /// </summary>
+    public event Action<Enemy> Initialized;
+
+    /// <summary>
+    /// Event fired when enemy is despawned.
+    /// </summary>
+    public event Action<Enemy> Despawned;
+
+    /// <summary>
+    /// Event fired whenever enemy receives a movement command.
+    /// </summary>
+    public event Action<Enemy> MovementCommanded;
 
     /// <summary>
     /// Event fired when enemy takes damage.
@@ -118,17 +126,6 @@ public class Enemy : MonoBehaviour, IPoolable
             defaultColor = spriteRenderer.color;
         }
 
-        if (engineAudioSource == null)
-        {
-            engineAudioSource = GetComponent<AudioSource>();
-
-            if (engineAudioSource == null)
-            {
-                engineAudioSource = gameObject.AddComponent<AudioSource>();
-            }
-        }
-
-        ConfigureEngineAudioSource();
     }
 
     /// <summary>
@@ -163,11 +160,6 @@ public class Enemy : MonoBehaviour, IPoolable
             animator.enabled = true;
         }
 
-        if (engine != null)
-        {
-            engine.SetActive(true);
-        }
-
         // Setup movement pattern (always chase)
         SetupMovementPattern();
 
@@ -177,8 +169,7 @@ public class Enemy : MonoBehaviour, IPoolable
         // Find player reference
         FindPlayer();
 
-        previousPosition = transform.position;
-        StopEngineAudio();
+        Initialized?.Invoke(this);
     }
 
     /// <summary>
@@ -267,13 +258,7 @@ public class Enemy : MonoBehaviour, IPoolable
             hitCollider.enabled = true;
         }
 
-        if (engine != null)
-        {
-            engine.SetActive(true);
-        }
-
-        StopEngineAudio();
-        previousPosition = transform.position;
+        Despawned?.Invoke(this);
 
     }
 
@@ -299,8 +284,6 @@ public class Enemy : MonoBehaviour, IPoolable
         {
             spawnCooldown -= Time.deltaTime;
         }
-
-        UpdateEngineAudioByMovement();
 
     }
 
@@ -360,6 +343,7 @@ public class Enemy : MonoBehaviour, IPoolable
         if (!isDead && movementPattern != null)
         {
             movementPattern.UpdateMovement(transform, effectiveSpeed);
+            NotifyMovementCommanded();
         }
     }
 
@@ -439,6 +423,12 @@ public class Enemy : MonoBehaviour, IPoolable
         }
 
         transform.Translate(Vector2.up * speed * Time.deltaTime, Space.Self);
+        NotifyMovementCommanded();
+    }
+
+    private void NotifyMovementCommanded()
+    {
+        MovementCommanded?.Invoke(this);
     }
 
     /// <summary>
@@ -594,7 +584,7 @@ public class Enemy : MonoBehaviour, IPoolable
             player.TakeDamage(data.ContactDamage);
         }
 
-        SfxManager.Instance?.Play(selfDestructSfx);
+        SfxManager.Instance.Play(selfDestructSfx);
         Die();
     }
 
@@ -668,89 +658,12 @@ public class Enemy : MonoBehaviour, IPoolable
             hitCollider.enabled = false;
         }
 
-        if (engine != null)
-        {
-            engine.SetActive(false);
-        }
-
-        StopEngineAudio();
-
         Died?.Invoke(this);
         if (animator != null)
         {
             animator.SetTrigger(ANIM_TRIGGER_DEAD);
         }
         // Do not destroy here - let death animation handler call Cleanup() when finished
-    }
-
-    private void ConfigureEngineAudioSource()
-    {
-        if (engineAudioSource == null)
-        {
-            return;
-        }
-
-        engineAudioSource.playOnAwake = false;
-        engineAudioSource.loop = true;
-
-        if (engineSfx != null)
-        {
-            engineAudioSource.clip = engineSfx.Clip;
-            engineSfx.Source?.ApplyTo(engineAudioSource);
-            engineAudioSource.loop = true;
-        }
-    }
-
-    private void UpdateEngineAudioByMovement()
-    {
-        if (engineAudioSource == null || engineSfx == null || engineSfx.Clip == null)
-        {
-            StopEngineAudio();
-            previousPosition = transform.position;
-            return;
-        }
-
-        float movedSqr = ((Vector2)(transform.position - previousPosition)).sqrMagnitude;
-        bool isMoving = movedSqr > movementSfxThreshold;
-
-        if (isMoving)
-        {
-            PlayEngineAudio();
-        }
-        else
-        {
-            StopEngineAudio();
-        }
-
-        previousPosition = transform.position;
-    }
-
-    private void PlayEngineAudio()
-    {
-        if (engineAudioSource == null || engineSfx == null || engineSfx.Clip == null)
-        {
-            return;
-        }
-
-        if (engineAudioSource.clip != engineSfx.Clip)
-        {
-            engineAudioSource.clip = engineSfx.Clip;
-        }
-
-        if (!engineAudioSource.isPlaying)
-        {
-            engineSfx.Source?.ApplyTo(engineAudioSource);
-            engineAudioSource.loop = true;
-            engineAudioSource.Play();
-        }
-    }
-
-    private void StopEngineAudio()
-    {
-        if (engineAudioSource != null && engineAudioSource.isPlaying)
-        {
-            engineAudioSource.Stop();
-        }
     }
 
     /// <summary>

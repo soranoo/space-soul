@@ -1755,7 +1755,6 @@ GameObject:
   m_Component:
   - component: {fileID: 519420032}
   - component: {fileID: 519420031}
-  - component: {fileID: 519420029}
   - component: {fileID: 519420030}
   - component: {fileID: 519420033}
   - component: {fileID: 519420034}
@@ -1766,14 +1765,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!81 &519420029
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 519420028}
-  m_Enabled: 1
 --- !u!114 &519420030
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6482,6 +6473,7 @@ GameObject:
   - component: {fileID: 1935055143}
   - component: {fileID: 1935055145}
   - component: {fileID: 1935055146}
+  - component: {fileID: 1935055147}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -6756,6 +6748,14 @@ MonoBehaviour:
   normalBgmSettings: {fileID: 11400000, guid: 3b886e12f74bb67429462eecbbcddf66, type: 2}
   lowHealthBgmSettings: {fileID: 11400000, guid: be68fc5fe0c15774d99d6662a882b437, type: 2}
   lowHealthThresholdPercent: 0.3
+--- !u!81 &1935055147
+AudioListener:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1935055135}
+  m_Enabled: 1
 --- !u!1 &1967995966
 GameObject:
   m_ObjectHideFlags: 0
