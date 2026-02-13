@@ -17,6 +17,7 @@ public class Enemy : MonoBehaviour, IPoolable
     [SerializeField] private SpriteRenderer spriteRenderer;
     [SerializeField] private Animator animator;
     [SerializeField] private Collider2D hitCollider;
+    [SerializeField] private GameObject engine;
 
     private EnemyData data;
     private EnemyStateMachine stateMachine;
@@ -144,6 +145,11 @@ public class Enemy : MonoBehaviour, IPoolable
             animator.enabled = true;
         }
 
+        if (engine != null)
+        {
+            engine.SetActive(true);
+        }
+
         // Setup movement pattern (always chase)
         SetupMovementPattern();
 
@@ -238,6 +244,11 @@ public class Enemy : MonoBehaviour, IPoolable
         if (hitCollider != null)
         {
             hitCollider.enabled = true;
+        }
+
+        if (engine != null)
+        {
+            engine.SetActive(true);
         }
 
     }
@@ -528,6 +539,12 @@ public class Enemy : MonoBehaviour, IPoolable
         {
             hitCollider.enabled = false;
         }
+
+        if (engine != null)
+        {
+            engine.SetActive(false);
+        }
+
         Died?.Invoke(this);
         if (animator != null)
         {
