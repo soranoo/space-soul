@@ -24,6 +24,7 @@ public class BgmManager : SingletonBase<BgmManager>
     private AudioSettings pendingTrackSettings;
     private float nextSwitchAllowedTime;
     private Coroutine fadeRoutine;
+    private GameStateMachine observedStateMachine;
 
     protected override void Awake()
     {
@@ -45,12 +46,65 @@ public class BgmManager : SingletonBase<BgmManager>
         inactiveSource = secondarySource;
     }
 
+    private void OnEnable()
+    {
+        TrySubscribeToStateChanges();
+    }
+
+    private void Start()
+    {
+        TrySubscribeToStateChanges();
+    }
+
+    private void OnDisable()
+    {
+        UnsubscribeFromStateChanges();
+    }
+
     private void Update()
     {
+        if (observedStateMachine == null)
+        {
+            TrySubscribeToStateChanges();
+        }
+
         if (pendingTrackSettings != null && pendingTrackSettings != currentTrackSettings && Time.time >= nextSwitchAllowedTime)
         {
             SwitchTo(pendingTrackSettings);
         }
+    }
+
+    private void TrySubscribeToStateChanges()
+    {
+        if (observedStateMachine != null)
+        {
+            return;
+        }
+
+        GameManager gameManager = GameManager.Instance;
+        if (gameManager == null || gameManager.StateMachine == null)
+        {
+            return;
+        }
+
+        observedStateMachine = gameManager.StateMachine;
+        observedStateMachine.StateChanged += HandleGameStateChanged;
+    }
+
+    private void UnsubscribeFromStateChanges()
+    {
+        if (observedStateMachine == null)
+        {
+            return;
+        }
+
+        observedStateMachine.StateChanged -= HandleGameStateChanged;
+        observedStateMachine = null;
+    }
+
+    private void HandleGameStateChanged(IGameState previousState, IGameState newState)
+    {
+        nextSwitchAllowedTime = 0f;
     }
 
     private void ConfigureSource(AudioSource source)
