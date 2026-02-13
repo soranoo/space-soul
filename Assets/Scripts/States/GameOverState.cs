@@ -14,12 +14,4 @@ public class GameOverState : BaseGameState
         Time.timeScale = 0f;
         base.Enter();
     }
-
-    public override void HandleInput()
-    {
-        if (GameManager.IsSubmitPressed() || GameManager.IsAttackPressed())
-        {
-            GameManager.ReturnToMainMenu();
-        }
-    }
 }

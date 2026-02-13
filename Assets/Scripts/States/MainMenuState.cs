@@ -14,13 +14,4 @@ public class MainMenuState : BaseGameState
         Time.timeScale = 1f;
         base.Enter();
     }
-
-    public override void HandleInput()
-    {
-        // Placeholder input for prototype testing.
-        if (GameManager.IsSubmitPressed() || GameManager.IsAttackPressed())
-        {
-            GameManager.StartGame();
-        }
-    }
 }
