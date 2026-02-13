@@ -114,7 +114,7 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_MaskInteraction: 0
   m_Sprite: {fileID: -1818081386204390951, guid: 3d9d5f45b18c62f4b963dc23b9a07043, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -163,6 +163,16 @@ MonoBehaviour:
   firePoints:
   - {fileID: 4196528964429861690}
   bulletPrefab: {fileID: 7060739015984589562, guid: e45314b80795eff469b617b1c421f6bf, type: 3}
+  useZapperLaser: 0
+  zapperSegmentPrefab: {fileID: 0}
+  zapperHitMask:
+    serializedVersion: 2
+    m_Bits: 0
+  baseZapperLength: 6
+  lengthPerFireRate: 4
+  zapperSegmentLength: 0.5
+  zapperDamageInterval: 0.1
+  zapperDamagePerTick: 1
   fireSound: {fileID: 8300000, guid: 8b081e28b2278d54889cbc419af4394a, type: 3}
 --- !u!82 &8614881134080204448
 AudioSource:
