@@ -10,6 +10,17 @@ using UnityEngine;
 /// </summary>
 public class EnemyAttackState : BaseEnemyState
 {
+    /// <summary>
+    /// How fast the enemy rotates to face the player (degrees/sec).
+    /// </summary>
+    private const float ROTATION_SPEED = 270f;
+
+    /// <summary>
+    /// Maximum angle offset (degrees) to allow firing. 
+    /// Enemy must be within this angle of facing the player to shoot.
+    /// </summary>
+    private const float FIRE_ANGLE_TOLERANCE = 15f;
+
     public EnemyAttackState(Enemy enemy, EnemyStateMachine stateMachine) 
         : base(enemy, stateMachine) { }
 
@@ -43,7 +54,9 @@ public class EnemyAttackState : BaseEnemyState
     }
 
     /// <summary>
-    /// Ranged attacker behavior: Maintain preferred distance and fire at player.
+    /// Ranged attacker behavior: Maintain preferred distance, rotate to face, and fire at player.
+    /// Enemy must be facing the player before it can fire.
+    /// When too close, the enemy turns away and flies to create distance before re-engaging.
     /// </summary>
     private void UpdateRangedAttacker()
     {
@@ -61,15 +74,19 @@ public class EnemyAttackState : BaseEnemyState
             return;
         }
 
-        // If too close, back away
+        // If too close, retreat: rotate away from player and fly forward
         if (distance < targetDistance * 0.5f)
         {
-            Vector2 awayDir = -enemy.GetDirectionToPlayer();
-            enemy.transform.Translate(awayDir * enemy.EffectiveSpeed * 0.5f * Time.deltaTime, Space.World);
+            enemy.RotateAwayFromPlayer(ROTATION_SPEED);
+            enemy.MoveForward(enemy.EffectiveSpeed * 0.5f);
+            return; // Don't fire while retreating
         }
 
-        // Fire at player when in range
-        if (distance <= attackRange && enemy.CanFire())
+        // At good distance: rotate to face the player and fire
+        enemy.RotateTowardPlayer(ROTATION_SPEED);
+
+        // Only fire when in range AND facing the player
+        if (distance <= attackRange && enemy.CanFire() && enemy.IsFacingPlayer(FIRE_ANGLE_TOLERANCE))
         {
             enemy.FireAtPlayer();
         }

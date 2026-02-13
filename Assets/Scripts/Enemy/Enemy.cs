@@ -338,6 +338,107 @@ public class Enemy : MonoBehaviour, IPoolable
     }
 
     /// <summary>
+    /// Smoothly rotate the enemy to face the player.
+    /// Uses a rotation speed proportional to effective speed for natural feel.
+    /// </summary>
+    /// <param name="rotationSpeed">Degrees per second to rotate. 0 = instant.</param>
+    public void RotateTowardPlayer(float rotationSpeed = 360f)
+    {
+        if (playerTransform == null || isDead)
+        {
+            return;
+        }
+
+        Vector2 direction = GetDirectionToPlayer();
+        if (direction == Vector2.zero)
+        {
+            return;
+        }
+
+        float targetAngle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg - 90f;
+
+        if (rotationSpeed <= 0f)
+        {
+            // Instant rotation
+            transform.rotation = Quaternion.Euler(0f, 0f, targetAngle);
+        }
+        else
+        {
+            Quaternion targetRotation = Quaternion.Euler(0f, 0f, targetAngle);
+            transform.rotation = Quaternion.RotateTowards(
+                transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+        }
+    }
+
+    /// <summary>
+    /// Smoothly rotate the enemy to face away from the player (for retreating).
+    /// </summary>
+    /// <param name="rotationSpeed">Degrees per second to rotate. 0 = instant.</param>
+    public void RotateAwayFromPlayer(float rotationSpeed = 360f)
+    {
+        if (playerTransform == null || isDead)
+        {
+            return;
+        }
+
+        Vector2 direction = -GetDirectionToPlayer();
+        if (direction == Vector2.zero)
+        {
+            return;
+        }
+
+        float targetAngle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg - 90f;
+
+        if (rotationSpeed <= 0f)
+        {
+            transform.rotation = Quaternion.Euler(0f, 0f, targetAngle);
+        }
+        else
+        {
+            Quaternion targetRotation = Quaternion.Euler(0f, 0f, targetAngle);
+            transform.rotation = Quaternion.RotateTowards(
+                transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+        }
+    }
+
+    /// <summary>
+    /// Move the enemy forward in its facing direction (transform.up).
+    /// </summary>
+    /// <param name="speed">Movement speed.</param>
+    public void MoveForward(float speed)
+    {
+        if (isDead)
+        {
+            return;
+        }
+
+        transform.Translate(Vector2.up * speed * Time.deltaTime, Space.Self);
+    }
+
+    /// <summary>
+    /// Check if this enemy is facing the player within a given angle threshold.
+    /// </summary>
+    /// <param name="angleTolerance">Maximum angle (degrees) offset allowed to count as "facing".</param>
+    /// <returns>True if the enemy's forward (up) direction is within the tolerance of the player direction.</returns>
+    public bool IsFacingPlayer(float angleTolerance = 15f)
+    {
+        if (playerTransform == null)
+        {
+            return false;
+        }
+
+        Vector2 direction = GetDirectionToPlayer();
+        if (direction == Vector2.zero)
+        {
+            return false;
+        }
+
+        // Enemy's forward in 2D is transform.up
+        float angle = Vector2.Angle(transform.up, direction);
+        return angle <= angleTolerance;
+    }
+
+    /// <summary>
     /// Check if can fire (has ranged attack enabled).
     /// </summary>
     /// <returns>True if can fire.</returns>
@@ -370,7 +471,8 @@ public class Enemy : MonoBehaviour, IPoolable
     }
 
     /// <summary>
-    /// Spawn enemy projectile toward player.
+    /// Spawn enemy projectile in the direction the enemy is facing (transform.up).
+    /// The enemy must be rotated to face the target before calling this.
     /// </summary>
     private void SpawnEnemyProjectile()
     {
@@ -380,8 +482,8 @@ public class Enemy : MonoBehaviour, IPoolable
             return;
         }
 
-        // Get direction to player
-        Vector2 direction = GetDirectionToPlayer();
+        // Fire in the direction the enemy is visually facing
+        Vector2 direction = transform.up;
 
         // Spawn position slightly in front of enemy
         Vector3 spawnPos = transform.position + (Vector3)(direction * 0.5f);

@@ -764,6 +764,53 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 120}
   m_SizeDelta: {x: 516.2751, y: 315.4212}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &1336135565
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1336135567}
+  - component: {fileID: 1336135566}
+  m_Layer: 0
+  m_Name: BgmManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1336135566
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1336135565}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: debd41e82362de84d9bb944c5981c582, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BgmManager
+  bgmMixerGroup: {fileID: 189639053355378729, guid: f5db16cd6e4205d40bf49a7863eceae3, type: 2}
+  fadeDuration: 1
+  minClipPlaySeconds: 10
+--- !u!4 &1336135567
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1336135565}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 53.33992, y: 501.17557, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1344603042
 GameObject:
   m_ObjectHideFlags: 0
@@ -1028,10 +1075,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1713118351}
-  - component: {fileID: 1713118350}
   - component: {fileID: 1713118349}
   m_Layer: 0
-  m_Name: AudioManager
+  m_Name: SfxManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1051,21 +1097,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SfxManager
   sfxMixerGroup: {fileID: -2536850055105114216, guid: f5db16cd6e4205d40bf49a7863eceae3, type: 2}
   masterSfxVolume: 1
---- !u!114 &1713118350
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1713118348}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: debd41e82362de84d9bb944c5981c582, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BgmManager
-  bgmMixerGroup: {fileID: 189639053355378729, guid: f5db16cd6e4205d40bf49a7863eceae3, type: 2}
-  fadeDuration: 1
-  minClipPlaySeconds: 10
 --- !u!4 &1713118351
 Transform:
   m_ObjectHideFlags: 0
@@ -1385,3 +1416,4 @@ SceneRoots:
   - {fileID: 1534545621}
   - {fileID: 1863761732}
   - {fileID: 1713118351}
+  - {fileID: 1336135567}
