@@ -99,7 +99,6 @@ MonoBehaviour:
   spriteRenderer: {fileID: 2810711479129718282}
   animator: {fileID: 3732279967339083217}
   hitCollider: {fileID: 7131125013018640609}
-  enemyEngine: {fileID: 2506071557477148499}
   currentHealth: 0
   selfDestructSfx: {fileID: 11400000, guid: b72eb96f420dd3f42afa83bd294cd648, type: 2}
 --- !u!95 &3732279967339083217
@@ -137,9 +136,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyEngine
   engineVisual: {fileID: 915999101161495539}
-  engineSfx: {fileID: 11400000, guid: 2874904c38d7e5248b5c0a8847e01615, type: 2}
+  engineSfx: {fileID: 11400000, guid: 40544cbd62ae2b74ebb1dda466d553b4, type: 2}
   engineAudioSource: {fileID: 1270837431221828760}
-  movementThreshold: 0.0001
 --- !u!1 &915999101161495539
 GameObject:
   m_ObjectHideFlags: 0
@@ -268,13 +266,13 @@ AudioSource:
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 0}
   m_PlayOnAwake: 1
-  m_Volume: 1
+  m_Volume: 0.5
   m_Pitch: 1
   Loop: 1
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
-  Priority: 128
+  Priority: 100
   DopplerLevel: 1
   MinDistance: 1
   MaxDistance: 500

@@ -7,26 +7,21 @@ using UnityEngine;
 /// </summary>
 public class PlayerEngineController : MonoBehaviour
 {
-    private const string ANIM_BOOL_POWERING = "Powering";
-
     [Header("References")]
     [SerializeField] private InputHandler inputHandler;
 
-    [Header("Engine Audio")]
-    [SerializeField] private AudioSettings engineSfx;
-    [SerializeField] private AudioSource engineAudioSource;
-
     [Header("Engine Prefabs")]
-    [SerializeField] private GameObject baseEnginePrefab;
-    [SerializeField] private GameObject bigPulseEnginePrefab;
-    [SerializeField] private GameObject burstEnginePrefab;
-    [SerializeField] private GameObject superchargedEnginePrefab;
+    [SerializeField] private PlayerEngine baseEnginePrefab;
+    [SerializeField] private PlayerEngine bigPulseEnginePrefab;
+    [SerializeField] private PlayerEngine burstEnginePrefab;
+    [SerializeField] private PlayerEngine superchargedEnginePrefab;
 
     [Header("Settings")]
     [SerializeField] private EngineType defaultEngineType = EngineType.Base;
     private readonly Dictionary<EngineType, GameObject> spawnedEngines = new Dictionary<EngineType, GameObject>();
+    private readonly Dictionary<EngineType, PlayerEngine> spawnedEngineControllers = new Dictionary<EngineType, PlayerEngine>();
     private EngineType currentEngineType;
-    private Animator currentAnimator;
+    private PlayerEngine currentEngine;
 
     private void Awake()
     {
@@ -34,18 +29,6 @@ public class PlayerEngineController : MonoBehaviour
         {
             inputHandler = GetComponentInParent<InputHandler>();
         }
-
-        if (engineAudioSource == null)
-        {
-            engineAudioSource = GetComponent<AudioSource>();
-
-            if (engineAudioSource == null)
-            {
-                engineAudioSource = gameObject.AddComponent<AudioSource>();
-            }
-        }
-
-        ConfigureEngineAudioSource();
 
         // Spawn all engine types at start to avoid runtime instantiation
         SpawnAllEngines();
@@ -55,21 +38,7 @@ public class PlayerEngineController : MonoBehaviour
     private void Update()
     {
         bool isPowering = inputHandler != null && inputHandler.IsThrusting;
-
-        if (currentAnimator != null)
-        {
-            currentAnimator.SetBool(ANIM_BOOL_POWERING, isPowering);
-        }
-
-        UpdateEngineAudio(isPowering);
-    }
-
-    private void OnDisable()
-    {
-        if (engineAudioSource != null && engineAudioSource.isPlaying)
-        {
-            engineAudioSource.Stop();
-        }
+        currentEngine?.SetPowering(isPowering);
     }
 
     /// <summary>
@@ -77,7 +46,7 @@ public class PlayerEngineController : MonoBehaviour
     /// </summary>
     public void SetEngineType(EngineType engineType)
     {
-        if (currentEngineType == engineType && currentAnimator != null)
+        if (currentEngineType == engineType && currentEngine != null)
         {
             return;
         }
@@ -88,11 +57,11 @@ public class PlayerEngineController : MonoBehaviour
         if (engineInstance != null)
         {
             engineInstance.SetActive(true);
-            currentAnimator = engineInstance.GetComponentInChildren<Animator>();
+            currentEngine = GetEngineController(engineType);
         }
         else
         {
-            currentAnimator = null;
+            currentEngine = null;
         }
 
         currentEngineType = engineType;
@@ -102,10 +71,10 @@ public class PlayerEngineController : MonoBehaviour
 
     private void SpawnAllEngines()
     {
-        SpawnEngine(EngineType.Base, baseEnginePrefab);
-        SpawnEngine(EngineType.BigPulse, bigPulseEnginePrefab);
-        SpawnEngine(EngineType.Burst, burstEnginePrefab);
-        SpawnEngine(EngineType.Supercharged, superchargedEnginePrefab);
+        SpawnEngine(EngineType.Base, baseEnginePrefab.gameObject);
+        SpawnEngine(EngineType.BigPulse, bigPulseEnginePrefab.gameObject);
+        SpawnEngine(EngineType.Burst, burstEnginePrefab.gameObject);
+        SpawnEngine(EngineType.Supercharged, superchargedEnginePrefab.gameObject);
     }
 
     private void SpawnEngine(EngineType engineType, GameObject prefab)
@@ -126,7 +95,15 @@ public class PlayerEngineController : MonoBehaviour
         instance.transform.localScale = Vector3.one;
         instance.SetActive(false);
 
+        PlayerEngine engineController = instance.GetComponent<PlayerEngine>();
+        if (engineController == null)
+        {
+            engineController = instance.AddComponent<PlayerEngine>();
+        }
+
+
         spawnedEngines[engineType] = instance;
+        spawnedEngineControllers[engineType] = engineController;
     }
 
     private GameObject GetEngine(EngineType engineType)
@@ -141,81 +118,21 @@ public class PlayerEngineController : MonoBehaviour
 
     private void DeactivateCurrentEngine()
     {
+        currentEngine?.SetPowering(false);
+
         if (spawnedEngines.TryGetValue(currentEngineType, out GameObject existing) && existing != null)
         {
             existing.SetActive(false);
         }
     }
 
-    private GameObject GetPrefabForType(EngineType engineType)
+    private PlayerEngine GetEngineController(EngineType engineType)
     {
-        switch (engineType)
+        if (spawnedEngineControllers.TryGetValue(engineType, out PlayerEngine controller) && controller != null)
         {
-            case EngineType.Base:
-                return baseEnginePrefab;
-            case EngineType.BigPulse:
-                return bigPulseEnginePrefab;
-            case EngineType.Burst:
-                return burstEnginePrefab;
-            case EngineType.Supercharged:
-                return superchargedEnginePrefab;
-            default:
-                return baseEnginePrefab;
-        }
-    }
-
-    private void ConfigureEngineAudioSource()
-    {
-        if (engineAudioSource == null)
-        {
-            return;
+            return controller;
         }
 
-        engineAudioSource.playOnAwake = false;
-        engineAudioSource.loop = true;
-
-        if (engineSfx != null)
-        {
-            engineAudioSource.clip = engineSfx.Clip;
-            engineSfx.Source?.ApplyTo(engineAudioSource);
-            engineAudioSource.loop = true;
-        }
-    }
-
-    private void UpdateEngineAudio(bool isPowering)
-    {
-        if (engineAudioSource == null)
-        {
-            return;
-        }
-
-        if (engineSfx == null || engineSfx.Clip == null)
-        {
-            if (engineAudioSource.isPlaying)
-            {
-                engineAudioSource.Stop();
-            }
-
-            return;
-        }
-
-        if (isPowering)
-        {
-            if (engineAudioSource.clip != engineSfx.Clip)
-            {
-                engineAudioSource.clip = engineSfx.Clip;
-            }
-
-            if (!engineAudioSource.isPlaying)
-            {
-                engineSfx.Source?.ApplyTo(engineAudioSource);
-                engineAudioSource.loop = true;
-                engineAudioSource.Play();
-            }
-        }
-        else if (engineAudioSource.isPlaying)
-        {
-            engineAudioSource.Stop();
-        }
+        return null;
     }
 }
