@@ -2187,7 +2187,6 @@ Transform:
   - {fileID: 131166139}
   - {fileID: 1363273065}
   - {fileID: 1283237936}
-  - {fileID: 1240790141}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &580284434
@@ -3950,68 +3949,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1224252604}
   m_CullTransparentMesh: 1
---- !u!1 &1240790140
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1240790141}
-  - component: {fileID: 1240790142}
-  - component: {fileID: 1240790143}
-  m_Layer: 0
-  m_Name: AudioManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1240790141
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1240790140}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 563225649}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1240790142
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1240790140}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: debd41e82362de84d9bb944c5981c582, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BgmManager
-  bgmMixerGroup: {fileID: 189639053355378729, guid: f5db16cd6e4205d40bf49a7863eceae3, type: 2}
-  fadeDuration: 1
-  minClipPlaySeconds: 10
---- !u!114 &1240790143
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1240790140}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 54ec5acf4c5488f4fb3494992bac945e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::SfxManager
-  sfxMixerGroup: {fileID: -2536850055105114216, guid: f5db16cd6e4205d40bf49a7863eceae3, type: 2}
-  masterSfxVolume: 1
 --- !u!1 &1260369861
 GameObject:
   m_ObjectHideFlags: 0
