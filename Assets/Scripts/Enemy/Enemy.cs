@@ -19,6 +19,11 @@ public class Enemy : MonoBehaviour, IPoolable
     [SerializeField] private Collider2D hitCollider;
     [SerializeField] private GameObject engine;
 
+    [Header("Audio")]
+    [SerializeField] private AudioSettings engineSfx;
+    [SerializeField] private AudioSource engineAudioSource;
+    [SerializeField, Min(0f)] private float movementSfxThreshold = 0.0001f;
+
     private EnemyData data;
     private EnemyStateMachine stateMachine;
     private IMovementPattern movementPattern;
@@ -29,6 +34,7 @@ public class Enemy : MonoBehaviour, IPoolable
     private Color defaultColor;
     private Coroutine damageTintCoroutine;
     private bool isDead;
+    private Vector3 previousPosition;
 
     // Role-specific variables
     private float attackCooldown;
@@ -111,6 +117,18 @@ public class Enemy : MonoBehaviour, IPoolable
         {
             defaultColor = spriteRenderer.color;
         }
+
+        if (engineAudioSource == null)
+        {
+            engineAudioSource = GetComponent<AudioSource>();
+
+            if (engineAudioSource == null)
+            {
+                engineAudioSource = gameObject.AddComponent<AudioSource>();
+            }
+        }
+
+        ConfigureEngineAudioSource();
     }
 
     /// <summary>
@@ -158,6 +176,9 @@ public class Enemy : MonoBehaviour, IPoolable
 
         // Find player reference
         FindPlayer();
+
+        previousPosition = transform.position;
+        StopEngineAudio();
     }
 
     /// <summary>
@@ -251,6 +272,9 @@ public class Enemy : MonoBehaviour, IPoolable
             engine.SetActive(true);
         }
 
+        StopEngineAudio();
+        previousPosition = transform.position;
+
     }
 
     private void Update()
@@ -275,6 +299,8 @@ public class Enemy : MonoBehaviour, IPoolable
         {
             spawnCooldown -= Time.deltaTime;
         }
+
+        UpdateEngineAudioByMovement();
 
     }
 
@@ -647,12 +673,84 @@ public class Enemy : MonoBehaviour, IPoolable
             engine.SetActive(false);
         }
 
+        StopEngineAudio();
+
         Died?.Invoke(this);
         if (animator != null)
         {
             animator.SetTrigger(ANIM_TRIGGER_DEAD);
         }
         // Do not destroy here - let death animation handler call Cleanup() when finished
+    }
+
+    private void ConfigureEngineAudioSource()
+    {
+        if (engineAudioSource == null)
+        {
+            return;
+        }
+
+        engineAudioSource.playOnAwake = false;
+        engineAudioSource.loop = true;
+
+        if (engineSfx != null)
+        {
+            engineAudioSource.clip = engineSfx.Clip;
+            engineSfx.Source?.ApplyTo(engineAudioSource);
+            engineAudioSource.loop = true;
+        }
+    }
+
+    private void UpdateEngineAudioByMovement()
+    {
+        if (engineAudioSource == null || engineSfx == null || engineSfx.Clip == null)
+        {
+            StopEngineAudio();
+            previousPosition = transform.position;
+            return;
+        }
+
+        float movedSqr = ((Vector2)(transform.position - previousPosition)).sqrMagnitude;
+        bool isMoving = movedSqr > movementSfxThreshold;
+
+        if (isMoving)
+        {
+            PlayEngineAudio();
+        }
+        else
+        {
+            StopEngineAudio();
+        }
+
+        previousPosition = transform.position;
+    }
+
+    private void PlayEngineAudio()
+    {
+        if (engineAudioSource == null || engineSfx == null || engineSfx.Clip == null)
+        {
+            return;
+        }
+
+        if (engineAudioSource.clip != engineSfx.Clip)
+        {
+            engineAudioSource.clip = engineSfx.Clip;
+        }
+
+        if (!engineAudioSource.isPlaying)
+        {
+            engineSfx.Source?.ApplyTo(engineAudioSource);
+            engineAudioSource.loop = true;
+            engineAudioSource.Play();
+        }
+    }
+
+    private void StopEngineAudio()
+    {
+        if (engineAudioSource != null && engineAudioSource.isPlaying)
+        {
+            engineAudioSource.Stop();
+        }
     }
 
     /// <summary>

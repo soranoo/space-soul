@@ -13,14 +13,21 @@ public class AudioSourceConfig
     [Range(-3f, 3f)]
     [SerializeField] private float pitch = 1f;
 
-    [Range(0f, 1f)]
-    [SerializeField] private float spatialBlend = 0f;
+    [SerializeField] private bool randomizePitch;
+
+    [Range(-3f, 3f)]
+    [SerializeField] private float pitchMin = 0.95f;
+
+    [Range(-3f, 3f)]
+    [SerializeField] private float pitchMax = 1.05f;
 
     [SerializeField] private AudioMixerGroup mixerGroup;
 
     public float Volume => volume;
     public float Pitch => pitch;
-    public float SpatialBlend => spatialBlend;
+    public bool RandomizePitch => randomizePitch;
+    public float PitchMin => pitchMin;
+    public float PitchMax => pitchMax;
     public AudioMixerGroup MixerGroup => mixerGroup;
 
     public void ApplyTo(AudioSource source)
@@ -31,8 +38,17 @@ public class AudioSourceConfig
         }
 
         source.volume = volume;
-        source.pitch = pitch;
-        source.spatialBlend = spatialBlend;
+
+        if (randomizePitch)
+        {
+            float minPitch = Mathf.Clamp(Mathf.Min(pitchMin, pitchMax), -3f, 3f);
+            float maxPitch = Mathf.Clamp(Mathf.Max(pitchMin, pitchMax), -3f, 3f);
+            source.pitch = Random.Range(minPitch, maxPitch);
+        }
+        else
+        {
+            source.pitch = pitch;
+        }
 
         if (mixerGroup != null)
         {

@@ -12,6 +12,10 @@ public class PlayerEngineController : MonoBehaviour
     [Header("References")]
     [SerializeField] private InputHandler inputHandler;
 
+    [Header("Engine Audio")]
+    [SerializeField] private AudioSettings engineSfx;
+    [SerializeField] private AudioSource engineAudioSource;
+
     [Header("Engine Prefabs")]
     [SerializeField] private GameObject baseEnginePrefab;
     [SerializeField] private GameObject bigPulseEnginePrefab;
@@ -31,6 +35,18 @@ public class PlayerEngineController : MonoBehaviour
             inputHandler = GetComponentInParent<InputHandler>();
         }
 
+        if (engineAudioSource == null)
+        {
+            engineAudioSource = GetComponent<AudioSource>();
+
+            if (engineAudioSource == null)
+            {
+                engineAudioSource = gameObject.AddComponent<AudioSource>();
+            }
+        }
+
+        ConfigureEngineAudioSource();
+
         // Spawn all engine types at start to avoid runtime instantiation
         SpawnAllEngines();
         SetEngineType(defaultEngineType);
@@ -43,6 +59,16 @@ public class PlayerEngineController : MonoBehaviour
         if (currentAnimator != null)
         {
             currentAnimator.SetBool(ANIM_BOOL_POWERING, isPowering);
+        }
+
+        UpdateEngineAudio(isPowering);
+    }
+
+    private void OnDisable()
+    {
+        if (engineAudioSource != null && engineAudioSource.isPlaying)
+        {
+            engineAudioSource.Stop();
         }
     }
 
@@ -135,6 +161,61 @@ public class PlayerEngineController : MonoBehaviour
                 return superchargedEnginePrefab;
             default:
                 return baseEnginePrefab;
+        }
+    }
+
+    private void ConfigureEngineAudioSource()
+    {
+        if (engineAudioSource == null)
+        {
+            return;
+        }
+
+        engineAudioSource.playOnAwake = false;
+        engineAudioSource.loop = true;
+
+        if (engineSfx != null)
+        {
+            engineAudioSource.clip = engineSfx.Clip;
+            engineSfx.Source?.ApplyTo(engineAudioSource);
+            engineAudioSource.loop = true;
+        }
+    }
+
+    private void UpdateEngineAudio(bool isPowering)
+    {
+        if (engineAudioSource == null)
+        {
+            return;
+        }
+
+        if (engineSfx == null || engineSfx.Clip == null)
+        {
+            if (engineAudioSource.isPlaying)
+            {
+                engineAudioSource.Stop();
+            }
+
+            return;
+        }
+
+        if (isPowering)
+        {
+            if (engineAudioSource.clip != engineSfx.Clip)
+            {
+                engineAudioSource.clip = engineSfx.Clip;
+            }
+
+            if (!engineAudioSource.isPlaying)
+            {
+                engineSfx.Source?.ApplyTo(engineAudioSource);
+                engineAudioSource.loop = true;
+                engineAudioSource.Play();
+            }
+        }
+        else if (engineAudioSource.isPlaying)
+        {
+            engineAudioSource.Stop();
         }
     }
 }
