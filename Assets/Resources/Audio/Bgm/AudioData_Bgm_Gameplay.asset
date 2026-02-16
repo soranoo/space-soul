@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 54f319b8ec16bfd41b81a2f4eb0e94d3, type: 3}
-  m_Name: AudioData_Bgm_Gameplay_Normal
+  m_Name: AudioData_Bgm_Gameplay
   m_EditorClassIdentifier: Assembly-CSharp::AudioSettings
   clip: {fileID: 8300000, guid: ca68fd530a23c754ba2cc7e570aae409, type: 3}
   source:

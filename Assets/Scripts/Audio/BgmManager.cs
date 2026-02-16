@@ -23,7 +23,11 @@ public class BgmManager : SingletonBase<BgmManager>
     private AudioSettings currentTrackSettings;
     private AudioSettings pendingTrackSettings;
     private float nextSwitchAllowedTime;
+    private float runtimePitchMultiplier = 1f;
+    private float activeBasePitch = 1f;
+    private float inactiveBasePitch = 1f;
     private Coroutine fadeRoutine;
+    private Coroutine pitchTransitionRoutine;
     private GameStateMachine observedStateMachine;
 
     protected override void Awake()
@@ -44,6 +48,8 @@ public class BgmManager : SingletonBase<BgmManager>
 
         activeSource = primarySource;
         inactiveSource = secondarySource;
+        activeBasePitch = activeSource != null ? activeSource.pitch : 1f;
+        inactiveBasePitch = inactiveSource != null ? inactiveSource.pitch : 1f;
     }
 
     private void OnEnable()
@@ -59,6 +65,12 @@ public class BgmManager : SingletonBase<BgmManager>
     private void OnDisable()
     {
         UnsubscribeFromStateChanges();
+
+        if (pitchTransitionRoutine != null)
+        {
+            StopCoroutine(pitchTransitionRoutine);
+            pitchTransitionRoutine = null;
+        }
     }
 
     private void Update()
@@ -166,6 +178,36 @@ public class BgmManager : SingletonBase<BgmManager>
         SwitchTo(trackSettings);
     }
 
+    public void SetRuntimePitchMultiplier(float pitchMultiplier)
+    {
+        SetRuntimePitchMultiplier(pitchMultiplier, 0f);
+    }
+
+    public void SetRuntimePitchMultiplier(float pitchMultiplier, float transitionSeconds)
+    {
+        float targetPitch = Mathf.Clamp(pitchMultiplier, 0.1f, 3f);
+
+        if (transitionSeconds <= 0f)
+        {
+            if (pitchTransitionRoutine != null)
+            {
+                StopCoroutine(pitchTransitionRoutine);
+                pitchTransitionRoutine = null;
+            }
+
+            runtimePitchMultiplier = targetPitch;
+            RefreshRuntimePitch();
+            return;
+        }
+
+        if (pitchTransitionRoutine != null)
+        {
+            StopCoroutine(pitchTransitionRoutine);
+        }
+
+        pitchTransitionRoutine = StartCoroutine(TransitionRuntimePitch(targetPitch, transitionSeconds));
+    }
+
     private void SwitchTo(AudioSettings nextSettings)
     {
         if (nextSettings == null || nextSettings.Clip == null)
@@ -179,6 +221,8 @@ public class BgmManager : SingletonBase<BgmManager>
         }
 
         ApplySettingsToSource(inactiveSource, nextSettings);
+        inactiveBasePitch = inactiveSource != null ? inactiveSource.pitch : 1f;
+        ApplyRuntimePitch(inactiveSource, inactiveBasePitch);
         inactiveSource.clip = nextSettings.Clip;
         inactiveSource.volume = 0f;
         inactiveSource.Play();
@@ -194,6 +238,10 @@ public class BgmManager : SingletonBase<BgmManager>
         AudioSource temp = activeSource;
         activeSource = inactiveSource;
         inactiveSource = temp;
+
+        float tempPitch = activeBasePitch;
+        activeBasePitch = inactiveBasePitch;
+        inactiveBasePitch = tempPitch;
     }
 
     private IEnumerator Crossfade(AudioSource from, AudioSource to, float duration, float toTargetVolume)
@@ -250,5 +298,40 @@ public class BgmManager : SingletonBase<BgmManager>
                 source.outputAudioMixerGroup = bgmMixerGroup;
             }
         }
+    }
+
+    private void RefreshRuntimePitch()
+    {
+        ApplyRuntimePitch(activeSource, activeBasePitch);
+        ApplyRuntimePitch(inactiveSource, inactiveBasePitch);
+    }
+
+    private void ApplyRuntimePitch(AudioSource source, float basePitch)
+    {
+        if (source == null)
+        {
+            return;
+        }
+
+        source.pitch = Mathf.Clamp(basePitch * runtimePitchMultiplier, -3f, 3f);
+    }
+
+    private IEnumerator TransitionRuntimePitch(float targetPitch, float duration)
+    {
+        float elapsed = 0f;
+        float startPitch = runtimePitchMultiplier;
+
+        while (elapsed < duration)
+        {
+            elapsed += Time.unscaledDeltaTime;
+            float t = Mathf.Clamp01(elapsed / duration);
+            runtimePitchMultiplier = Mathf.Lerp(startPitch, targetPitch, t);
+            RefreshRuntimePitch();
+            yield return null;
+        }
+
+        runtimePitchMultiplier = targetPitch;
+        RefreshRuntimePitch();
+        pitchTransitionRoutine = null;
     }
 }
