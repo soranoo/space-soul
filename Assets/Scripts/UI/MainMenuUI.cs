@@ -9,6 +9,9 @@ public class MainMenuUI : MonoBehaviour
     [Header("Scene Loading")]
     [SerializeField] private string gameplaySceneName = "Gameplay";
 
+    [Header("Credits")]
+    [SerializeField] private CreditsPanelUI creditsPanel;
+
     [Header("Audio")]
     [SerializeField] private AudioSettings mainMenuBgmSettings;
 
@@ -20,6 +23,8 @@ public class MainMenuUI : MonoBehaviour
         {
             BgmManager.Instance?.SetTrackImmediate(mainMenuBgmSettings);
         }
+
+        creditsPanel?.Hide();
     }
 
     private void OnDisable()
@@ -67,5 +72,29 @@ public class MainMenuUI : MonoBehaviour
         waitingForGameplaySceneLoad = false;
         SceneManager.sceneLoaded -= OnGameplaySceneLoaded;
         GameManager.Instance?.StartGame();
+    }
+
+    /// <summary>
+    /// Shows the credits panel.
+    /// </summary>
+    public void OnCreditsPressed()
+    {
+        creditsPanel?.Show();
+    }
+
+    /// <summary>
+    /// Closes the credits panel.
+    /// </summary>
+    public void OnCloseCreditsPressed()
+    {
+        creditsPanel?.Hide();
+    }
+
+    /// <summary>
+    /// Quits the application.
+    /// </summary>
+    public void OnQuitPressed()
+    {
+        Application.Quit();
     }
 }
