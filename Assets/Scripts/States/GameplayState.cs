@@ -15,7 +15,7 @@ public class GameplayState : BaseGameState
     public override void Enter()
     {
         Time.timeScale = 1f;
-        EnsureWaveManager();
+        InitWaveManager();
         StartWaveIfNeeded();
         base.Enter();
     }
@@ -34,7 +34,7 @@ public class GameplayState : BaseGameState
         }
     }
 
-    private void EnsureWaveManager()
+    private void InitWaveManager()
     {
         if (waveManager == null)
         {

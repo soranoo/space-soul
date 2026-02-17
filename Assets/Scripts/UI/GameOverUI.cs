@@ -54,8 +54,7 @@ public class GameOverUI : MonoBehaviour
             return;
         }
 
-        Time.timeScale = 1f;
-        SceneManager.LoadScene(gameplaySceneName);
+        GameManager.Instance?.RestartGame(gameplaySceneName);
     }
 
     /// <summary>

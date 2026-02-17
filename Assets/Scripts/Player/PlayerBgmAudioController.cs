@@ -15,7 +15,7 @@ public class PlayerBgmAudioController : MonoBehaviour
 
     [Header("Health Pitch")]
     [SerializeField] private AnimationCurve healthToPitchCurve = new AnimationCurve(
-        new Keyframe(0f, 0.85f),
+        new Keyframe(0f, 1.5f),
         new Keyframe(1f, 1f));
 
     [Header("Death Pitch")]

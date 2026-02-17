@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 /// <summary>
 /// Central coordinator for game-wide systems and state transitions.
@@ -191,6 +192,22 @@ public class GameManager : SingletonBase<GameManager>
     public void GameOver()
     {
         stateMachine.ChangeState(gameOverState);
+    }
+
+    /// <summary>
+    /// Restart the game by reloading a scene and entering gameplay after load.
+    /// </summary>
+    public void RestartGame(string sceneName)
+    {
+        Time.timeScale = 1f;
+        SceneManager.sceneLoaded += OnRestartSceneLoaded;
+        SceneManager.LoadScene(sceneName);
+    }
+
+    private void OnRestartSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        SceneManager.sceneLoaded -= OnRestartSceneLoaded;
+        StartGame();
     }
 
     /// <summary>
