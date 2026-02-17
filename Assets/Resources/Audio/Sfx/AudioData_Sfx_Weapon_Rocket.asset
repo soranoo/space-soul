@@ -10,13 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 54f319b8ec16bfd41b81a2f4eb0e94d3, type: 3}
-  m_Name: AudioData_Sfx_Engine_Fire
+  m_Name: AudioData_Sfx_Weapon_Rocket
   m_EditorClassIdentifier: Assembly-CSharp::AudioSettings
-  clip: {fileID: 8300000, guid: f5dfd2b937f8eea4ea5dbc4e7f77e271, type: 3}
+  clip: {fileID: 8300000, guid: bae2d7ef4509b584bb4ecba96edd11fc, type: 3}
   source:
-    volume: 0.3
+    volume: 1
     pitch: 1
     randomizePitch: 1
     pitchMin: 0.95
     pitchMax: 1.05
-    mixerGroup: {fileID: -2536850055105114216, guid: f5db16cd6e4205d40bf49a7863eceae3, type: 2}
+    mixerGroup: {fileID: 0}

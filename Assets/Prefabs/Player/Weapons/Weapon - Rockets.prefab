@@ -215,7 +215,7 @@ MonoBehaviour:
   zapperSegmentLength: 0.5
   zapperDamageInterval: 0.1
   zapperDamagePerTick: 1
-  fireSound: {fileID: 8300000, guid: 8b081e28b2278d54889cbc419af4394a, type: 3}
+  fireSfxSettings: {fileID: 11400000, guid: 2a3ca8d1bea22404fbfc44c3f2c522ad, type: 2}
 --- !u!82 &6316331833464985844
 AudioSource:
   m_ObjectHideFlags: 0
@@ -225,7 +225,7 @@ AudioSource:
   m_GameObject: {fileID: 2965842365555091504}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: -5545860500597221392, guid: f5db16cd6e4205d40bf49a7863eceae3, type: 2}
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 0}
   m_PlayOnAwake: 1

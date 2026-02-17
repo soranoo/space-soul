@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 /// <summary>
 /// Manages player weapon firing.
@@ -22,7 +23,8 @@ public class WeaponController : MonoBehaviour
     [SerializeField] private int zapperDamagePerTick = 1;
 
     [Header("Audio")]
-    [SerializeField] private AudioClip fireSound;
+    [FormerlySerializedAs("fireSound")]
+    [SerializeField] private AudioSettings fireSfxSettings;
 
     private PlayerStats stats;
     private float lastFireTime;
@@ -197,10 +199,29 @@ public class WeaponController : MonoBehaviour
 
     private void PlayFireSound()
     {
-        if (fireSound != null)
+        if (fireSfxSettings == null || fireSfxSettings.Clip == null)
         {
-            audioSource.PlayOneShot(fireSound);
+            return;
         }
+
+        if (SfxManager.Instance != null)
+        {
+            SfxManager.Instance.Play(fireSfxSettings, audioSource);
+            return;
+        }
+
+        if (audioSource == null)
+        {
+            return;
+        }
+
+        if (fireSfxSettings.Source != null)
+        {
+            fireSfxSettings.Source.ApplyTo(audioSource);
+        }
+
+        float volume = fireSfxSettings.Source != null ? fireSfxSettings.Source.Volume : 1f;
+        audioSource.PlayOneShot(fireSfxSettings.Clip, volume);
     }
 
     /// <summary>

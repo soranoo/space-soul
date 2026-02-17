@@ -10,13 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 54f319b8ec16bfd41b81a2f4eb0e94d3, type: 3}
-  m_Name: AudioData_Sfx_Engine_Fire
+  m_Name: AudioData_Sfx_Projectile_Hit
   m_EditorClassIdentifier: Assembly-CSharp::AudioSettings
-  clip: {fileID: 8300000, guid: f5dfd2b937f8eea4ea5dbc4e7f77e271, type: 3}
+  clip: {fileID: 8300000, guid: 111760a2e606dea418cba127a7ce0634, type: 3}
   source:
-    volume: 0.3
+    volume: 1
     pitch: 1
     randomizePitch: 1
-    pitchMin: 0.95
-    pitchMax: 1.05
-    mixerGroup: {fileID: -2536850055105114216, guid: f5db16cd6e4205d40bf49a7863eceae3, type: 2}
+    pitchMin: 0.7
+    pitchMax: 1.1
+    mixerGroup: {fileID: 0}
