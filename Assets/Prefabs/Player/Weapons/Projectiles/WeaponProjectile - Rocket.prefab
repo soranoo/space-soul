@@ -160,6 +160,7 @@ MonoBehaviour:
   speed: 15
   lifetime: 3
   baseDamage: 1
+  onHitSfx: {fileID: 11400000, guid: 174efc76f9bab9d43b58bcad1a8952bc, type: 2}
 --- !u!61 &7321815212875560982
 BoxCollider2D:
   m_ObjectHideFlags: 0

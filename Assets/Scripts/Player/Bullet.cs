@@ -13,6 +13,9 @@ public class Bullet : MonoBehaviour, IPoolable
     [SerializeField] private float lifetime = 3f;
     [SerializeField] private int baseDamage = 1;
 
+    [Header("Audio")]
+    [SerializeField] private AudioSettings onHitSfx;
+
     private float damageMultiplier = 1f;
     private float spawnTime;
 
@@ -89,6 +92,11 @@ public class Bullet : MonoBehaviour, IPoolable
     {
         if (other.CompareTag("Enemy"))
         {
+            if (onHitSfx != null)
+            {
+                SfxManager.Instance?.Play(onHitSfx);
+            }
+
             Despawn();
         }
     }
