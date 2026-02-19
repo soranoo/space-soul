@@ -4,20 +4,13 @@ using UnityEngine;
 /// Basic bullet behavior.
 /// Implements IPoolable for object pooling support.
 /// </summary>
-public class Bullet : MonoBehaviour, IPoolable
+public class Bullet : ProjectileBase
 {
-    [SerializeField] private string poolIdOverride;
-
     [Header("Bullet Settings")]
     [SerializeField] private float speed = 15f;
-    [SerializeField] private float lifetime = 3f;
     [SerializeField] private int baseDamage = 1;
 
-    [Header("Audio")]
-    [SerializeField] private AudioSettings onHitSfx;
-
     private float damageMultiplier = 1f;
-    private float spawnTime;
 
     /// <summary>
     /// Set the damage multiplier for this bullet.
@@ -35,56 +28,19 @@ public class Bullet : MonoBehaviour, IPoolable
         return Mathf.RoundToInt(baseDamage * damageMultiplier);
     }
 
-    /// <summary>
-    /// Get the pool identifier for this prefab type.
-    /// </summary>
-    public string GetPoolId()
+    public override void OnSpawn()
     {
-        if (!string.IsNullOrWhiteSpace(poolIdOverride))
-        {
-            return poolIdOverride;
-        }
-
-        return gameObject.name;
-    }
-
-    /// <summary>
-    /// Assign the pool identifier for this instance.
-    /// </summary>
-    public void SetPoolId(string poolId)
-    {
-        poolIdOverride = poolId;
-    }
-
-    /// <summary>
-    /// Called when retrieved from pool.
-    /// </summary>
-    public void OnSpawn()
-    {
+        base.OnSpawn();
         damageMultiplier = 1f;
-        spawnTime = Time.time;
-    }
-
-    /// <summary>
-    /// Called when returned to pool.
-    /// </summary>
-    public void OnDespawn()
-    {
-        // Reset state if needed
-    }
-
-    private void OnEnable()
-    {
-        spawnTime = Time.time;
     }
 
     private void Update()
     {
         transform.Translate(Vector3.up * speed * Time.deltaTime);
 
-        if (Time.time >= spawnTime + lifetime)
+        if (HasExpired())
         {
-            Despawn();
+            DespawnSelf();
         }
     }
 
@@ -92,25 +48,8 @@ public class Bullet : MonoBehaviour, IPoolable
     {
         if (other.CompareTag("Enemy"))
         {
-            if (onHitSfx != null)
-            {
-                SfxManager.Instance?.Play(onHitSfx);
-            }
-
-            Despawn();
-        }
-    }
-
-    private void Despawn()
-    {
-        // Use object pool if PoolManager exists, otherwise fallback to Destroy
-        if (PoolManager.Instance != null)
-        {
-            PoolManager.Instance.Release(this);
-        }
-        else
-        {
-            Destroy(gameObject);
+            PlayHitSfx();
+            DespawnSelf();
         }
     }
 }

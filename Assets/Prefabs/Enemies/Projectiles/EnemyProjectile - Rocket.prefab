@@ -144,6 +144,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyProjectile
   poolIdOverride: EnemyProjectile - Rocket
+  lifetime: 3
+  onHitSfx: {fileID: 11400000, guid: 174efc76f9bab9d43b58bcad1a8952bc, type: 2}
   spriteRenderer: {fileID: 7832405672107143125}
   rb: {fileID: 7095130780186660097}
 --- !u!1 &7871463112787085852

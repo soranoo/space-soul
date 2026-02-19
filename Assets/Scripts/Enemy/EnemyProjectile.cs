@@ -3,18 +3,14 @@ using UnityEngine;
 /// <summary>
 /// Enemy projectile that moves in a direction and damages the player on contact.
 /// </summary>
-public class EnemyProjectile : MonoBehaviour, IPoolable
+public class EnemyProjectile : ProjectileBase
 {
-    [SerializeField] private string poolIdOverride;
-
     [Header("References")]
     [SerializeField] private SpriteRenderer spriteRenderer;
     [SerializeField] private Rigidbody2D rb;
 
     private int damage;
     private float speed;
-    private float lifetime;
-    private float spawnTime;
 
     private void Awake()
     {
@@ -40,8 +36,8 @@ public class EnemyProjectile : MonoBehaviour, IPoolable
     {
         this.damage = damage;
         this.speed = speed;
-        this.lifetime = lifetime;
-        this.spawnTime = Time.time;
+        SetLifetime(lifetime);
+        ResetLifetimeTimer();
 
         // Set velocity
         if (rb != null)
@@ -54,37 +50,20 @@ public class EnemyProjectile : MonoBehaviour, IPoolable
         transform.rotation = Quaternion.Euler(0f, 0f, angle - 90f);
     }
 
-    /// <summary>
-    /// Get the pool identifier for this prefab type.
-    /// </summary>
-    public string GetPoolId()
+    public override void OnSpawn()
     {
-        if (!string.IsNullOrWhiteSpace(poolIdOverride))
-        {
-            return poolIdOverride;
-        }
+        base.OnSpawn();
 
-        return gameObject.name;
-    }
-
-    /// <summary>
-    /// Assign the pool identifier for this instance.
-    /// </summary>
-    public void SetPoolId(string poolId)
-    {
-        poolIdOverride = poolId;
-    }
-
-    public void OnSpawn()
-    {
         if (spriteRenderer != null)
         {
             spriteRenderer.enabled = true;
         }
     }
 
-    public void OnDespawn()
+    public override void OnDespawn()
     {
+        base.OnDespawn();
+
         if (rb != null)
         {
             rb.linearVelocity = Vector2.zero;
@@ -98,10 +77,9 @@ public class EnemyProjectile : MonoBehaviour, IPoolable
 
     private void Update()
     {
-        // Check lifetime
-        if (Time.time - spawnTime >= lifetime)
+        if (HasExpired())
         {
-            Despawn();
+            DespawnSelf();
         }
     }
 
@@ -109,7 +87,8 @@ public class EnemyProjectile : MonoBehaviour, IPoolable
     {
         if (other.GetComponent<ShieldBlocker>() != null)
         {
-            Despawn();
+            PlayHitSfx();
+            DespawnSelf();
             return;
         }
 
@@ -126,11 +105,7 @@ public class EnemyProjectile : MonoBehaviour, IPoolable
             player?.TakeDamage(damage);
         }
 
-        Despawn();
-    }
-
-    private void Despawn()
-    {
-        PoolManager.Instance.Release(this);
+        PlayHitSfx();
+        DespawnSelf();
     }
 }

@@ -235,5 +235,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyProjectile
   poolIdOverride: EnemyProjectile - Torpedo
+  lifetime: 3
+  onHitSfx: {fileID: 11400000, guid: 174efc76f9bab9d43b58bcad1a8952bc, type: 2}
   spriteRenderer: {fileID: 4382990368879401910}
   rb: {fileID: 6604193806788228538}
