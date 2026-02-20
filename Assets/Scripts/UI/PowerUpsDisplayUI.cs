@@ -18,7 +18,7 @@ public class PowerUpsDisplayUI : MonoBehaviour
     {
         if (powerUpController == null)
         {
-            powerUpController = FindObjectOfType<PowerUpController>();
+            powerUpController = FindFirstObjectByType<PowerUpController>();
         }
 
         Subscribe();
