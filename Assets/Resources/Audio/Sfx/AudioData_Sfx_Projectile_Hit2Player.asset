@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 54f319b8ec16bfd41b81a2f4eb0e94d3, type: 3}
+  m_Name: AudioData_Sfx_Projectile_Hit2Player
+  m_EditorClassIdentifier: Assembly-CSharp::AudioSettings
+  clip: {fileID: 8300000, guid: 111760a2e606dea418cba127a7ce0634, type: 3}
+  source:
+    volume: 0.8
+    pitch: 1
+    randomizePitch: 1
+    pitchMin: 0.7
+    pitchMax: 1.1
+    mixerGroup: {fileID: 0}

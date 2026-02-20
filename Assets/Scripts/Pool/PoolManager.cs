@@ -235,17 +235,44 @@ public class PoolManager : SingletonBase<PoolManager>
     }
 
     /// <summary>
-    /// Return an object to its pool using the instance's pool id.
+    /// Return an object to its pool using runtime type dispatch.
+    /// Use this when compile-time type may differ from the pooled concrete type.
     /// </summary>
-    public void Release<T>(T instance) where T : MonoBehaviour, IPoolable
+    /// <param name="instance">Object to return.</param>
+    public void Release(IPoolable instance)
     {
+        if (instance == null)
+        {
+            return;
+        }
+
         if (!TryGetPoolId(instance, out string poolId))
         {
             Debug.LogWarning("Instance has an invalid pool id.");
             return;
         }
 
-        Release(poolId, instance);
+        if (!pools.TryGetValue(poolId, out object poolObj))
+        {
+            Debug.LogWarning($"Pool '{poolId}' not found.");
+            return;
+        }
+
+        System.Reflection.MethodInfo releaseMethod = poolObj.GetType().GetMethod("Release");
+        if (releaseMethod == null)
+        {
+            Debug.LogWarning($"Pool '{poolId}' does not expose a Release method.");
+            return;
+        }
+
+        try
+        {
+            releaseMethod.Invoke(poolObj, new object[] { instance });
+        }
+        catch (Exception ex)
+        {
+            Debug.LogWarning($"Failed to release instance '{(instance as MonoBehaviour)?.name}' to pool '{poolId}': {ex.Message}");
+        }
     }
 
     private static bool TryGetPoolId(IPoolable poolable, out string poolId)

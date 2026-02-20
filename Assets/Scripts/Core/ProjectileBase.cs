@@ -81,13 +81,6 @@ public abstract class ProjectileBase : MonoBehaviour, IPoolable
 
     protected void DespawnSelf()
     {
-        if (PoolManager.Instance != null)
-        {
-            PoolManager.Instance.Release(this);
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
+        PoolManager.Instance.Release(this);
     }
 }

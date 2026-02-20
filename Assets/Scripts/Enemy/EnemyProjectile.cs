@@ -92,15 +92,15 @@ public class EnemyProjectile : ProjectileBase
             return;
         }
 
-        // Ignore enemy collisions
         if (other.CompareTag("Enemy"))
         {
+            // Ignore enemy collisions
             return;
         }
 
-        // Damage player on contact
         if (other.CompareTag("Player"))
         {
+            // Damage player on contact
             PlayerController player = other.GetComponent<PlayerController>();
             player?.TakeDamage(damage);
         }
