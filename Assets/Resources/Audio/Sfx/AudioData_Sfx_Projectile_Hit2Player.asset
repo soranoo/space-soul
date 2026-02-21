@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::AudioSettings
   clip: {fileID: 8300000, guid: 111760a2e606dea418cba127a7ce0634, type: 3}
   source:
-    volume: 0.8
+    volume: 0.5
     pitch: 1
     randomizePitch: 1
     pitchMin: 0.7

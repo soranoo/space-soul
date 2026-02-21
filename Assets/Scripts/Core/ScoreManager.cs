@@ -6,7 +6,10 @@ using UnityEngine;
 /// </summary>
 public class ScoreManager : SingletonBase<ScoreManager>
 {
+    private const string HighScoreKey = "score.high";
+
     private int score;
+    private int highScore;
 
     /// <summary>
     /// Current score value.
@@ -14,9 +17,31 @@ public class ScoreManager : SingletonBase<ScoreManager>
     public int Score => score;
 
     /// <summary>
+    /// Highest score persisted between runs.
+    /// </summary>
+    public int HighScore => highScore;
+
+    /// <summary>
     /// Fired when score changes.
     /// </summary>
     public event Action<int> ScoreChanged;
+
+    /// <summary>
+    /// Fired when the high score changes.
+    /// </summary>
+    public event Action<int> HighScoreChanged;
+
+    protected override void Awake()
+    {
+        base.Awake();
+
+        if (!ReferenceEquals(Instance, this))
+        {
+            return;
+        }
+
+        highScore = Mathf.Max(0, PlayerDataStore.GetInt(HighScoreKey, 0));
+    }
 
     /// <summary>
     /// Add points to the score.
@@ -30,6 +55,13 @@ public class ScoreManager : SingletonBase<ScoreManager>
 
         score += amount;
         ScoreChanged?.Invoke(score);
+
+        if (score > highScore)
+        {
+            highScore = score;
+            PlayerDataStore.SetInt(HighScoreKey, highScore);
+            HighScoreChanged?.Invoke(highScore);
+        }
     }
 
     /// <summary>
