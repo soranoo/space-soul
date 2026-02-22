@@ -75,14 +75,6 @@ public class EnemyProjectile : ProjectileBase
         }
     }
 
-    private void Update()
-    {
-        if (HasExpired())
-        {
-            DespawnSelf();
-        }
-    }
-
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.GetComponent<ShieldBlocker>() != null)

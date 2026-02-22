@@ -34,14 +34,11 @@ public class Bullet : ProjectileBase
         damageMultiplier = 1f;
     }
 
-    private void Update()
+    protected override void Update()
     {
         transform.Translate(Vector3.up * speed * Time.deltaTime);
 
-        if (HasExpired())
-        {
-            DespawnSelf();
-        }
+        base.Update();
     }
 
     private void OnTriggerEnter2D(Collider2D other)

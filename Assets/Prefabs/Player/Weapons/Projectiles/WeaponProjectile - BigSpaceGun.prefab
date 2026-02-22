@@ -157,10 +157,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Bullet
   poolIdOverride: WeaponProjectile - BigSpaceGun
-  speed: 15
   lifetime: 3
-  baseDamage: 1
+  despawnOutSideViewportMultiplier: 1.1
   onHitSfx: {fileID: 11400000, guid: 174efc76f9bab9d43b58bcad1a8952bc, type: 2}
+  speed: 15
+  baseDamage: 1
 --- !u!58 &8378237660203508990
 CircleCollider2D:
   m_ObjectHideFlags: 0
