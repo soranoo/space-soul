@@ -17,6 +17,7 @@ public class InputHandler : MonoBehaviour
     private Vector2 aimPosition;
     private bool isFiring;
     private bool allowFire;
+    private bool allowGameplayInput;
 
     /// <summary>
     /// Whether the player is currently applying thrust input.
@@ -51,16 +52,17 @@ public class InputHandler : MonoBehaviour
 
     private void OnEnable()
     {
-        inputActions.Player.Enable();
-        
         gameManager.StateMachine.StateChanged += OnStateChanged;
-        UpdateFireAllowed(gameManager.StateMachine.CurrentState);
+        UpdateInputAllowed(gameManager.StateMachine.CurrentState);
+
 
         inputActions.Player.Move.performed += OnMovePerformed;
         inputActions.Player.Move.canceled += OnMoveCanceled;
         inputActions.Player.Attack.performed += OnAttackPerformed;
         inputActions.Player.Attack.canceled += OnAttackCanceled;
         inputActions.Player.Point.performed += OnPointPerformed;
+
+        ApplyPlayerActionMapState();
     }
 
     private void OnDisable()
@@ -72,6 +74,9 @@ public class InputHandler : MonoBehaviour
         inputActions.Player.Point.performed -= OnPointPerformed;
 
         gameManager.StateMachine.StateChanged -= OnStateChanged;
+
+        moveInput = Vector2.zero;
+        isFiring = false;
 
         inputActions.Player.Disable();
     }
@@ -100,6 +105,11 @@ public class InputHandler : MonoBehaviour
 
     private void HandleMovement()
     {
+        if (!allowGameplayInput)
+        {
+            return;
+        }
+
         // Thrust forward when pressing up (y > 0).
         if (moveInput.y > 0f)
         {
@@ -116,6 +126,12 @@ public class InputHandler : MonoBehaviour
 
     private void OnMovePerformed(InputAction.CallbackContext context)
     {
+        if (!allowGameplayInput)
+        {
+            moveInput = Vector2.zero;
+            return;
+        }
+
         moveInput = context.ReadValue<Vector2>();
     }
 
@@ -148,22 +164,49 @@ public class InputHandler : MonoBehaviour
 
     private void OnPointPerformed(InputAction.CallbackContext context)
     {
+        if (!allowGameplayInput)
+        {
+            return;
+        }
+
         aimPosition = context.ReadValue<Vector2>();
     }
 
     private void OnStateChanged(IGameState previousState, IGameState currentState)
     {
-        UpdateFireAllowed(currentState);
+        UpdateInputAllowed(currentState);
     }
 
-    private void UpdateFireAllowed(IGameState currentState)
+    private void UpdateInputAllowed(IGameState currentState)
     {
-        allowFire = currentState is GameplayState;
+        allowGameplayInput = currentState is GameplayState;
+        allowFire = allowGameplayInput;
 
-        if (!allowFire && isFiring)
+        if (!allowGameplayInput)
         {
+            moveInput = Vector2.zero;
+
+            if (!isFiring)
+            {
+                ApplyPlayerActionMapState();
+                return;
+            }
+
             isFiring = false;
             FireStopped?.Invoke();
         }
+
+        ApplyPlayerActionMapState();
+    }
+
+    private void ApplyPlayerActionMapState()
+    {
+        if (allowGameplayInput)
+        {
+            inputActions.Player.Enable();
+            return;
+        }
+
+        inputActions.Player.Disable();
     }
 }
