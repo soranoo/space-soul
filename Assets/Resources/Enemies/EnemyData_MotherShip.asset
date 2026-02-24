@@ -12,22 +12,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3cde25d693330624f9e1273dd47188fe, type: 3}
   m_Name: EnemyData_MotherShip
   m_EditorClassIdentifier: Assembly-CSharp::EnemyData
-  baseHealth: 1
+  baseHealth: 1000
   baseSpeed: 3
   contactDamage: 1
-  detectionRange: 15
-  preferredDistance: 10
+  detectionRange: 50
+  preferredDistance: 40
   selfDestructOnContact: 0
-  canFireProjectiles: 0
-  attackRange: 5
+  canFireProjectiles: 1
+  attackRange: 10
   fireRate: 1
-  projectileDamage: 1
+  projectileDamage: 3
   projectileSpeed: 8
-  projectilePrefab: {fileID: 0}
+  projectilePrefab: {fileID: 9096654700147482479, guid: eea9f00aeec50ca4b863ada3b87afe15, type: 3}
   canSpawnEnemies: 1
   spawnInterval: 3
   spawnCount: 1
-  spawnList: []
+  spawnList:
+  - enemyData: {fileID: 11400000, guid: 5a766f2b4568a2a409fd59af7d23a52c, type: 2}
+    weight: 15
+  - enemyData: {fileID: 11400000, guid: dbe8f70d4bc2ee049b458fe7907b5fc1, type: 2}
+    weight: 80
+  - enemyData: {fileID: 11400000, guid: ee59eba43fe5ec74daaf86303e381258, type: 2}
+    weight: 5
   pointValue: 3000
   powerUpDropChance: 0.1
   prefab: {fileID: 662773263525930302, guid: f0cb78b9cfd90374195557a307e5805c, type: 3}

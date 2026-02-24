@@ -7,6 +7,7 @@ using UnityEngine;
 /// Base enemy behavior.
 /// Implements IPoolable for object pooling support.
 /// </summary>
+[RequireComponent(typeof(Rigidbody2D))]
 public class Enemy : MonoBehaviour, IPoolable
 {
     [SerializeField] private string poolIdOverride;
@@ -18,6 +19,7 @@ public class Enemy : MonoBehaviour, IPoolable
     [SerializeField] private Animator animator;
     [SerializeField] private Collider2D hitCollider;
 
+    private Rigidbody2D rb;
     private EnemyData data;
     private EnemyStateMachine stateMachine;
     private IMovementPattern movementPattern;
@@ -126,6 +128,8 @@ public class Enemy : MonoBehaviour, IPoolable
             defaultColor = spriteRenderer.color;
         }
 
+        rb = GetComponent<Rigidbody2D>();
+
     }
 
     /// <summary>
@@ -160,6 +164,9 @@ public class Enemy : MonoBehaviour, IPoolable
             animator.enabled = true;
         }
 
+        rb.linearVelocity = Vector2.zero;
+        rb.angularVelocity = 0f;
+
         // Setup movement pattern (always chase)
         SetupMovementPattern();
 
@@ -178,7 +185,7 @@ public class Enemy : MonoBehaviour, IPoolable
     private void SetupMovementPattern()
     {
         movementPattern = new ChasePlayerPattern();
-        movementPattern.Initialize(transform);
+        movementPattern.Initialize(transform, rb);
     }
 
     /// <summary>
@@ -257,6 +264,9 @@ public class Enemy : MonoBehaviour, IPoolable
         {
             hitCollider.enabled = true;
         }
+
+        rb.linearVelocity = Vector2.zero;
+        rb.angularVelocity = 0f;
 
         Despawned?.Invoke(this);
 
@@ -342,7 +352,7 @@ public class Enemy : MonoBehaviour, IPoolable
     {
         if (!isDead && movementPattern != null)
         {
-            movementPattern.UpdateMovement(transform, effectiveSpeed);
+            movementPattern.UpdateMovement(transform, rb, effectiveSpeed);
             NotifyMovementCommanded();
         }
     }
@@ -422,7 +432,9 @@ public class Enemy : MonoBehaviour, IPoolable
             return;
         }
 
-        transform.Translate(Vector2.up * speed * Time.deltaTime, Space.Self);
+        Vector2 nextPosition = rb.position + (Vector2)(transform.up * speed * Time.deltaTime);
+        rb.MovePosition(nextPosition);
+
         NotifyMovementCommanded();
     }
 
@@ -653,6 +665,10 @@ public class Enemy : MonoBehaviour, IPoolable
         }
 
         isDead = true;
+
+        rb.linearVelocity = Vector2.zero;
+        rb.angularVelocity = 0f;
+
         if (hitCollider != null)
         {
             hitCollider.enabled = false;
@@ -697,7 +713,8 @@ public class Enemy : MonoBehaviour, IPoolable
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (data == null) {
+        if (data == null)
+        {
             return;
         }
 

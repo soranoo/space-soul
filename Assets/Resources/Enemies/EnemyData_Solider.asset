@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: EnemyData_Solider
   m_EditorClassIdentifier: Assembly-CSharp::EnemyData
   baseHealth: 1
-  baseSpeed: 3
-  contactDamage: 1
+  baseSpeed: 15
+  contactDamage: 3
   detectionRange: 15
   preferredDistance: 5
   selfDestructOnContact: 0

@@ -6,15 +6,18 @@ using UnityEngine;
 public class ChasePlayerPattern : IMovementPattern
 {
     private Transform enemyTransform;
+    private Rigidbody2D enemyRb;
     private Transform playerTransform;
 
     /// <summary>
     /// Initialize the movement pattern.
     /// </summary>
     /// <param name="enemy">The enemy transform.</param>
-    public void Initialize(Transform enemy)
+    /// <param name="rb">The enemy rigidbody.</param>
+    public void Initialize(Transform enemy, Rigidbody2D rb)
     {
         enemyTransform = enemy;
+        enemyRb = rb;
         FindPlayer();
     }
 
@@ -34,8 +37,9 @@ public class ChasePlayerPattern : IMovementPattern
     /// Update movement toward player.
     /// </summary>
     /// <param name="enemy">The enemy transform to move.</param>
+    /// <param name="rb">The enemy rigidbody used for movement.</param>
     /// <param name="speed">Movement speed.</param>
-    public void UpdateMovement(Transform enemy, float speed)
+    public void UpdateMovement(Transform enemy, Rigidbody2D rb, float speed)
     {
         if (playerTransform == null)
         {
@@ -47,7 +51,17 @@ public class ChasePlayerPattern : IMovementPattern
         }
 
         Vector2 direction = ((Vector2)playerTransform.position - (Vector2)enemy.position).normalized;
-        enemy.Translate(direction * speed * Time.deltaTime, Space.World);
+
+        Rigidbody2D targetBody = rb != null ? rb : enemyRb;
+        if (targetBody != null)
+        {
+            Vector2 nextPosition = targetBody.position + direction * speed * Time.deltaTime;
+            targetBody.MovePosition(nextPosition);
+        }
+        else
+        {
+            enemy.Translate(direction * speed * Time.deltaTime, Space.World);
+        }
 
         // Rotate to face player
         float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg - 90f;
@@ -59,6 +73,7 @@ public class ChasePlayerPattern : IMovementPattern
     /// </summary>
     public void Reset()
     {
+        enemyRb = null;
         playerTransform = null;
     }
 }

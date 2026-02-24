@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: EnemyData_Suicide
   m_EditorClassIdentifier: Assembly-CSharp::EnemyData
   baseHealth: 1
-  baseSpeed: 3
+  baseSpeed: 15
   contactDamage: 30
   detectionRange: 20
   preferredDistance: 0
