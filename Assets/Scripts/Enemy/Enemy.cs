@@ -17,7 +17,6 @@ public class Enemy : MonoBehaviour, IPoolable
     [Header("References")]
     [SerializeField] private SpriteRenderer spriteRenderer;
     [SerializeField] private Animator animator;
-    [SerializeField] private Collider2D hitCollider;
 
     private Rigidbody2D rb;
     private EnemyData data;
@@ -118,11 +117,6 @@ public class Enemy : MonoBehaviour, IPoolable
             animator = GetComponent<Animator>();
         }
 
-        if (hitCollider == null)
-        {
-            hitCollider = GetComponent<Collider2D>();
-        }
-
         if (spriteRenderer != null)
         {
             defaultColor = spriteRenderer.color;
@@ -147,10 +141,7 @@ public class Enemy : MonoBehaviour, IPoolable
         spawnCooldown = 0f;
         isDead = false;
 
-        if (hitCollider != null)
-        {
-            hitCollider.enabled = true;
-        }
+        rb.simulated = true;
 
         // Reset visual tint
         if (spriteRenderer != null)
@@ -260,10 +251,7 @@ public class Enemy : MonoBehaviour, IPoolable
             animator.enabled = true;
         }
 
-        if (hitCollider != null)
-        {
-            hitCollider.enabled = true;
-        }
+        rb.simulated = true;
 
         rb.linearVelocity = Vector2.zero;
         rb.angularVelocity = 0f;
@@ -669,10 +657,7 @@ public class Enemy : MonoBehaviour, IPoolable
         rb.linearVelocity = Vector2.zero;
         rb.angularVelocity = 0f;
 
-        if (hitCollider != null)
-        {
-            hitCollider.enabled = false;
-        }
+        rb.simulated = false;
 
         Died?.Invoke(this);
         if (animator != null)
@@ -703,10 +688,7 @@ public class Enemy : MonoBehaviour, IPoolable
             animator.enabled = false;
         }
 
-        if (hitCollider != null)
-        {
-            hitCollider.enabled = false;
-        }
+        rb.simulated = false;
 
         PoolManager.Instance.Release(this);
     }
