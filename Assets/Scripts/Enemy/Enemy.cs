@@ -10,6 +10,12 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody2D))]
 public class Enemy : MonoBehaviour, IPoolable
 {
+    private enum ProjectileFireMode
+    {
+        Random,
+        All
+    }
+
     [SerializeField] private string poolIdOverride;
     private const string ANIM_TRIGGER_DEAD = "Dead";
     private const string ANIM_TRIGGER_FIRE = "Fire";
@@ -17,6 +23,9 @@ public class Enemy : MonoBehaviour, IPoolable
     [Header("References")]
     [SerializeField] private SpriteRenderer spriteRenderer;
     [SerializeField] private Animator animator;
+
+    [Header("Projectile")]
+    [SerializeField] private ProjectileFireMode projectileFireMode = ProjectileFireMode.Random;
     [SerializeField] private Transform[] firePoints;
 
     private Rigidbody2D rb;
@@ -499,13 +508,33 @@ public class Enemy : MonoBehaviour, IPoolable
             return;
         }
 
+        if (projectileFireMode == ProjectileFireMode.All)
+        {
+            Transform[] availableFirePoints = GetAvailableFirePoints();
+            for (int i = 0; i < availableFirePoints.Length; i++)
+            {
+                SpawnEnemyProjectileFromFirePoint(availableFirePoints[i]);
+            }
+
+            return;
+        }
+
         Transform selectedFirePoint = GetRandomFirePoint();
+        SpawnEnemyProjectileFromFirePoint(selectedFirePoint);
+    }
+
+    private void SpawnEnemyProjectileFromFirePoint(Transform firePoint)
+    {
+        if (firePoint == null)
+        {
+            firePoint = transform;
+        }
 
         // Fire in the direction the selected fire point is facing
-        Vector2 direction = selectedFirePoint.up;
+        Vector2 direction = firePoint.up;
 
         // Spawn position at the selected fire point
-        Vector3 spawnPos = selectedFirePoint.position;
+        Vector3 spawnPos = firePoint.position;
 
         // Try to get from pool first
         EnemyProjectile projectile = null;
@@ -541,16 +570,46 @@ public class Enemy : MonoBehaviour, IPoolable
         }
     }
 
-    private Transform GetRandomFirePoint()
+    private Transform[] GetAvailableFirePoints()
     {
         if (firePoints == null || firePoints.Length == 0)
         {
-            return transform;
+            return new[] { transform };
         }
 
-        int randomIndex = UnityEngine.Random.Range(0, firePoints.Length);
-        Transform selected = firePoints[randomIndex];
-        return selected != null ? selected : transform;
+        int validCount = 0;
+        for (int i = 0; i < firePoints.Length; i++)
+        {
+            if (firePoints[i] != null)
+            {
+                validCount++;
+            }
+        }
+
+        if (validCount == 0)
+        {
+            return new[] { transform };
+        }
+
+        Transform[] available = new Transform[validCount];
+        int writeIndex = 0;
+        for (int i = 0; i < firePoints.Length; i++)
+        {
+            if (firePoints[i] != null)
+            {
+                available[writeIndex] = firePoints[i];
+                writeIndex++;
+            }
+        }
+
+        return available;
+    }
+
+    private Transform GetRandomFirePoint()
+    {
+        Transform[] availableFirePoints = GetAvailableFirePoints();
+        int randomIndex = UnityEngine.Random.Range(0, availableFirePoints.Length);
+        return availableFirePoints[randomIndex];
     }
 
     /// <summary>

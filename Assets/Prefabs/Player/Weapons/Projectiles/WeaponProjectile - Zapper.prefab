@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 6222629853475258594}
   - component: {fileID: 4815521234929274559}
   - component: {fileID: 2836405182070955557}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: WeaponProjectile - Zapper
   m_TagString: PlayerProjectile
   m_Icon: {fileID: 0}

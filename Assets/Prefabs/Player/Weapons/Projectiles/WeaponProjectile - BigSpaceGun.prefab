@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 2905933452223059762}
   - component: {fileID: 1045912129275292403}
   - component: {fileID: 8378237660203508990}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: WeaponProjectile - BigSpaceGun
   m_TagString: PlayerProjectile
   m_Icon: {fileID: 0}

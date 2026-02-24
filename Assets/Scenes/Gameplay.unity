@@ -7868,7 +7868,7 @@ GameObject:
   m_Component:
   - component: {fileID: 627430025}
   - component: {fileID: 627430026}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: ShieldAnchor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -11014,7 +11014,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1645446584}
   - component: {fileID: 1645446585}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: WeaponAnchor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -11619,7 +11619,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1812110579}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: FirePoints
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -11652,7 +11652,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1841945176}
   - component: {fileID: 1841945177}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: EngineAnchor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -11776,7 +11776,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1882795840}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: FirePoints - 1
   m_TagString: Untagged
   m_Icon: {fileID: 7174288486110832750, guid: 0000000000000000d000000000000000, type: 0}
@@ -11815,7 +11815,7 @@ GameObject:
   - component: {fileID: 1935055145}
   - component: {fileID: 1935055146}
   - component: {fileID: 1935055147}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -12569,7 +12569,7 @@ GameObject:
   - component: {fileID: 2129034016}
   - component: {fileID: 2129034017}
   - component: {fileID: 2129034018}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}

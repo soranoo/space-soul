@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 8714692742081272002}
   - component: {fileID: 3995731684217151183}
   - component: {fileID: 1869006009064188708}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: WeaponProjectile - AutoCannonBullet
   m_TagString: PlayerProjectile
   m_Icon: {fileID: 0}
