@@ -20,7 +20,7 @@ MonoBehaviour:
   selfDestructOnContact: 0
   canFireProjectiles: 1
   attackRange: 5
-  fireRate: 1
+  fireRate: 2
   projectileDamage: 1
   projectileSpeed: 8
   projectilePrefab: {fileID: 2790041247049111195, guid: 919eff5c351eeab4ab394af01673c1a1, type: 3}

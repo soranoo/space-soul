@@ -17,6 +17,7 @@ public class Enemy : MonoBehaviour, IPoolable
     [Header("References")]
     [SerializeField] private SpriteRenderer spriteRenderer;
     [SerializeField] private Animator animator;
+    [SerializeField] private Transform[] firePoints;
 
     private Rigidbody2D rb;
     private EnemyData data;
@@ -498,11 +499,13 @@ public class Enemy : MonoBehaviour, IPoolable
             return;
         }
 
-        // Fire in the direction the enemy is visually facing
-        Vector2 direction = transform.up;
+        Transform selectedFirePoint = GetRandomFirePoint();
 
-        // Spawn position slightly in front of enemy
-        Vector3 spawnPos = transform.position + (Vector3)(direction * 0.5f);
+        // Fire in the direction the selected fire point is facing
+        Vector2 direction = selectedFirePoint.up;
+
+        // Spawn position at the selected fire point
+        Vector3 spawnPos = selectedFirePoint.position;
 
         // Try to get from pool first
         EnemyProjectile projectile = null;
@@ -536,6 +539,18 @@ public class Enemy : MonoBehaviour, IPoolable
         {
             projectile.Initialize(data.ProjectileDamage, data.ProjectileSpeed, direction);
         }
+    }
+
+    private Transform GetRandomFirePoint()
+    {
+        if (firePoints == null || firePoints.Length == 0)
+        {
+            return transform;
+        }
+
+        int randomIndex = UnityEngine.Random.Range(0, firePoints.Length);
+        Transform selected = firePoints[randomIndex];
+        return selected != null ? selected : transform;
     }
 
     /// <summary>
