@@ -116,6 +116,7 @@ public class UpgradeCard : MonoBehaviour
 
     private void OnSelectClicked()
     {
+        UIManager.Instance.OnButtonClick();
         onSelected?.Invoke(data);
     }
 }

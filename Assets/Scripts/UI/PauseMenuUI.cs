@@ -55,6 +55,7 @@ public class PauseMenuUI : MonoBehaviour
 	/// </summary>
 	public void OnResumePressed()
 	{
+		UIManager.Instance.OnButtonClick();
 		GameManager.Instance.ResumeGame();
 	}
 
@@ -63,6 +64,7 @@ public class PauseMenuUI : MonoBehaviour
 	/// </summary>
 	public void OnMainMenuPressed()
 	{
+		UIManager.Instance.OnButtonClick();
 		GameManager.Instance.ReturnToMainMenu();
 
 		if (!string.IsNullOrWhiteSpace(mainMenuSceneName))

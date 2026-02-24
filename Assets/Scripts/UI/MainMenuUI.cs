@@ -42,6 +42,7 @@ public class MainMenuUI : MonoBehaviour
     /// </summary>
     public void OnStartGamePressed()
     {
+        UIManager.Instance.OnButtonClick();
         if (string.IsNullOrWhiteSpace(gameplaySceneName))
         {
             Debug.LogError("Gameplay scene name is not set on MainMenuUI.");
@@ -79,6 +80,7 @@ public class MainMenuUI : MonoBehaviour
     /// </summary>
     public void OnCreditsPressed()
     {
+        UIManager.Instance.OnButtonClick();
         creditsPanel?.Show();
     }
 
@@ -87,6 +89,7 @@ public class MainMenuUI : MonoBehaviour
     /// </summary>
     public void OnCloseCreditsPressed()
     {
+        UIManager.Instance.OnButtonClick();
         creditsPanel?.Hide();
     }
 
@@ -95,6 +98,7 @@ public class MainMenuUI : MonoBehaviour
     /// </summary>
     public void OnQuitPressed()
     {
+        UIManager.Instance.OnButtonClick();
         Application.Quit();
     }
 }

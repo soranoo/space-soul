@@ -48,6 +48,8 @@ public class GameOverUI : MonoBehaviour
     /// </summary>
     public void OnRestartPressed()
     {
+        UIManager.Instance.OnButtonClick();
+
         if (string.IsNullOrWhiteSpace(gameplaySceneName))
         {
             Debug.LogError("Gameplay scene name is not set on GameOverUI.");
@@ -62,6 +64,8 @@ public class GameOverUI : MonoBehaviour
     /// </summary>
     public void OnMainMenuPressed()
     {
+        UIManager.Instance.OnButtonClick();
+
         GameManager.Instance.ReturnToMainMenu();
 
         if (string.IsNullOrWhiteSpace(mainMenuSceneName))
