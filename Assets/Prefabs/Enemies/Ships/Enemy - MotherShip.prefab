@@ -112,6 +112,7 @@ MonoBehaviour:
   - {fileID: 8016518483832443446}
   - {fileID: 1753263310446413999}
   - {fileID: 8920357947220877996}
+  rotationSpeed: 30
   currentHealth: 0
   selfDestructSfx: {fileID: 11400000, guid: b72eb96f420dd3f42afa83bd294cd648, type: 2}
 --- !u!95 &8760605433947502916

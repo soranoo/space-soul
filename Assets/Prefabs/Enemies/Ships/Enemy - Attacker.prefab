@@ -147,11 +147,13 @@ MonoBehaviour:
   poolIdOverride: Enemy - Attacker
   spriteRenderer: {fileID: 2810711479129718282}
   animator: {fileID: 3732279967339083217}
+  projectileFireMode: 0
   firePoints:
   - {fileID: 6380373771435472208}
   - {fileID: 8906864199543519258}
   - {fileID: 7330912571554048289}
   - {fileID: 1475201459860726246}
+  rotationSpeed: 100
   currentHealth: 0
   selfDestructSfx: {fileID: 11400000, guid: b72eb96f420dd3f42afa83bd294cd648, type: 2}
 --- !u!95 &3732279967339083217

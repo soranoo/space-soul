@@ -28,6 +28,9 @@ public class Enemy : MonoBehaviour, IPoolable
     [SerializeField] private ProjectileFireMode projectileFireMode = ProjectileFireMode.Random;
     [SerializeField] private Transform[] firePoints;
 
+    [Header("Combat")]
+    [SerializeField] private float rotationSpeed = 270f;
+
     private Rigidbody2D rb;
     private EnemyData data;
     private EnemyStateMachine stateMachine;
@@ -58,6 +61,11 @@ public class Enemy : MonoBehaviour, IPoolable
     /// Effective movement speed after scaling.
     /// </summary>
     public float EffectiveSpeed => effectiveSpeed;
+
+    /// <summary>
+    /// Rotation speed in degrees per second used for attack-facing behavior.
+    /// </summary>
+    public float RotationSpeed => rotationSpeed;
 
     /// <summary>
     /// Player transform reference.
@@ -359,8 +367,7 @@ public class Enemy : MonoBehaviour, IPoolable
     /// Smoothly rotate the enemy to face the player.
     /// Uses a rotation speed proportional to effective speed for natural feel.
     /// </summary>
-    /// <param name="rotationSpeed">Degrees per second to rotate. 0 = instant.</param>
-    public void RotateTowardPlayer(float rotationSpeed = 360f)
+    public void RotateTowardPlayer()
     {
         if (playerTransform == null || isDead)
         {
@@ -391,8 +398,7 @@ public class Enemy : MonoBehaviour, IPoolable
     /// <summary>
     /// Smoothly rotate the enemy to face away from the player (for retreating).
     /// </summary>
-    /// <param name="rotationSpeed">Degrees per second to rotate. 0 = instant.</param>
-    public void RotateAwayFromPlayer(float rotationSpeed = 360f)
+    public void RotateAwayFromPlayer()
     {
         if (playerTransform == null || isDead)
         {

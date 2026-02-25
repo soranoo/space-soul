@@ -11,11 +11,6 @@ using UnityEngine;
 public class EnemyAttackState : BaseEnemyState
 {
     /// <summary>
-    /// How fast the enemy rotates to face the player (degrees/sec).
-    /// </summary>
-    private const float ROTATION_SPEED = 270f;
-
-    /// <summary>
     /// Maximum angle offset (degrees) to allow firing. 
     /// Enemy must be within this angle of facing the player to shoot.
     /// </summary>
@@ -77,13 +72,13 @@ public class EnemyAttackState : BaseEnemyState
         // If too close, retreat: rotate away from player and fly forward
         if (distance < targetDistance * 0.5f)
         {
-            enemy.RotateAwayFromPlayer(ROTATION_SPEED);
+            enemy.RotateAwayFromPlayer();
             enemy.MoveForward(enemy.EffectiveSpeed * 0.5f);
             return; // Don't fire while retreating
         }
 
         // At good distance: rotate to face the player and fire
-        enemy.RotateTowardPlayer(ROTATION_SPEED);
+        enemy.RotateTowardPlayer();
 
         // Only fire when in range AND facing the player
         if (distance <= attackRange && enemy.CanFire() && enemy.IsFacingPlayer(FIRE_ANGLE_TOLERANCE))

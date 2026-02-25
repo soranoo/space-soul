@@ -18,7 +18,7 @@ MonoBehaviour:
   detectionRange: 50
   preferredDistance: 15
   selfDestructOnContact: 0
-  canFireProjectiles: 0
+  canFireProjectiles: 1
   attackRange: 10
   fireRate: 10
   projectileDamage: 3
