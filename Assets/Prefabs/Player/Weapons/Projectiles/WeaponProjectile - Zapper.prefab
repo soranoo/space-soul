@@ -161,7 +161,7 @@ MonoBehaviour:
   despawnOutSideViewportMultiplier: 1.1
   onHitSfx: {fileID: 11400000, guid: 174efc76f9bab9d43b58bcad1a8952bc, type: 2}
   speed: 15
-  baseDamage: 1
+  baseDamage: 5
 --- !u!61 &2836405182070955557
 BoxCollider2D:
   m_ObjectHideFlags: 0

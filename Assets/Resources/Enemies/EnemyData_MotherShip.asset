@@ -13,14 +13,14 @@ MonoBehaviour:
   m_Name: EnemyData_MotherShip
   m_EditorClassIdentifier: Assembly-CSharp::EnemyData
   baseHealth: 1000
-  baseSpeed: 5
+  baseSpeed: 1
   contactDamage: 1
   detectionRange: 50
   preferredDistance: 15
   selfDestructOnContact: 0
   canFireProjectiles: 1
   attackRange: 10
-  fireRate: 8
+  fireRate: 5
   projectileDamage: 3
   projectileSpeed: 8
   projectilePrefab: {fileID: 9096654700147482479, guid: eea9f00aeec50ca4b863ada3b87afe15, type: 3}

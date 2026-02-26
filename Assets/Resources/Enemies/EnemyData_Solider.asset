@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3cde25d693330624f9e1273dd47188fe, type: 3}
   m_Name: EnemyData_Solider
   m_EditorClassIdentifier: Assembly-CSharp::EnemyData
-  baseHealth: 1
-  baseSpeed: 15
+  baseHealth: 25
+  baseSpeed: 4
   contactDamage: 3
   detectionRange: 15
   preferredDistance: 5
@@ -24,6 +24,7 @@ MonoBehaviour:
   projectileDamage: 1
   projectileSpeed: 8
   projectilePrefab: {fileID: 2790041247049111195, guid: 919eff5c351eeab4ab394af01673c1a1, type: 3}
+  fireMode: 0
   canSpawnEnemies: 0
   spawnInterval: 3
   spawnCount: 1

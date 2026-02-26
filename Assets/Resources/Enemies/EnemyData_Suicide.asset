@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3cde25d693330624f9e1273dd47188fe, type: 3}
   m_Name: EnemyData_Suicide
   m_EditorClassIdentifier: Assembly-CSharp::EnemyData
-  baseHealth: 1
-  baseSpeed: 15
+  baseHealth: 15
+  baseSpeed: 3
   contactDamage: 30
   detectionRange: 20
   preferredDistance: 0
@@ -24,6 +24,7 @@ MonoBehaviour:
   projectileDamage: 1
   projectileSpeed: 8
   projectilePrefab: {fileID: 0}
+  fireMode: 0
   canSpawnEnemies: 0
   spawnInterval: 3
   spawnCount: 1

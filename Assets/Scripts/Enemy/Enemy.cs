@@ -13,7 +13,8 @@ public class Enemy : MonoBehaviour, IPoolable
     private enum ProjectileFireMode
     {
         Random,
-        All
+        All,
+        ByAnimation
     }
 
     [SerializeField] private string poolIdOverride;
@@ -168,11 +169,6 @@ public class Enemy : MonoBehaviour, IPoolable
             spriteRenderer.color = defaultColor;
         }
 
-        if (animator != null)
-        {
-            animator.enabled = true;
-        }
-
         rb.linearVelocity = Vector2.zero;
         rb.angularVelocity = 0f;
 
@@ -262,11 +258,6 @@ public class Enemy : MonoBehaviour, IPoolable
         {
             spriteRenderer.enabled = true;
             spriteRenderer.color = defaultColor;
-        }
-
-        if (animator != null)
-        {
-            animator.enabled = true;
         }
 
         rb.simulated = true;
@@ -538,9 +529,29 @@ public class Enemy : MonoBehaviour, IPoolable
         // Set cooldown
         attackCooldown = 1f / data.FireRate;
 
-        // Spawn projectile - this will be handled by a projectile system
-        // For now, emit event or spawn directly
+        // In animation mode, projectile spawning is deferred to an animation event.
+        if (projectileFireMode == ProjectileFireMode.ByAnimation && animator != null)
+        {
+            return;
+        }
+
         SpawnEnemyProjectile();
+    }
+
+    /// <summary>
+    /// Animation event hook: spawn projectile from a specific fire point index.
+    /// Invalid index falls back to this enemy transform.
+    /// </summary>
+    /// <param name="firePointIndex">Index inside firePoints array.</param>
+    public void FireProjectileByAnimationEventAtIndex(int firePointIndex)
+    {
+        if (isDead || data == null || !data.CanFireProjectiles)
+        {
+            return;
+        }
+
+        Transform selectedFirePoint = GetFirePointByIndex(firePointIndex);
+        SpawnEnemyProjectileFromFirePoint(selectedFirePoint);
     }
 
     /// <summary>
@@ -657,6 +668,22 @@ public class Enemy : MonoBehaviour, IPoolable
         Transform[] availableFirePoints = GetAvailableFirePoints();
         int randomIndex = UnityEngine.Random.Range(0, availableFirePoints.Length);
         return availableFirePoints[randomIndex];
+    }
+
+    private Transform GetFirePointByIndex(int firePointIndex)
+    {
+        if (firePoints == null || firePoints.Length == 0)
+        {
+            return transform;
+        }
+
+        if (firePointIndex < 0 || firePointIndex >= firePoints.Length)
+        {
+            return transform;
+        }
+
+        Transform indexedFirePoint = firePoints[firePointIndex];
+        return indexedFirePoint != null ? indexedFirePoint : transform;
     }
 
     /// <summary>
@@ -802,11 +829,6 @@ public class Enemy : MonoBehaviour, IPoolable
         if (spriteRenderer != null)
         {
             spriteRenderer.enabled = false;
-        }
-
-        if (animator != null)
-        {
-            animator.enabled = false;
         }
 
         rb.simulated = false;
