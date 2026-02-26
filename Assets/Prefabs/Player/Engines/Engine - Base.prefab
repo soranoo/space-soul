@@ -77,8 +77,8 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: -653733307
+  m_SortingLayer: 3
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: 2869836826937132121, guid: 10f5986a038230342b97547306aefce7, type: 3}
@@ -172,8 +172,8 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: -653733307
+  m_SortingLayer: 3
   m_SortingOrder: -1
   m_MaskInteraction: 0
   m_Sprite: {fileID: 3727712762487445309, guid: fde912bd2c2dcf54b886e5861364c35d, type: 3}
@@ -222,7 +222,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerEngine
   engineAnimator: {fileID: 246985144948219953}
   engineSfx: {fileID: 11400000, guid: 2874904c38d7e5248b5c0a8847e01615, type: 2}
-  engineAudioSource: {fileID: -5754404479446350173}
 --- !u!82 &-5754404479446350173
 AudioSource:
   m_ObjectHideFlags: 0

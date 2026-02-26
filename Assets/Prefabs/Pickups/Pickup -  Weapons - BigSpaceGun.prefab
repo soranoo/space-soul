@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 7966732903406677571}
   - component: {fileID: 17271649545197225}
   - component: {fileID: 6153137974761250874}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Pickup -  Weapons - BigSpaceGun
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -80,8 +80,8 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: -1296691453
+  m_SortingLayer: 2
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: 4981332949968277620, guid: 3b283b6e04cfd5b47bd7aa4032a0ff80, type: 3}

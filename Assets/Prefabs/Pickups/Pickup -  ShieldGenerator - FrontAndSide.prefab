@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 4212598046826869716}
   - component: {fileID: 968783328903984163}
   - component: {fileID: 893341905212066801}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Pickup -  ShieldGenerator - FrontAndSide
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -80,8 +80,8 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: -1296691453
+  m_SortingLayer: 2
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: 3885523723205202616, guid: 49f9f6b39482d784aa64aae6078d1327, type: 3}

@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 1198378790796340322}
   - component: {fileID: 1170878585964144950}
   - component: {fileID: 6107549429717064990}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Pickup -  ShieldGenerator - Invincibility
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -80,8 +80,8 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: -1296691453
+  m_SortingLayer: 2
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: -5311436260645357221, guid: 8c002076b6cd1c34b860e630e76be831, type: 3}

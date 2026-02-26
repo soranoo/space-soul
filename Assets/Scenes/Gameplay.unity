@@ -1551,7 +1551,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 10, y: 10}
-  m_SizeDelta: {x: 800, y: 400}
+  m_SizeDelta: {x: 700, y: 400}
   m_Pivot: {x: 0, y: 0}
 --- !u!114 &343053448
 MonoBehaviour:
@@ -7774,7 +7774,7 @@ MonoBehaviour:
   m_Intensity: 1
   m_LightVolumeIntensity: 1
   m_LightVolumeEnabled: 0
-  m_ApplyToSortingLayers: 00000000b5e14236
+  m_ApplyToSortingLayers: b5e1423600000000517ec73c030fb6b245d208d9
   m_LightCookieSprite: {fileID: 0}
   m_DeprecatedPointLightCookieSprite: {fileID: 0}
   m_LightOrder: 0
@@ -12636,8 +12636,8 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: -653733307
+  m_SortingLayer: 3
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: -5448727121883926364, guid: 4924a83215328de40a2645d00aedb235, type: 3}

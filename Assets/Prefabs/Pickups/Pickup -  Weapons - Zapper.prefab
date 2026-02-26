@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 9119588295485429116}
   - component: {fileID: 1898869413848984454}
   - component: {fileID: 6021557865531154946}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Pickup -  Weapons - Zapper
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -80,8 +80,8 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: -1296691453
+  m_SortingLayer: 2
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: 6482822384215342590, guid: fb59953182dbf8b4fbb2e852954801c4, type: 3}

@@ -79,8 +79,8 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: 1019706961
+  m_SortingLayer: 1
   m_SortingOrder: -2
   m_MaskInteraction: 0
   m_Sprite: {fileID: -1539443468136995811, guid: 591bd9130b992d34f8ba1d0600b495f3, type: 3}
@@ -311,6 +311,9 @@ MonoBehaviour:
   poolIdOverride: Enemy - Suicide
   spriteRenderer: {fileID: 2810711479129718282}
   animator: {fileID: 2870612331553790183}
+  projectileFireMode: 0
+  firePoints: []
+  rotationSpeed: 270
   currentHealth: 0
   selfDestructSfx: {fileID: 11400000, guid: b72eb96f420dd3f42afa83bd294cd648, type: 2}
 --- !u!95 &2870612331553790183
@@ -457,8 +460,8 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: 1019706961
+  m_SortingLayer: 1
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: -1162233375206758482, guid: a28ced7c8ea031e478737782881f0499, type: 3}

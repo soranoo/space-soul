@@ -7,6 +7,7 @@ TagManager:
   - Enemy
   - EnemyBullet
   - PlayerProjectile
+  - Bullet
   layers:
   - Default
   - TransparentFX
@@ -17,7 +18,7 @@ TagManager:
   - PlayerProjectile
   - Enemy
   - EnemyProjectile
-  - 
+  - Pickup
   - 
   - 
   - 
@@ -46,6 +47,15 @@ TagManager:
     locked: 0
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Enemy
+    uniqueID: 1019706961
+    locked: 0
+  - name: Pickup
+    uniqueID: 2998275843
+    locked: 0
+  - name: Player
+    uniqueID: 3641233989
     locked: 0
   m_RenderingLayers:
   - Default

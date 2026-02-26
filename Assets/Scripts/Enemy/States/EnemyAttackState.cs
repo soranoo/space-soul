@@ -58,9 +58,34 @@ public class EnemyAttackState : BaseEnemyState
         float distance = enemy.GetDistanceToPlayer();
         float attackRange = enemy.Data.AttackRange;
         float preferredDist = enemy.Data.PreferredDistance;
+        bool whenDetectedMode = enemy.Data.FireMode == EnemyData.RangedFireMode.WhenDetected;
 
         // Use preferredDistance if set, otherwise use attackRange
         float targetDistance = preferredDist > 0f ? preferredDist : attackRange;
+
+        if (whenDetectedMode)
+        {
+            enemy.RotateTowardPlayer();
+
+            if (distance > targetDistance * 1.5f)
+            {
+                stateMachine.ChangeState<EnemyChaseState>();
+                return;
+            }
+
+            if (distance < targetDistance * 0.5f)
+            {
+                enemy.RotateAwayFromPlayer();
+                enemy.MoveForward(enemy.EffectiveSpeed * 0.5f);
+            }
+
+            if (enemy.CanFireAtDistance(distance))
+            {
+                enemy.FireAtPlayer();
+            }
+
+            return;
+        }
 
         // If too far, chase
         if (distance > targetDistance * 1.5f)
@@ -80,8 +105,8 @@ public class EnemyAttackState : BaseEnemyState
         // At good distance: rotate to face the player and fire
         enemy.RotateTowardPlayer();
 
-        // Only fire when in range AND facing the player
-        if (distance <= attackRange && enemy.CanFire() && enemy.IsFacingPlayer(FIRE_ANGLE_TOLERANCE))
+        // Only fire when allowed by fire mode and facing the player
+        if (enemy.CanFireAtDistance(distance) && enemy.IsFacingPlayer(FIRE_ANGLE_TOLERANCE))
         {
             enemy.FireAtPlayer();
         }

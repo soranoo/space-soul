@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 4601458243686369269}
   - component: {fileID: 202257643563590906}
   - component: {fileID: 4017548563312086403}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Pickup - Engines - Burst
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -80,8 +80,8 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: -1296691453
+  m_SortingLayer: 2
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: -1891451263786832654, guid: 5e6c887851a97044d8f2138dbf96fe58, type: 3}

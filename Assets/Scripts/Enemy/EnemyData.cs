@@ -26,6 +26,12 @@ public class SpawnEntry
 [CreateAssetMenu(fileName = "NewEnemyData", menuName = "Game/Enemy Data")]
 public class EnemyData : ScriptableObject
 {
+    public enum RangedFireMode
+    {
+        OnlyInSafePosition,
+        WhenDetected
+    }
+
     [Header("Basic Stats")]
     [Tooltip("Base health points for this enemy type.")]
     [SerializeField] private int baseHealth = 1;
@@ -65,6 +71,9 @@ public class EnemyData : ScriptableObject
 
     [Tooltip("Custom projectile prefab (uses default if null).")]
     [SerializeField] private GameObject projectilePrefab;
+
+    [Tooltip("How this enemy decides when it is allowed to fire.")]
+    [SerializeField] private RangedFireMode fireMode = RangedFireMode.OnlyInSafePosition;
 
     [Header("Spawning Behavior")]
     [Tooltip("If true, enemy can spawn other enemies periodically.")]
@@ -116,6 +125,7 @@ public class EnemyData : ScriptableObject
     public int ProjectileDamage => projectileDamage;
     public float ProjectileSpeed => projectileSpeed;
     public GameObject ProjectilePrefab => projectilePrefab;
+    public RangedFireMode FireMode => fireMode;
 
     // Spawning Behavior Properties
     public bool CanSpawnEnemies => canSpawnEnemies;

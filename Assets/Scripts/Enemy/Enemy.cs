@@ -480,6 +480,47 @@ public class Enemy : MonoBehaviour, IPoolable
     }
 
     /// <summary>
+    /// Check if this enemy can fire at the specified player distance,
+    /// based on configured fire mode in EnemyData.
+    /// </summary>
+    /// <param name="distanceToPlayer">Current distance to player.</param>
+    /// <returns>True if firing is allowed at this distance.</returns>
+    public bool CanFireAtDistance(float distanceToPlayer)
+    {
+        if (!CanFire())
+        {
+            return false;
+        }
+
+        switch (data.FireMode)
+        {
+            case EnemyData.RangedFireMode.WhenDetected:
+                return distanceToPlayer <= data.DetectionRange;
+
+            case EnemyData.RangedFireMode.OnlyInSafePosition:
+            default:
+                return IsInSafeFirePosition(distanceToPlayer) && distanceToPlayer <= data.AttackRange;
+        }
+    }
+
+    /// <summary>
+    /// Check if current position is considered safe for ranged firing.
+    /// Safe band is based on preferred distance fallback to attack range.
+    /// </summary>
+    /// <param name="distanceToPlayer">Current distance to player.</param>
+    /// <returns>True if distance is within safe firing band.</returns>
+    public bool IsInSafeFirePosition(float distanceToPlayer)
+    {
+        if (data == null)
+        {
+            return false;
+        }
+
+        float targetDistance = data.PreferredDistance > 0f ? data.PreferredDistance : data.AttackRange;
+        return distanceToPlayer >= targetDistance * 0.5f && distanceToPlayer <= targetDistance * 1.5f;
+    }
+
+    /// <summary>
     /// Fire projectile at player.
     /// </summary>
     public void FireAtPlayer()

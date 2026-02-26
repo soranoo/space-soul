@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 8709494423976625433}
   - component: {fileID: 6048566276254286453}
   - component: {fileID: 4784857431648295075}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Pickup - Engines - Supercharged
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -80,8 +80,8 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: -1296691453
+  m_SortingLayer: 2
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: 277385070867472838, guid: 78366785227101d49ba8e52bb1a0046f, type: 3}
