@@ -31,6 +31,7 @@ public class WeaponController : MonoBehaviour
     private AudioSource audioSource;
     private float damageMultiplier = 1f;
     private bool isFiring;
+    private bool isZapperLoopSfxPlaying;
     private float lastZapperDamageTime;
     private readonly List<Transform> zapperSegments = new List<Transform>();
     private readonly List<Vector3> zapperSegmentBaseScales = new List<Vector3>();
@@ -69,6 +70,15 @@ public class WeaponController : MonoBehaviour
         if (useZapperLaser)
         {
             DisableZapperSegments();
+        }
+    }
+
+    private void OnDisable()
+    {
+        if (useZapperLaser)
+        {
+            DisableZapperSegments();
+            StopZapperLoopSfx();
         }
     }
 
@@ -153,12 +163,65 @@ public class WeaponController : MonoBehaviour
     /// </summary>
     public void SetFiring(bool firing)
     {
+        bool wasFiring = isFiring;
         isFiring = firing;
 
-        if (!isFiring && useZapperLaser)
+        if (!useZapperLaser)
+        {
+            return;
+        }
+
+        if (isFiring && !wasFiring)
+        {
+            StartZapperLoopSfx();
+            return;
+        }
+
+        if (!isFiring && wasFiring)
         {
             DisableZapperSegments();
+            StopZapperLoopSfx();
         }
+    }
+
+    private void StartZapperLoopSfx()
+    {
+        if (isZapperLoopSfxPlaying)
+        {
+            return;
+        }
+
+        if (audioSource == null || fireSfxSettings == null || fireSfxSettings.Clip == null)
+        {
+            return;
+        }
+
+        if (fireSfxSettings.Source != null)
+        {
+            fireSfxSettings.Source.ApplyTo(audioSource);
+        }
+
+        audioSource.clip = fireSfxSettings.Clip;
+        audioSource.loop = true;
+        audioSource.Play();
+        isZapperLoopSfxPlaying = true;
+    }
+
+    private void StopZapperLoopSfx()
+    {
+        if (!isZapperLoopSfxPlaying)
+        {
+            return;
+        }
+
+        if (audioSource != null)
+        {
+            audioSource.loop = false;
+            audioSource.Stop();
+            audioSource.clip = null;
+        }
+
+        isZapperLoopSfxPlaying = false;
     }
 
     private void SpawnBullet(Vector3 position, Quaternion rotation, float damageMultiplier)
