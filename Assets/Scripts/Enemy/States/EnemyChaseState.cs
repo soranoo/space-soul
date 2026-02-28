@@ -29,13 +29,6 @@ public class EnemyChaseState : BaseEnemyState
             return;
         }
 
-        // Check if player is still in detection range
-        if (!enemy.IsPlayerInRange(enemy.Data.DetectionRange))
-        {
-            stateMachine.ChangeState<EnemyIdleState>();
-            return;
-        }
-
         // Move toward player using movement pattern
         enemy.UpdateMovement();
     }

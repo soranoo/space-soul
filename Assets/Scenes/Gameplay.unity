@@ -9654,7 +9654,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SpawnManager
   gameCamera: {fileID: 519420031}
-  edgePadding: 1
+  edgePadding: 50
   minPlayerDistance: 5
   maxSpawnAttempts: 10
   circlePositionCount: 8
@@ -11206,13 +11206,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Unity.Cinemachine::Unity.Cinemachine.CinemachineRotationComposer
   Composition:
-    ScreenPosition: {x: -0.000000014901161, y: 0.000000029802322}
+    ScreenPosition: {x: 0.00000016391277, y: 0}
     DeadZone:
       Enabled: 1
-      Size: {x: 0.3701739, y: 0.5543307}
+      Size: {x: 0.7201735, y: 0.60433084}
     HardLimits:
       Enabled: 1
-      Size: {x: 0.8, y: 0.8}
+      Size: {x: 0.89062494, y: 0.77222216}
       Offset: {x: 0, y: 0}
   CenterOnActivate: 1
   TargetOffset: {x: 0, y: 0, z: 0}

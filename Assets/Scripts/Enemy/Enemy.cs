@@ -486,7 +486,7 @@ public class Enemy : MonoBehaviour, IPoolable
         switch (data.FireMode)
         {
             case EnemyData.RangedFireMode.WhenDetected:
-                return distanceToPlayer <= data.DetectionRange;
+                return playerTransform != null;
 
             case EnemyData.RangedFireMode.OnlyInSafePosition:
             default:

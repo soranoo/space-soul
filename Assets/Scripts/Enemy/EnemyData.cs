@@ -42,9 +42,7 @@ public class EnemyData : ScriptableObject
     [Tooltip("Damage dealt to player on contact.")]
     [SerializeField] private int contactDamage = 1;
 
-    [Header("Detection & Range")]
-    [Tooltip("Detection range for targeting player.")]
-    [SerializeField] private float detectionRange = 15f;
+    [Header("Range")]
 
     [Tooltip("Preferred distance to maintain from player (0 = chase to contact).")]
     [SerializeField] private float preferredDistance = 0f;
@@ -111,8 +109,7 @@ public class EnemyData : ScriptableObject
     public float BaseSpeed => baseSpeed;
     public int ContactDamage => contactDamage;
 
-    // Detection & Range Properties
-    public float DetectionRange => detectionRange;
+    // Range Properties
     public float PreferredDistance => preferredDistance;
 
     // Contact Behavior Properties

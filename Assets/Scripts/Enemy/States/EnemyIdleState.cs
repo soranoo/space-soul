@@ -2,7 +2,7 @@ using UnityEngine;
 
 /// <summary>
 /// Idle state - enemy waits and looks for player.
-/// Transitions to Chase when player is detected.
+/// Transitions to Chase whenever a player reference exists.
 /// </summary>
 public class EnemyIdleState : BaseEnemyState
 {
@@ -11,8 +11,7 @@ public class EnemyIdleState : BaseEnemyState
 
     public override void Update()
     {
-        // Check if player is in detection range
-        if (enemy.IsPlayerInRange(enemy.Data.DetectionRange))
+        if (enemy.PlayerTransform != null)
         {
             stateMachine.ChangeState<EnemyChaseState>();
         }
