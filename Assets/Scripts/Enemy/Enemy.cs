@@ -47,6 +47,7 @@ public class Enemy : MonoBehaviour, IPoolable
     // Role-specific variables
     private float attackCooldown;
     private float spawnCooldown;
+    private int spawnedChildrenCount;
 
     /// <summary>
     /// Enemy data configuration.
@@ -158,6 +159,7 @@ public class Enemy : MonoBehaviour, IPoolable
         effectiveSpeed = data.BaseSpeed * speedMultiplier;
         attackCooldown = 0f;
         spawnCooldown = 0f;
+        spawnedChildrenCount = 0;
         isDead = false;
 
         rb.simulated = true;
@@ -246,6 +248,7 @@ public class Enemy : MonoBehaviour, IPoolable
         data = null;
         attackCooldown = 0f;
         spawnCooldown = 0f;
+        spawnedChildrenCount = 0;
         isDead = false;
 
         if (damageTintCoroutine != null)
@@ -692,7 +695,12 @@ public class Enemy : MonoBehaviour, IPoolable
     /// <returns>True if can spawn.</returns>
     public bool CanSpawnEnemies()
     {
-        return spawnCooldown <= 0f && data != null && data.CanSpawnEnemies && data.SpawnList != null && data.SpawnList.Length > 0;
+        return spawnCooldown <= 0f
+            && data != null
+            && data.CanSpawnEnemies
+            && data.SpawnList != null
+            && data.SpawnList.Length > 0
+            && GetRemainingSpawnCapacity() > 0;
     }
 
     /// <summary>
@@ -705,11 +713,21 @@ public class Enemy : MonoBehaviour, IPoolable
             return;
         }
 
+        int remainingSpawnCapacity = GetRemainingSpawnCapacity();
+        if (remainingSpawnCapacity <= 0)
+        {
+            return;
+        }
+
         // Set cooldown
         spawnCooldown = data.SpawnInterval;
 
+        int spawnAttempts = data.MaxSpawnChildren < 0
+            ? data.SpawnCount
+            : Mathf.Min(data.SpawnCount, remainingSpawnCapacity);
+
         // Spawn each child using weighted random selection
-        for (int i = 0; i < data.SpawnCount; i++)
+        for (int i = 0; i < spawnAttempts; i++)
         {
             EnemyData spawnData = data.GetRandomSpawnData();
             if (spawnData != null)
@@ -717,6 +735,47 @@ public class Enemy : MonoBehaviour, IPoolable
                 SpawnSoldiersRequested?.Invoke(this, spawnData, 1);
             }
         }
+    }
+
+    /// <summary>
+    /// Register that one child enemy was successfully spawned and is now alive.
+    /// </summary>
+    public void NotifyChildSpawned()
+    {
+        if (data == null || !data.CanSpawnEnemies)
+        {
+            return;
+        }
+
+        spawnedChildrenCount++;
+    }
+
+    /// <summary>
+    /// Register that one tracked child enemy has died/despawned.
+    /// </summary>
+    public void NotifyChildDespawned()
+    {
+        if (spawnedChildrenCount <= 0)
+        {
+            return;
+        }
+
+        spawnedChildrenCount--;
+    }
+
+    private int GetRemainingSpawnCapacity()
+    {
+        if (data == null)
+        {
+            return 0;
+        }
+
+        if (data.MaxSpawnChildren < 0)
+        {
+            return int.MaxValue;
+        }
+
+        return Mathf.Max(0, data.MaxSpawnChildren - spawnedChildrenCount);
     }
 
     [Header("Audio")]

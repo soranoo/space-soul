@@ -83,6 +83,9 @@ public class EnemyData : ScriptableObject
     [Tooltip("Number of enemies to spawn at once.")]
     [SerializeField] private int spawnCount = 1;
 
+    [Tooltip("Maximum children this enemy can spawn in one life cycle. -1 = unlimited.")]
+    [SerializeField] private int maxSpawnChildren = 30;
+
     [Tooltip("Weighted list of enemies to spawn.")]
     [SerializeField] private SpawnEntry[] spawnList;
 
@@ -128,6 +131,7 @@ public class EnemyData : ScriptableObject
     public bool CanSpawnEnemies => canSpawnEnemies;
     public float SpawnInterval => spawnInterval;
     public int SpawnCount => spawnCount;
+    public int MaxSpawnChildren => Mathf.Max(-1, maxSpawnChildren);
     public SpawnEntry[] SpawnList => spawnList;
 
     /// <summary>

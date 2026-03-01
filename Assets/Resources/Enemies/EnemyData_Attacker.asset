@@ -15,7 +15,6 @@ MonoBehaviour:
   baseHealth: 50
   baseSpeed: 3
   contactDamage: 1
-  detectionRange: 15
   preferredDistance: 5
   selfDestructOnContact: 0
   canFireProjectiles: 1
@@ -28,6 +27,7 @@ MonoBehaviour:
   canSpawnEnemies: 0
   spawnInterval: 3
   spawnCount: 1
+  maxSpawnChildren: 30
   spawnList: []
   pointValue: 100
   powerUpDropChance: 0.1

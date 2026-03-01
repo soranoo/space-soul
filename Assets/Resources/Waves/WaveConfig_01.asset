@@ -15,7 +15,7 @@ MonoBehaviour:
   waveName: Wave_01
   waveNumber: 1
   enemySpawns:
-  - enemyData: {fileID: 11400000, guid: 5a766f2b4568a2a409fd59af7d23a52c, type: 2}
+  - enemyData: {fileID: 11400000, guid: e99e615990ab4a440988a597b255073f, type: 2}
     count: 1
     spawnDelay: 2
   spawnInterval: 0.5

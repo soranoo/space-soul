@@ -33,6 +33,7 @@ public class WaveManager : SingletonBase<WaveManager>
     private bool isWaveActive;
     private bool isSpawning;
     private Coroutine spawnCoroutine;
+    private readonly Dictionary<Enemy, Enemy> childToSpawnerMap = new Dictionary<Enemy, Enemy>();
 
     /// <summary>
     /// Current wave number (1-based).
@@ -95,6 +96,7 @@ public class WaveManager : SingletonBase<WaveManager>
     public void StartWaves()
     {
         currentWaveNumber = 0;
+        childToSpawnerMap.Clear();
         StartNextWave();
     }
 
@@ -363,6 +365,13 @@ public class WaveManager : SingletonBase<WaveManager>
             {
                 enemiesAlive++;
                 soldier.Died += OnEnemyDied;
+
+                if (spawner != null)
+                {
+                    childToSpawnerMap[soldier] = spawner;
+                    spawner.NotifyChildSpawned();
+                }
+
                 EnemySpawned?.Invoke(soldier);
             }
         }
@@ -383,6 +392,20 @@ public class WaveManager : SingletonBase<WaveManager>
     /// </summary>
     private void OnEnemyDied(Enemy enemy)
     {
+        if (enemy != null && childToSpawnerMap.TryGetValue(enemy, out Enemy spawner))
+        {
+            childToSpawnerMap.Remove(enemy);
+            if (spawner != null)
+            {
+                spawner.NotifyChildDespawned();
+            }
+        }
+
+        if (enemy != null)
+        {
+            RemoveTrackedChildrenForSpawner(enemy);
+        }
+
         enemy.Died -= OnEnemyDied;
         enemy.SpawnSoldiersRequested -= OnSpawnerEnemySpawnChildren;
         enemiesAlive--;
@@ -398,6 +421,39 @@ public class WaveManager : SingletonBase<WaveManager>
         if (!isSpawning && enemiesAlive <= 0 && isWaveActive)
         {
             CompleteWave();
+        }
+    }
+
+    private void RemoveTrackedChildrenForSpawner(Enemy spawner)
+    {
+        if (spawner == null || childToSpawnerMap.Count == 0)
+        {
+            return;
+        }
+
+        List<Enemy> childrenToForget = null;
+
+        foreach (KeyValuePair<Enemy, Enemy> pair in childToSpawnerMap)
+        {
+            if (pair.Value == spawner)
+            {
+                if (childrenToForget == null)
+                {
+                    childrenToForget = new List<Enemy>();
+                }
+
+                childrenToForget.Add(pair.Key);
+            }
+        }
+
+        if (childrenToForget == null)
+        {
+            return;
+        }
+
+        for (int i = 0; i < childrenToForget.Count; i++)
+        {
+            childToSpawnerMap.Remove(childrenToForget[i]);
         }
     }
 
