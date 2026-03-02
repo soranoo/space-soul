@@ -121,14 +121,7 @@ public class PowerUpPickup : MonoBehaviour, IPoolable
         controller?.ApplyPowerUp(powerUpData);
         SfxManager.Instance?.Play(pickupSfx);
 
-        if (PoolManager.Instance != null)
-        {
-            PoolManager.Instance.Release(this);
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
+        PoolManager.Instance.Release(this);
     }
 
     private void OnEnable()
@@ -188,14 +181,7 @@ public class PowerUpPickup : MonoBehaviour, IPoolable
             .SetEase(Ease.InBack)
             .OnComplete(() =>
             {
-                if (PoolManager.Instance != null)
-                {
-                    PoolManager.Instance.Release(this);
-                }
-                else
-                {
-                    Destroy(gameObject);
-                }
+                PoolManager.Instance.Release(this);
             });
     }
 

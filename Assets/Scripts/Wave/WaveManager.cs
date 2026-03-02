@@ -487,13 +487,10 @@ public class WaveManager : SingletonBase<WaveManager>
         {
             PowerUpPickup pickup = null;
 
-            if (PoolManager.Instance != null)
+            PowerUpPickup prefabComponent = selectedPrefab.GetComponent<PowerUpPickup>();
+            if (prefabComponent != null)
             {
-                PowerUpPickup prefabComponent = selectedPrefab.GetComponent<PowerUpPickup>();
-                if (prefabComponent != null)
-                {
-                    pickup = PoolManager.Instance.Get(prefabComponent, spawnPosition, Quaternion.identity);
-                }
+                pickup = PoolManager.Instance.Get(prefabComponent, spawnPosition, Quaternion.identity);
             }
 
             if (pickup == null)

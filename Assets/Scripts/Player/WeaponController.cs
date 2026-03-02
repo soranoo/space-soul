@@ -229,7 +229,7 @@ public class WeaponController : MonoBehaviour
         Bullet bullet = null;
 
         // Try to get from pool first
-        if (PoolManager.Instance != null && bulletPrefab != null)
+        if (bulletPrefab != null)
         {
             Bullet prefabComponent = bulletPrefab.GetComponent<Bullet>();
             if (prefabComponent != null)

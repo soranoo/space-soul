@@ -11,8 +11,8 @@ GameObject:
   - component: {fileID: 7813102190240813630}
   - component: {fileID: 7020213889186381319}
   - component: {fileID: 7630093812495980101}
-  - component: {fileID: 516769897351065119}
   - component: {fileID: 2873500096261790491}
+  - component: {fileID: 4190402104480699260}
   m_Layer: 9
   m_Name: Pickup -  ShieldGenerator - AllAround
   m_TagString: Untagged
@@ -116,8 +116,28 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!61 &516769897351065119
-BoxCollider2D:
+--- !u!114 &2873500096261790491
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5528694946353948611}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f2cbdec0465b63841a083bacd614268e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PowerUpPickup
+  powerUpData: {fileID: 11400000, guid: 3afc7895cea01684c831ab213f82679a, type: 2}
+  poolIdOverride: Pickup -  ShieldGenerator - AllAround
+  despawnTime: 30
+  spawnScaleDuration: 0.2
+  despawnScaleDuration: 0.2
+  blinkStartTime: 5
+  blinkInterval: 0.15
+  pickupSfx: {fileID: 11400000, guid: 6648a53e15b927845b483aedfe09de4f, type: 2}
+--- !u!58 &4190402104480699260
+CircleCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -150,35 +170,5 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: -0.0014486611, y: 0.0043461323}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 0.8, y: 0.8}
-    newSize: {x: 1, y: 1}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  m_Size: {x: 0.63484806, y: 0.6348481}
-  m_EdgeRadius: 0
---- !u!114 &2873500096261790491
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5528694946353948611}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f2cbdec0465b63841a083bacd614268e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PowerUpPickup
-  powerUpData: {fileID: 11400000, guid: 3afc7895cea01684c831ab213f82679a, type: 2}
-  poolIdOverride: Pickup -  ShieldGenerator - AllAround
-  despawnTime: 10
-  spawnScaleDuration: 0.2
-  despawnScaleDuration: 0.2
-  blinkStartTime: 2
-  blinkInterval: 0.15
-  pickupSfx: {fileID: 11400000, guid: 6648a53e15b927845b483aedfe09de4f, type: 2}
+  m_Offset: {x: 0, y: 0}
+  m_Radius: 0.53333336

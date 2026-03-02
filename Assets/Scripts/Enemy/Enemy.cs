@@ -600,17 +600,14 @@ public class Enemy : MonoBehaviour, IPoolable
         // Try to get from pool first
         EnemyProjectile projectile = null;
 
-        if (PoolManager.Instance != null)
+        EnemyProjectile prefabComponent = data.ProjectilePrefab.GetComponent<EnemyProjectile>();
+        if (prefabComponent != null)
         {
-            EnemyProjectile prefabComponent = data.ProjectilePrefab.GetComponent<EnemyProjectile>();
-            if (prefabComponent != null)
-            {
-                projectile = PoolManager.Instance.Get(prefabComponent, spawnPos, Quaternion.identity);
-            }
-            else
-            {
-                Debug.LogWarning("[Enemy] Projectile prefab does not have an EnemyProjectile component.");
-            }
+            projectile = PoolManager.Instance.Get(prefabComponent, spawnPos, Quaternion.identity);
+        }
+        else
+        {
+            Debug.LogWarning("[Enemy] Projectile prefab does not have an EnemyProjectile component.");
         }
 
         // If no pool or pool empty, instantiate

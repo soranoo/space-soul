@@ -53,7 +53,7 @@ public class EnemyFactory : SingletonBase<EnemyFactory>
         Enemy enemy = null;
 
         // Try to get from pool
-        if (PoolManager.Instance != null && enemyData.Prefab != null)
+        if (enemyData.Prefab != null)
         {
             Enemy prefabComponent = enemyData.Prefab.GetComponent<Enemy>();
             if (prefabComponent != null)

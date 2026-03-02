@@ -11,8 +11,8 @@ GameObject:
   - component: {fileID: 2631621921064398919}
   - component: {fileID: 3963183425517831092}
   - component: {fileID: 7966732903406677571}
-  - component: {fileID: 17271649545197225}
   - component: {fileID: 6153137974761250874}
+  - component: {fileID: 9032603225950735922}
   m_Layer: 9
   m_Name: Pickup -  Weapons - BigSpaceGun
   m_TagString: Untagged
@@ -116,8 +116,28 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!61 &17271649545197225
-BoxCollider2D:
+--- !u!114 &6153137974761250874
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3501397110965389630}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f2cbdec0465b63841a083bacd614268e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PowerUpPickup
+  powerUpData: {fileID: 11400000, guid: 46fdc94475e772f47b3d401c391afe45, type: 2}
+  poolIdOverride: Pickup -  Weapons - BigSpaceGun
+  despawnTime: 30
+  spawnScaleDuration: 0.2
+  despawnScaleDuration: 0.2
+  blinkStartTime: 5
+  blinkInterval: 0.15
+  pickupSfx: {fileID: 11400000, guid: 6648a53e15b927845b483aedfe09de4f, type: 2}
+--- !u!58 &9032603225950735922
+CircleCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -150,35 +170,5 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: -0.0014487058, y: -0.03621748}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 0.8, y: 0.8}
-    newSize: {x: 1, y: 1}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  m_Size: {x: 0.640643, y: 0.611669}
-  m_EdgeRadius: 0
---- !u!114 &6153137974761250874
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3501397110965389630}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f2cbdec0465b63841a083bacd614268e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PowerUpPickup
-  powerUpData: {fileID: 11400000, guid: 46fdc94475e772f47b3d401c391afe45, type: 2}
-  poolIdOverride: Pickup -  Weapons - BigSpaceGun
-  despawnTime: 10
-  spawnScaleDuration: 0.2
-  despawnScaleDuration: 0.2
-  blinkStartTime: 2
-  blinkInterval: 0.15
-  pickupSfx: {fileID: 11400000, guid: 6648a53e15b927845b483aedfe09de4f, type: 2}
+  m_Offset: {x: 0, y: 0}
+  m_Radius: 0.53333336

@@ -17,14 +17,7 @@ public class ShieldBlocker : MonoBehaviour
         EnemyProjectile projectile = other.GetComponent<EnemyProjectile>();
         if (projectile != null)
         {
-            if (PoolManager.Instance != null)
-            {
-                PoolManager.Instance.Release(projectile);
-            }
-            else
-            {
-                Destroy(projectile.gameObject);
-            }
+            PoolManager.Instance.Release(projectile);
         }
     }
 }
