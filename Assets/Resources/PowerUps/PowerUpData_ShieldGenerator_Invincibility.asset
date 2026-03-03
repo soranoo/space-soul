@@ -15,7 +15,7 @@ MonoBehaviour:
   powerUpType: 1
   displayName: Invincibility Shield
   icon: {fileID: -5311436260645357221, guid: 8c002076b6cd1c34b860e630e76be831, type: 3}
-  duration: 5
+  duration: 20
   spawnChance: 0.1
   multiplier: 1.5
   shieldAmount: 1

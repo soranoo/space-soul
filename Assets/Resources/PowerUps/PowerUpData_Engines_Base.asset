@@ -15,7 +15,7 @@ MonoBehaviour:
   powerUpType: 0
   displayName: 
   icon: {fileID: 1473390766520696716, guid: a4b5f86c816cc2347b58becd34accbee, type: 3}
-  duration: 5
+  duration: 30
   spawnChance: 0.1
   multiplier: 1.5
   shieldAmount: 1

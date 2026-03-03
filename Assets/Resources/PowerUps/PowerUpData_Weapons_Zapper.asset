@@ -15,7 +15,7 @@ MonoBehaviour:
   powerUpType: 2
   displayName: Zapper
   icon: {fileID: 6482822384215342590, guid: fb59953182dbf8b4fbb2e852954801c4, type: 3}
-  duration: 5
+  duration: 30
   spawnChance: 0.1
   multiplier: 1.5
   shieldAmount: 1

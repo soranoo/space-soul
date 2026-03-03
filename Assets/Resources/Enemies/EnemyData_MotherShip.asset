@@ -36,7 +36,7 @@ MonoBehaviour:
   - enemyData: {fileID: 11400000, guid: ee59eba43fe5ec74daaf86303e381258, type: 2}
     weight: 5
   pointValue: 3000
-  powerUpDropChance: 0.1
+  powerUpDropChance: 1
   prefab: {fileID: 662773263525930302, guid: f0cb78b9cfd90374195557a307e5805c, type: 3}
   damageTintColor: {r: 1, g: 0, b: 0, a: 1}
   damageTintDuration: 0.1

@@ -15,7 +15,7 @@ MonoBehaviour:
   powerUpType: 0
   displayName: Burst Engine
   icon: {fileID: -1891451263786832654, guid: 5e6c887851a97044d8f2138dbf96fe58, type: 3}
-  duration: 5
+  duration: 30
   spawnChance: 0.1
   multiplier: 1.5
   shieldAmount: 1

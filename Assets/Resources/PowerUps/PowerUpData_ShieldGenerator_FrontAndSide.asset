@@ -15,7 +15,7 @@ MonoBehaviour:
   powerUpType: 1
   displayName: Front and Side Shield
   icon: {fileID: 3885523723205202616, guid: 49f9f6b39482d784aa64aae6078d1327, type: 3}
-  duration: 5
+  duration: 30
   spawnChance: 0.1
   multiplier: 1.5
   shieldAmount: 1

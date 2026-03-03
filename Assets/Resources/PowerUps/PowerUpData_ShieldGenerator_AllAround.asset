@@ -15,7 +15,7 @@ MonoBehaviour:
   powerUpType: 1
   displayName: All Round Shield
   icon: {fileID: -8666052772528564308, guid: 5d6490ba5d053a7469b1c1a69ab6bcbf, type: 3}
-  duration: 5
+  duration: 30
   spawnChance: 0.1
   multiplier: 1.5
   shieldAmount: 1
