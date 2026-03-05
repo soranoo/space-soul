@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 5218018756833415128}
   - component: {fileID: 6309372889111091885}
   - component: {fileID: 1476456459516233338}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Shield - Front
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -81,7 +81,7 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: -653733307
   m_SortingLayer: 3
-  m_SortingOrder: 0
+  m_SortingOrder: 10
   m_MaskInteraction: 0
   m_Sprite: {fileID: -1633750310377780036, guid: a0253d6e09d40554eba367a8e2203c54, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}

@@ -113,7 +113,18 @@ MonoBehaviour:
   - {fileID: 1753263310446413999}
   - {fileID: 8920357947220877996}
   rotationSpeed: 30
-  currentHealth: 0
+  damageSmokePrefab: {fileID: -6929098367191284748, guid: 5dafbd547891377429c57281a9c1292b, type: 3}
+  smokeSpawnEveryPercent: 5
+  smokeSpawnRects:
+  - localCenter: {x: 0, y: -0.74}
+    size: {x: 3.32, y: 2.74}
+  - localCenter: {x: 0, y: 1.11}
+    size: {x: 2.23, y: 1.15}
+  - localCenter: {x: 0, y: 2.09}
+    size: {x: 1.63, y: 0.85}
+  smokeRandomXRotationRange: {x: 0, y: 360}
+  showDamageSmokeRectsGizmo: 1
+  damageSmokeRectGizmoColor: {r: 1, g: 0.6, b: 0.1, a: 0.8}
   selfDestructSfx: {fileID: 11400000, guid: b72eb96f420dd3f42afa83bd294cd648, type: 2}
 --- !u!95 &8760605433947502916
 Animator:

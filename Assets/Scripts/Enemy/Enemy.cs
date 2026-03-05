@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using Unity.Collections;
 using UnityEngine;
 
@@ -10,6 +11,22 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody2D))]
 public class Enemy : MonoBehaviour, IPoolable
 {
+    [Serializable]
+    private struct DamageSmokeSpawnRect
+    {
+        public Vector2 localCenter;
+        public Vector2 size;
+
+        public Vector2 GetRandomLocalPoint()
+        {
+            float safeWidth = Mathf.Max(0f, size.x);
+            float safeHeight = Mathf.Max(0f, size.y);
+            float randomX = UnityEngine.Random.Range(-safeWidth * 0.5f, safeWidth * 0.5f);
+            float randomY = UnityEngine.Random.Range(-safeHeight * 0.5f, safeHeight * 0.5f);
+            return localCenter + new Vector2(randomX, randomY);
+        }
+    }
+
     private enum ProjectileFireMode
     {
         Random,
@@ -32,17 +49,32 @@ public class Enemy : MonoBehaviour, IPoolable
     [Header("Combat")]
     [SerializeField] private float rotationSpeed = 270f;
 
+    [Header("Damage Smoke")]
+    [SerializeField] private PooledParticle damageSmokePrefab;
+    [SerializeField, Range(1f, 100f)] private float smokeSpawnEveryPercent = 20f;
+    [SerializeField] private DamageSmokeSpawnRect[] smokeSpawnRects;
+    [SerializeField] private Vector2 smokeRandomXRotationRange = new Vector2(0f, 360f);
+
+#if UNITY_EDITOR
+    [Header("Damage Smoke Gizmos")]
+    [SerializeField] private bool showDamageSmokeRectsGizmo = true;
+    [SerializeField] private Color damageSmokeRectGizmoColor = new Color(1f, 0.6f, 0.1f, 0.8f);
+#endif
+
     private Rigidbody2D rb;
     private EnemyData data;
     private EnemyStateMachine stateMachine;
     private IMovementPattern movementPattern;
     private Transform playerTransform;
 
-    [SerializeField] private int currentHealth;
+    private int currentHealth;
     private float effectiveSpeed;
     private Color defaultColor;
     private Coroutine damageTintCoroutine;
     private bool isDead;
+    private int maxHealthAtSpawn;
+    private float nextSmokeTriggerHealthPercent;
+    private readonly List<PooledParticle> heldSmokeParticles = new List<PooledParticle>();
 
     // Role-specific variables
     private float attackCooldown;
@@ -156,6 +188,8 @@ public class Enemy : MonoBehaviour, IPoolable
     {
         data = enemyData;
         currentHealth = Mathf.RoundToInt(data.BaseHealth * healthMultiplier);
+        maxHealthAtSpawn = Mathf.Max(1, currentHealth);
+        nextSmokeTriggerHealthPercent = 1f - Mathf.Clamp01(smokeSpawnEveryPercent / 100f);
         effectiveSpeed = data.BaseSpeed * speedMultiplier;
         attackCooldown = 0f;
         spawnCooldown = 0f;
@@ -234,6 +268,8 @@ public class Enemy : MonoBehaviour, IPoolable
     /// </summary>
     public void OnDespawn()
     {
+        ReleaseHeldSmokeParticles();
+
         if (stateMachine != null)
         {
             stateMachine.Reset();
@@ -250,6 +286,8 @@ public class Enemy : MonoBehaviour, IPoolable
         spawnCooldown = 0f;
         spawnedChildrenCount = 0;
         isDead = false;
+        maxHealthAtSpawn = 0;
+        nextSmokeTriggerHealthPercent = 1f;
 
         if (damageTintCoroutine != null)
         {
@@ -807,6 +845,7 @@ public class Enemy : MonoBehaviour, IPoolable
         DamageTaken?.Invoke(this, amount);
 
         FlashDamageTint();
+        TrySpawnDamageSmokeByThreshold();
 
         if (currentHealth <= 0)
         {
@@ -845,6 +884,93 @@ public class Enemy : MonoBehaviour, IPoolable
         damageTintCoroutine = null;
     }
 
+    private void TrySpawnDamageSmokeByThreshold()
+    {
+        if (damageSmokePrefab == null || smokeSpawnRects == null || smokeSpawnRects.Length == 0)
+        {
+            return;
+        }
+
+        float step = Mathf.Clamp01(smokeSpawnEveryPercent / 100f);
+        if (step <= 0f || maxHealthAtSpawn <= 0)
+        {
+            return;
+        }
+
+        float healthPercent = Mathf.Clamp01((float)Mathf.Max(0, currentHealth) / maxHealthAtSpawn);
+
+        while (nextSmokeTriggerHealthPercent >= 0f && healthPercent <= nextSmokeTriggerHealthPercent)
+        {
+            SpawnDamageSmoke();
+            nextSmokeTriggerHealthPercent -= step;
+        }
+    }
+
+    private void SpawnDamageSmoke()
+    {
+        if (smokeSpawnRects == null || smokeSpawnRects.Length == 0 || damageSmokePrefab == null)
+        {
+            return;
+        }
+
+        int rectIndex = UnityEngine.Random.Range(0, smokeSpawnRects.Length);
+        DamageSmokeSpawnRect rect = smokeSpawnRects[rectIndex];
+        Vector2 localPoint = rect.GetRandomLocalPoint();
+        float randomX = UnityEngine.Random.Range(smokeRandomXRotationRange.x, smokeRandomXRotationRange.y);
+        Quaternion localRotation = Quaternion.Euler(randomX, 0f, 0f);
+
+        PoolManager poolManager = PoolManager.Instance;
+        if (poolManager == null)
+        {
+            return;
+        }
+
+        PooledParticle smokeInstance = poolManager.Get(damageSmokePrefab);
+        if (smokeInstance == null)
+        {
+            poolManager.RegisterPool(damageSmokePrefab, initialSize: 6, canExpand: true);
+            smokeInstance = poolManager.Get(damageSmokePrefab);
+        }
+
+        if (smokeInstance == null)
+        {
+            return;
+        }
+
+        smokeInstance.AttachTo(transform, new Vector3(localPoint.x, localPoint.y, 0f), localRotation);
+        if (!heldSmokeParticles.Contains(smokeInstance))
+        {
+            heldSmokeParticles.Add(smokeInstance);
+        }
+    }
+
+    private void ReleaseHeldSmokeParticles()
+    {
+        PoolManager poolManager = PoolManager.Instance;
+        for (int i = heldSmokeParticles.Count - 1; i >= 0; i--)
+        {
+            PooledParticle particle = heldSmokeParticles[i];
+            heldSmokeParticles.RemoveAt(i);
+
+            if (particle == null)
+            {
+                continue;
+            }
+
+            if (!particle.transform.IsChildOf(transform))
+            {
+                continue;
+            }
+
+            if (!particle.gameObject.activeInHierarchy)
+            {
+                continue;
+            }
+
+            poolManager?.Release(particle);
+        }
+    }
+
     /// <summary>
     /// Handle enemy death.
     /// Fires Died event but does NOT destroy - external animation handler should call Cleanup() when done.
@@ -876,6 +1002,8 @@ public class Enemy : MonoBehaviour, IPoolable
     /// </summary>
     public void Cleanup()
     {
+        ReleaseHeldSmokeParticles();
+
         if (damageTintCoroutine != null)
         {
             StopCoroutine(damageTintCoroutine);
@@ -937,4 +1065,28 @@ public class Enemy : MonoBehaviour, IPoolable
             }
         }
     }
+
+#if UNITY_EDITOR
+    private void OnDrawGizmosSelected()
+    {
+        if (!showDamageSmokeRectsGizmo || smokeSpawnRects == null)
+        {
+            return;
+        }
+
+        Gizmos.color = damageSmokeRectGizmoColor;
+        Matrix4x4 previousMatrix = Gizmos.matrix;
+        Gizmos.matrix = transform.localToWorldMatrix;
+
+        for (int i = 0; i < smokeSpawnRects.Length; i++)
+        {
+            Vector2 size2D = smokeSpawnRects[i].size;
+            Vector3 size3D = new Vector3(Mathf.Max(0f, size2D.x), Mathf.Max(0f, size2D.y), 0.01f);
+            Vector3 center = smokeSpawnRects[i].localCenter;
+            Gizmos.DrawWireCube(center, size3D);
+        }
+
+        Gizmos.matrix = previousMatrix;
+    }
+#endif
 }
