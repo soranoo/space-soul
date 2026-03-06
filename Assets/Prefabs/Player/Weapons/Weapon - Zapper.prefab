@@ -11,8 +11,8 @@ GameObject:
   - component: {fileID: 2937473749469730464}
   - component: {fileID: 836453343973784297}
   - component: {fileID: 9111923931346767729}
-  - component: {fileID: 8725492874440288592}
   - component: {fileID: 6052728055882707383}
+  - component: {fileID: 8737139559832641846}
   m_Layer: 0
   m_Name: Weapon - Zapper
   m_TagString: Untagged
@@ -117,32 +117,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &8725492874440288592
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1079000610187898534}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a519d9dc2f6348b4b8365a653b587b63, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::WeaponController
-  firePoints:
-  - {fileID: 5851018270205773014}
-  bulletPrefab: {fileID: 4317485738596253022, guid: c57ab7b86f971534e8e40d90742aeb74, type: 3}
-  useZapperLaser: 1
-  zapperSegmentPrefab: {fileID: 4317485738596253022, guid: c57ab7b86f971534e8e40d90742aeb74, type: 3}
-  zapperHitMask:
-    serializedVersion: 2
-    m_Bits: 128
-  baseZapperLength: 2
-  lengthPerFireRate: 1
-  zapperSegmentLength: 0.5
-  zapperDamageInterval: 0.1
-  zapperDamagePerTick: 1
-  fireSfxSettings: {fileID: 11400000, guid: 5b074277923f7744eb7754a21858d97a, type: 2}
 --- !u!82 &6052728055882707383
 AudioSource:
   m_ObjectHideFlags: 0
@@ -240,6 +214,31 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &8737139559832641846
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1079000610187898534}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7b5c8af9619574f4fa1c55c2242ac231, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ZapperWeaponController
+  firePoints:
+  - {fileID: 5851018270205773014}
+  bulletPrefab: {fileID: 4317485738596253022, guid: c57ab7b86f971534e8e40d90742aeb74, type: 3}
+  fireSfxSettings: {fileID: 11400000, guid: 5b074277923f7744eb7754a21858d97a, type: 2}
+  zapperSegmentPrefab: {fileID: 4317485738596253022, guid: c57ab7b86f971534e8e40d90742aeb74, type: 3}
+  zapperHitMask:
+    serializedVersion: 2
+    m_Bits: 640
+  baseZapperLength: 2
+  lengthPerFireRate: 1
+  zapperSegmentLength: 0.5
+  zapperDamageInterval: 0.1
+  zapperDamagePerTick: 1
 --- !u!1 &1770314170210395322
 GameObject:
   m_ObjectHideFlags: 0
