@@ -12,7 +12,8 @@ public class PlayerStats
     [SerializeField] private float maxSpeed = 8f;
 
     [Header("Combat")]
-    [SerializeField] private float fireRate = 0.25f;
+    [Tooltip("Multiplier applied to all weapon cooldowns. Lower = faster. 1 = normal.")]
+    [SerializeField] private float fireRateMultiplier = 1f;
     [SerializeField] private int maxHealth = 3;
 
     [Header("Regeneration")]
@@ -35,9 +36,9 @@ public class PlayerStats
     public float MaxSpeed => maxSpeed;
 
     /// <summary>
-    /// Time between shots in seconds.
+    /// Multiplier applied to all weapon cooldowns (lower = faster firing).
     /// </summary>
-    public float FireRate => fireRate;
+    public float FireRateMultiplier => fireRateMultiplier;
 
     /// <summary>
     /// Maximum health points.
@@ -74,11 +75,11 @@ public class PlayerStats
     }
 
     /// <summary>
-    /// Apply a modifier to fire rate.
+    /// Apply a modifier to the fire rate multiplier (multiplicative).
     /// </summary>
     public void ModifyFireRate(float multiplier)
     {
-        fireRate *= multiplier;
+        fireRateMultiplier *= multiplier;
     }
 
     /// <summary>
@@ -106,10 +107,10 @@ public class PlayerStats
     }
 
     /// <summary>
-    /// Decrease fire rate cooldown by a flat amount (clamped to min 0.05).
+    /// Decrease the fire rate multiplier by a flat amount (clamped to min 0.2).
     /// </summary>
     public void DecreaseFireRate(float amount)
     {
-        fireRate = Mathf.Max(0.05f, fireRate - amount);
+        fireRateMultiplier = Mathf.Max(0.2f, fireRateMultiplier - amount);
     }
 }

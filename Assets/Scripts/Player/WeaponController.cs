@@ -12,6 +12,10 @@ public class WeaponController : MonoBehaviour
     [SerializeField] private Transform[] firePoints;
     [SerializeField] private GameObject bulletPrefab;
 
+    [Header("Fire Rate")]
+    [Tooltip("Base cooldown between shots in seconds (before player multiplier).")]
+    [SerializeField] private float baseFireRate = 0.25f;
+
     [Header("Audio")]
     [FormerlySerializedAs("fireSound")]
     [SerializeField] private AudioSettings fireSfxSettings;
@@ -29,6 +33,11 @@ public class WeaponController : MonoBehaviour
     {
         this.stats = stats;
     }
+
+    /// <summary>
+    /// Base cooldown between shots in seconds (before player fire rate multiplier).
+    /// </summary>
+    public float BaseFireRate => baseFireRate;
 
     /// <summary>
     /// Current damage multiplier applied to all shots.
@@ -74,7 +83,16 @@ public class WeaponController : MonoBehaviour
             return false;
         }
 
-        return Time.time >= lastFireTime + stats.FireRate;
+        return Time.time >= lastFireTime + GetEffectiveCooldown();
+    }
+
+    /// <summary>
+    /// Effective cooldown between shots (base fire rate * player multiplier).
+    /// </summary>
+    protected float GetEffectiveCooldown()
+    {
+        float multiplier = stats != null ? stats.FireRateMultiplier : 1f;
+        return baseFireRate * multiplier;
     }
 
     /// <summary>

@@ -111,8 +111,8 @@ public class ZapperWeaponController : WeaponController
         Vector3 start = selectedFirePoint.position;
         Vector3 direction = selectedFirePoint.up;
 
-        float fireRate = Stats != null ? Mathf.Max(0.01f, Stats.FireRate) : 0.2f;
-        float maxLength = baseZapperLength + (lengthPerFireRate / fireRate);
+        float effectiveCooldown = Mathf.Max(0.01f, GetEffectiveCooldown());
+        float maxLength = baseZapperLength + (lengthPerFireRate / effectiveCooldown);
 
         RaycastHit2D hit = Physics2D.Raycast(start, direction, maxLength, zapperHitMask);
         Vector3 end = hit.collider != null ? (Vector3)hit.point : start + direction * maxLength;

@@ -6220,7 +6220,7 @@ MonoBehaviour:
   bigSpaceGunPrefab: {fileID: 4167080452073095899, guid: 49de5e79603d3514eb84999c656694b2, type: 3}
   rocketsPrefab: {fileID: 2965842365555091504, guid: 2b71b8f270fe9434aa6e778a82b4848d, type: 3}
   zapperPrefab: {fileID: 1079000610187898534, guid: a980cb9dd146f2246a8c689449f65954, type: 3}
-  defaultWeaponType: 3
+  defaultWeaponType: 2
 --- !u!1 &1661899362
 GameObject:
   m_ObjectHideFlags: 0
@@ -7017,7 +7017,7 @@ MonoBehaviour:
     thrustForce: 3
     rotationSpeed: 2
     maxSpeed: 8
-    fireRate: 0.1
+    fireRateMultiplier: 1
     maxHealth: 100
     healthRegenRate: 0
   inputHandler: {fileID: 1935055137}

@@ -163,16 +163,7 @@ MonoBehaviour:
   firePoints:
   - {fileID: 4196528964429861690}
   bulletPrefab: {fileID: 7060739015984589562, guid: e45314b80795eff469b617b1c421f6bf, type: 3}
-  useZapperLaser: 0
-  zapperSegmentPrefab: {fileID: 0}
-  zapperHitMask:
-    serializedVersion: 2
-    m_Bits: 0
-  baseZapperLength: 6
-  lengthPerFireRate: 4
-  zapperSegmentLength: 0.5
-  zapperDamageInterval: 0.1
-  zapperDamagePerTick: 1
+  baseFireRate: 0.2
   fireSfxSettings: {fileID: 11400000, guid: 11dcd1930e556464c94a903af6309d08, type: 2}
 --- !u!82 &8614881134080204448
 AudioSource:
