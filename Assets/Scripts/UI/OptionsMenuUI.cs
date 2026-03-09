@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 /// <summary>
 /// Handles options menu navigation and submenu back-stack behavior.
@@ -11,12 +12,30 @@ public class OptionsMenuUI : MonoBehaviour
     [SerializeField] private GameObject optionsMenuRoot;
     [SerializeField] private CreditsPanelUI creditsPanel;
 
+    [Header("Options")]
+    [SerializeField] private Toggle fpsCounterToggle;
+    [SerializeField] private FpsCounterUI fpsCounter;
+
     private readonly Stack<GameObject> menuHistory = new Stack<GameObject>();
     private GameObject currentMenu;
 
     private void OnEnable()
     {
         ResetMenuState();
+
+        if (fpsCounterToggle != null)
+        {
+            fpsCounterToggle.SetIsOnWithoutNotify(fpsCounter != null && fpsCounter.IsVisible);
+            fpsCounterToggle.onValueChanged.AddListener(OnFpsCounterToggleChanged);
+        }
+    }
+
+    private void OnDisable()
+    {
+        if (fpsCounterToggle != null)
+        {
+            fpsCounterToggle.onValueChanged.RemoveListener(OnFpsCounterToggleChanged);
+        }
     }
 
     /// <summary>
@@ -48,6 +67,20 @@ public class OptionsMenuUI : MonoBehaviour
     {
         UIManager.Instance.OnButtonClick();
         GoBack();
+    }
+
+    /// <summary>
+    /// Toggle callback for showing or hiding FPS counter UI.
+    /// </summary>
+    public void OnFpsCounterToggleChanged(bool isOn)
+    {
+        if (fpsCounter == null)
+        {
+            return;
+        }
+
+        UIManager.Instance.OnButtonClick();
+        fpsCounter.SetVisible(isOn);
     }
 
     private void ResetMenuState()
