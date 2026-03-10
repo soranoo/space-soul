@@ -110,6 +110,24 @@ public class AudioVolumeControlUI : MonoBehaviour
         return DbToNormalized(dbValue);
     }
 
+    /// <summary>
+    /// Reads the saved PlayerPrefs value and immediately pushes it to the mixer.
+    /// Safe to call while the GameObject or component is disabled.
+    /// </summary>
+    public void ApplySavedMixerValue()
+    {
+        if (string.IsNullOrWhiteSpace(playerPrefsKey))
+        {
+            playerPrefsKey = getPlayerfrefKey();
+        }
+
+        float normalized = PlayerPrefs.HasKey(playerPrefsKey)
+            ? Mathf.Clamp01(PlayerPrefs.GetFloat(playerPrefsKey))
+            : ReadMixerAsNormalized();
+
+        SetMixerVolume(NormalizedToDb(normalized));
+    }
+
     private void SetMixerVolume(float dbValue)
     {
         if (mixer == null || string.IsNullOrWhiteSpace(exposedParameter))

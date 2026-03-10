@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -18,6 +19,18 @@ public class OptionsMenuUI : MonoBehaviour
 
     private readonly Stack<GameObject> menuHistory = new Stack<GameObject>();
     private GameObject currentMenu;
+
+    private IEnumerator Start()
+    {
+        // Yield one frame so Unity's audio system is fully initialized before pushing mixer values.
+        yield return null;
+
+        AudioVolumeControlUI[] controls = GetComponentsInChildren<AudioVolumeControlUI>(true);
+        foreach (AudioVolumeControlUI control in controls)
+        {
+            control.ApplySavedMixerValue();
+        }
+    }
 
     private void OnEnable()
     {
