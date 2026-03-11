@@ -75,6 +75,11 @@ public class WaveManager : SingletonBase<WaveManager>
     /// </summary>
     public event Action AllWavesCompleted;
 
+    /// <summary>
+    /// Event fired when an enemy that has ShowAlarmOnSpawn enabled is spawned.
+    /// </summary>
+    public event Action<Enemy> AlarmEnemySpawned;
+
     protected override void Awake()
     {
         base.Awake();
@@ -324,6 +329,11 @@ public class WaveManager : SingletonBase<WaveManager>
             }
 
             EnemySpawned?.Invoke(enemy);
+
+            if (enemyData.ShowAlarmOnSpawn)
+            {
+                AlarmEnemySpawned?.Invoke(enemy);
+            }
         }
     }
 
@@ -373,6 +383,11 @@ public class WaveManager : SingletonBase<WaveManager>
                 }
 
                 EnemySpawned?.Invoke(soldier);
+
+                if (childData.ShowAlarmOnSpawn)
+                {
+                    AlarmEnemySpawned?.Invoke(soldier);
+                }
             }
         }
     }

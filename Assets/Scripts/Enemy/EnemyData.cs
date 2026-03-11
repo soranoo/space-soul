@@ -101,6 +101,9 @@ public class EnemyData : ScriptableObject
     [Tooltip("Prefab for this enemy type.")]
     [SerializeField] private GameObject prefab;
 
+    [Tooltip("If true, an alarm UI will be shown when this enemy spawns.")]
+    [SerializeField] private bool showAlarmOnSpawn = false;
+
     [Tooltip("Damage tint color (applied briefly when hit).")]
     [SerializeField] private Color damageTintColor = Color.red;
 
@@ -184,6 +187,7 @@ public class EnemyData : ScriptableObject
 
     // Visual Properties
     public GameObject Prefab => prefab;
+    public bool ShowAlarmOnSpawn => showAlarmOnSpawn;
     public Color DamageTintColor => damageTintColor;
     public float DamageTintDuration => damageTintDuration;
 }

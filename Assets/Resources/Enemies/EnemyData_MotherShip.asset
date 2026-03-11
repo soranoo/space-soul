@@ -38,5 +38,6 @@ MonoBehaviour:
   pointValue: 3000
   powerUpDropChance: 1
   prefab: {fileID: 662773263525930302, guid: f0cb78b9cfd90374195557a307e5805c, type: 3}
+  showAlarmOnSpawn: 1
   damageTintColor: {r: 1, g: 0, b: 0, a: 1}
   damageTintDuration: 0.1
