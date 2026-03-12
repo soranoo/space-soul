@@ -5342,7 +5342,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SpawnManager
   gameCamera: {fileID: 519420031}
-  edgePadding: 50
+  viewportSpawnScale: 1.5
   minPlayerDistance: 5
   maxSpawnAttempts: 10
   circlePositionCount: 8
@@ -7690,7 +7690,7 @@ MonoBehaviour:
     rotationSpeed: 2
     maxSpeed: 8
     fireRateMultiplier: 1
-    maxHealth: 100
+    maxHealth: 300
     healthRegenRate: 0
   inputHandler: {fileID: 1935055137}
 --- !u!50 &1935055140

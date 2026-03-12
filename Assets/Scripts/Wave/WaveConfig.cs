@@ -56,12 +56,6 @@ public class WaveConfig : ScriptableObject
     [Tooltip("Pattern for spawning enemies.")]
     [SerializeField] private SpawnPatternType spawnPattern = SpawnPatternType.Random;
 
-    [Tooltip("Minimum distance from player to spawn.")]
-    [SerializeField] private float minSpawnDistance = 8f;
-
-    [Tooltip("Maximum distance from player to spawn.")]
-    [SerializeField] private float maxSpawnDistance = 15f;
-
     /// <summary>
     /// Whether this wave is enabled.
     /// </summary>
@@ -106,16 +100,6 @@ public class WaveConfig : ScriptableObject
     /// Spawn pattern type.
     /// </summary>
     public SpawnPatternType SpawnPattern => spawnPattern;
-
-    /// <summary>
-    /// Minimum spawn distance from player.
-    /// </summary>
-    public float MinSpawnDistance => minSpawnDistance;
-
-    /// <summary>
-    /// Maximum spawn distance from player.
-    /// </summary>
-    public float MaxSpawnDistance => maxSpawnDistance;
 
     /// <summary>
     /// Get total enemy count for this wave.

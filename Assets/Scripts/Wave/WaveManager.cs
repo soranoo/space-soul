@@ -307,15 +307,11 @@ public class WaveManager : SingletonBase<WaveManager>
 
         if (spawnManager != null && config != null)
         {
-            spawnPosition = spawnManager.GetSpawnPosition(
-                config.SpawnPattern,
-                config.MinSpawnDistance,
-                config.MaxSpawnDistance
-            );
+            spawnPosition = spawnManager.GetSpawnPosition(config.SpawnPattern);
         }
         else if (spawnManager != null)
         {
-            spawnPosition = spawnManager.GetSpawnPosition(SpawnPatternType.Random, 8f, 15f);
+            spawnPosition = spawnManager.GetSpawnPosition(SpawnPatternType.Random);
         }
         else
         {
@@ -414,12 +410,24 @@ public class WaveManager : SingletonBase<WaveManager>
 
     /// <summary>
     /// Get a default spawn position when SpawnManager is not available.
+    /// Falls back to a point just outside a rough 1.5x viewport estimate.
     /// </summary>
     private Vector3 GetDefaultSpawnPosition()
     {
+        Camera cam = Camera.main;
+        float halfH = cam != null ? cam.orthographicSize * 1.5f : 10f;
+        float halfW = cam != null ? halfH * cam.aspect : 15f;
+
         float angle = UnityEngine.Random.Range(0f, 360f) * Mathf.Deg2Rad;
-        float distance = UnityEngine.Random.Range(10f, 15f);
-        return new Vector3(Mathf.Cos(angle) * distance, Mathf.Sin(angle) * distance, 0f);
+        float cos = Mathf.Cos(angle);
+        float sin = Mathf.Sin(angle);
+        float tX = cos != 0f ? halfW / Mathf.Abs(cos) : float.MaxValue;
+        float tY = sin != 0f ? halfH / Mathf.Abs(sin) : float.MaxValue;
+        float t = Mathf.Min(tX, tY);
+
+        Vector3 center = cam != null ? cam.transform.position : Vector3.zero;
+        center.z = 0f;
+        return center + new Vector3(cos * t, sin * t, 0f);
     }
 
     /// <summary>

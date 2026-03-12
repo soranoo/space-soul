@@ -11,8 +11,8 @@ public class SpawnManager : MonoBehaviour
     [Tooltip("Reference to the camera for screen bounds calculation.")]
     [SerializeField] private Camera gameCamera;
 
-    [Tooltip("Padding from screen edges for edge spawning.")]
-    [SerializeField] private float edgePadding = 1f;
+    [Tooltip("Viewport scale multiplier: enemies spawn on the boundary of (viewport * scale).")]
+    [SerializeField] private float viewportSpawnScale = 1.5f;
 
     [Header("Safety Settings")]
     [Tooltip("Minimum distance from player for spawning.")]
@@ -93,145 +93,119 @@ public class SpawnManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Get a spawn position based on pattern and distance settings.
+    /// Get a spawn position based on pattern. All positions are placed on the
+    /// boundary of (viewportSpawnScale × camera viewport) — always off-screen.
     /// </summary>
-    /// <param name="pattern">Spawn pattern type.</param>
-    /// <param name="minDistance">Minimum spawn distance from center.</param>
-    /// <param name="maxDistance">Maximum spawn distance from center.</param>
-    /// <returns>Safe spawn position.</returns>
-    public Vector3 GetSpawnPosition(SpawnPatternType pattern, float minDistance, float maxDistance)
+    public Vector3 GetSpawnPosition(SpawnPatternType pattern)
     {
-        // Ensure camera is valid
-        if (gameCamera == null)
-        {
-            gameCamera = Camera.main;
-        }
+        if (gameCamera == null) gameCamera = Camera.main;
+        if (playerTransform == null) FindPlayer();
 
-        // Refresh player reference if needed
-        if (playerTransform == null)
-        {
-            FindPlayer();
-        }
-
-        // Validate distances
-        if (minDistance <= 0f) minDistance = 5f;
-        if (maxDistance <= minDistance) maxDistance = minDistance + 5f;
+        Bounds spawnBounds = GetViewportSpawnBounds();
 
         Vector3 position;
-
         switch (pattern)
         {
             case SpawnPatternType.Circle:
-                position = GetCirclePosition(minDistance, maxDistance);
+                position = GetCirclePosition(spawnBounds);
                 break;
-
             case SpawnPatternType.Edges:
-                position = GetEdgePosition();
+                position = GetEdgePosition(spawnBounds);
                 break;
-
             case SpawnPatternType.Corners:
-                position = GetCornerPosition();
+                position = GetCornerPosition(spawnBounds);
                 break;
-
             case SpawnPatternType.Random:
             default:
-                position = GetRandomPosition(minDistance, maxDistance);
+                position = GetRandomPosition(spawnBounds);
                 break;
         }
 
-        // Validate position for NaN
         if (float.IsNaN(position.x) || float.IsNaN(position.y))
         {
             Debug.LogWarning("[SpawnManager] Invalid position detected, using fallback");
-            position = GetRandomPosition(minDistance, maxDistance);
+            position = GetRandomPosition(spawnBounds);
         }
 
-        return EnsureSafePosition(position, minDistance, maxDistance);
+        return EnsureSafePosition(position);
     }
 
     /// <summary>
-    /// Get a random position within spawn distance.
+    /// Returns the spawn boundary: camera viewport scaled by viewportSpawnScale.
+    /// Enemies always land on this rectangle's perimeter, guaranteeing off-screen entry.
     /// </summary>
-    private Vector3 GetRandomPosition(float minDistance, float maxDistance)
+    private Bounds GetViewportSpawnBounds()
+    {
+        if (gameCamera == null) gameCamera = Camera.main;
+
+        float halfH = (gameCamera != null) ? gameCamera.orthographicSize * viewportSpawnScale : 10f;
+        float halfW = (gameCamera != null) ? halfH * gameCamera.aspect : 15f;
+
+        Vector3 center = GetSpawnCenter();
+        return new Bounds(center, new Vector3(halfW * 2f, halfH * 2f, 0f));
+    }
+
+    /// <summary>
+    /// Project a direction angle to the boundary of a rectangle (axis-aligned).
+    /// </summary>
+    private Vector3 ProjectAngleToRectBoundary(float angle, Bounds bounds)
+    {
+        float cos = Mathf.Cos(angle);
+        float sin = Mathf.Sin(angle);
+        float halfW = bounds.extents.x;
+        float halfH = bounds.extents.y;
+
+        float tX = (cos != 0f) ? halfW / Mathf.Abs(cos) : float.MaxValue;
+        float tY = (sin != 0f) ? halfH / Mathf.Abs(sin) : float.MaxValue;
+        float t = Mathf.Min(tX, tY);
+
+        return bounds.center + new Vector3(cos * t, sin * t, 0f);
+    }
+
+    /// <summary>
+    /// Get a random position on the spawn boundary rectangle.
+    /// </summary>
+    private Vector3 GetRandomPosition(Bounds spawnBounds)
     {
         float angle = UnityEngine.Random.Range(0f, 360f) * Mathf.Deg2Rad;
-        float distance = UnityEngine.Random.Range(minDistance, maxDistance);
-
-        Vector3 center = GetSpawnCenter();
-        return new Vector3(
-            center.x + Mathf.Cos(angle) * distance,
-            center.y + Mathf.Sin(angle) * distance,
-            0f
-        );
+        return ProjectAngleToRectBoundary(angle, spawnBounds);
     }
 
     /// <summary>
-    /// Get a position on a circle around center.
-    /// Distributes enemies evenly around the circle.
+    /// Distribute enemies evenly around the spawn boundary rectangle.
     /// </summary>
-    private Vector3 GetCirclePosition(float minDistance, float maxDistance)
+    private Vector3 GetCirclePosition(Bounds spawnBounds)
     {
         float angle = (360f / circlePositionCount) * currentCircleIndex * Mathf.Deg2Rad;
-        float distance = (minDistance + maxDistance) / 2f;
-
         currentCircleIndex = (currentCircleIndex + 1) % circlePositionCount;
-
-        Vector3 center = GetSpawnCenter();
-        return new Vector3(
-            center.x + Mathf.Cos(angle) * distance,
-            center.y + Mathf.Sin(angle) * distance,
-            0f
-        );
+        return ProjectAngleToRectBoundary(angle, spawnBounds);
     }
 
     /// <summary>
-    /// Get a position on screen edges.
+    /// Get a position on one of the four sides of the spawn boundary rectangle.
     /// </summary>
-    private Vector3 GetEdgePosition()
+    private Vector3 GetEdgePosition(Bounds spawnBounds)
     {
-        UpdateScreenBounds();
-
-        float minX = ScreenBounds.min.x - edgePadding;
-        float maxX = ScreenBounds.max.x + edgePadding;
-        float minY = ScreenBounds.min.y - edgePadding;
-        float maxY = ScreenBounds.max.y + edgePadding;
+        float minX = spawnBounds.min.x;
+        float maxX = spawnBounds.max.x;
+        float minY = spawnBounds.min.y;
+        float maxY = spawnBounds.max.y;
 
         Vector3 position;
-
-        // Cycle through edges: 0=top, 1=right, 2=bottom, 3=left
         switch (currentEdgeIndex)
         {
             case 0: // Top
-                position = new Vector3(
-                    UnityEngine.Random.Range(minX, maxX),
-                    maxY,
-                    0f
-                );
+                position = new Vector3(UnityEngine.Random.Range(minX, maxX), maxY, 0f);
                 break;
-
             case 1: // Right
-                position = new Vector3(
-                    maxX,
-                    UnityEngine.Random.Range(minY, maxY),
-                    0f
-                );
+                position = new Vector3(maxX, UnityEngine.Random.Range(minY, maxY), 0f);
                 break;
-
             case 2: // Bottom
-                position = new Vector3(
-                    UnityEngine.Random.Range(minX, maxX),
-                    minY,
-                    0f
-                );
+                position = new Vector3(UnityEngine.Random.Range(minX, maxX), minY, 0f);
                 break;
-
             case 3: // Left
             default:
-                position = new Vector3(
-                    minX,
-                    UnityEngine.Random.Range(minY, maxY),
-                    0f
-                );
+                position = new Vector3(minX, UnityEngine.Random.Range(minY, maxY), 0f);
                 break;
         }
 
@@ -240,38 +214,23 @@ public class SpawnManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Get a position at screen corners.
+    /// Get a position at one of the four corners of the spawn boundary rectangle.
     /// </summary>
-    private Vector3 GetCornerPosition()
+    private Vector3 GetCornerPosition(Bounds spawnBounds)
     {
-        UpdateScreenBounds();
-
-        float minX = ScreenBounds.min.x - edgePadding;
-        float maxX = ScreenBounds.max.x + edgePadding;
-        float minY = ScreenBounds.min.y - edgePadding;
-        float maxY = ScreenBounds.max.y + edgePadding;
+        float minX = spawnBounds.min.x;
+        float maxX = spawnBounds.max.x;
+        float minY = spawnBounds.min.y;
+        float maxY = spawnBounds.max.y;
 
         Vector3 position;
-
-        // Cycle through corners: 0=top-left, 1=top-right, 2=bottom-right, 3=bottom-left
         switch (currentCornerIndex)
         {
-            case 0: // Top-left
-                position = new Vector3(minX, maxY, 0f);
-                break;
-
-            case 1: // Top-right
-                position = new Vector3(maxX, maxY, 0f);
-                break;
-
-            case 2: // Bottom-right
-                position = new Vector3(maxX, minY, 0f);
-                break;
-
+            case 0: position = new Vector3(minX, maxY, 0f); break; // Top-left
+            case 1: position = new Vector3(maxX, maxY, 0f); break; // Top-right
+            case 2: position = new Vector3(maxX, minY, 0f); break; // Bottom-right
             case 3: // Bottom-left
-            default:
-                position = new Vector3(minX, minY, 0f);
-                break;
+            default: position = new Vector3(minX, minY, 0f); break;
         }
 
         currentCornerIndex = (currentCornerIndex + 1) % 4;
@@ -281,7 +240,7 @@ public class SpawnManager : MonoBehaviour
     /// <summary>
     /// Ensure spawn position is safe (not too close to player).
     /// </summary>
-    private Vector3 EnsureSafePosition(Vector3 position, float minDistance, float maxDistance)
+    private Vector3 EnsureSafePosition(Vector3 position)
     {
         if (playerTransform == null)
         {
@@ -289,21 +248,18 @@ public class SpawnManager : MonoBehaviour
         }
 
         Vector3 playerPosition = playerTransform.position;
-
-        // Check if position is too close to player
         float distanceToPlayer = Vector3.Distance(position, playerPosition);
         if (distanceToPlayer >= minPlayerDistance)
         {
             return position;
         }
 
-        // Try to find a safe position
+        // Try to find a safe position on boundary
+        Bounds spawnBounds = GetViewportSpawnBounds();
         for (int i = 0; i < maxSpawnAttempts; i++)
         {
-            Vector3 newPosition = GetRandomPosition(minDistance, maxDistance);
-            distanceToPlayer = Vector3.Distance(newPosition, playerPosition);
-
-            if (distanceToPlayer >= minPlayerDistance)
+            Vector3 newPosition = GetRandomPosition(spawnBounds);
+            if (Vector3.Distance(newPosition, playerPosition) >= minPlayerDistance)
             {
                 return newPosition;
             }
@@ -311,11 +267,7 @@ public class SpawnManager : MonoBehaviour
 
         // Fallback: push position away from player
         Vector3 direction = (position - playerPosition).normalized;
-        if (direction == Vector3.zero)
-        {
-            direction = Vector3.up;
-        }
-
+        if (direction == Vector3.zero) direction = Vector3.up;
         return playerPosition + direction * minPlayerDistance;
     }
 

@@ -24,5 +24,3 @@ MonoBehaviour:
   speedMultiplier: 1
   damageMultiplier: 1
   spawnPattern: 0
-  minSpawnDistance: 8
-  maxSpawnDistance: 15
