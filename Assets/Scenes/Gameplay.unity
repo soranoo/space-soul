@@ -5358,8 +5358,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dd0b7ea6bcfb42c4880ab8d1598335c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WaveManager
-  waveConfigs:
-  - {fileID: 11400000, guid: d1ba7baad50dbdd429b94877a432df4b, type: 2}
   generateWavesAfterConfigs: 1
   defaultEnemyData: {fileID: 11400000, guid: ee59eba43fe5ec74daaf86303e381258, type: 2}
   spawnManager: {fileID: 1283237934}

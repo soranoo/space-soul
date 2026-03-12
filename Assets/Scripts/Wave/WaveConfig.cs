@@ -25,8 +25,8 @@ public class EnemySpawnEntry
 public class WaveConfig : ScriptableObject
 {
     [Header("Wave Info")]
-    [Tooltip("Display name for this wave.")]
-    [SerializeField] private string waveName = "Wave";
+    [Tooltip("Whether this wave is enabled and will be used in gameplay.")]
+    [SerializeField] private bool waveEnabled = true;
 
     [Tooltip("Wave number this config is designed for.")]
     [SerializeField] private int waveNumber = 1;
@@ -63,9 +63,9 @@ public class WaveConfig : ScriptableObject
     [SerializeField] private float maxSpawnDistance = 15f;
 
     /// <summary>
-    /// Display name for this wave.
+    /// Whether this wave is enabled.
     /// </summary>
-    public string WaveName => waveName;
+    public bool WaveEnabled => waveEnabled;
 
     /// <summary>
     /// Wave number.

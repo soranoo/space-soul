@@ -9,10 +9,6 @@ using UnityEngine;
 /// </summary>
 public class WaveManager : SingletonBase<WaveManager>
 {
-    [Header("Wave Configuration")]
-    [Tooltip("Array of wave configurations in order.")]
-    [SerializeField] private WaveConfig[] waveConfigs;
-
     [Tooltip("Use procedural generation after configured waves.")]
     [SerializeField] private bool generateWavesAfterConfigs = true;
 
@@ -26,6 +22,8 @@ public class WaveManager : SingletonBase<WaveManager>
     [Header("Power-Ups")]
     [SerializeField] private PowerUpPickup[] powerUpPickupPrefabs;
 
+    // "Auto-loaded from Resources/Waves. Sorted by wave number, only enabled waves are used."
+    private WaveConfig[] waveConfigs;
     private int currentWaveNumber;
     private int enemiesAlive;
     private int enemiesSpawned;
@@ -84,6 +82,8 @@ public class WaveManager : SingletonBase<WaveManager>
     {
         base.Awake();
 
+        LoadWaveConfigsFromResources();
+
         if (spawnManager == null)
         {
             spawnManager = GetComponent<SpawnManager>();
@@ -93,6 +93,26 @@ public class WaveManager : SingletonBase<WaveManager>
         {
             difficultyScaler = GetComponent<DifficultyScaler>();
         }
+    }
+
+    /// <summary>
+    /// Load all enabled WaveConfig assets from Resources/Waves, sorted by wave number.
+    /// </summary>
+    private void LoadWaveConfigsFromResources()
+    {
+        WaveConfig[] allConfigs = Resources.LoadAll<WaveConfig>("Waves");
+
+        List<WaveConfig> enabledConfigs = new List<WaveConfig>();
+        for (int i = 0; i < allConfigs.Length; i++)
+        {
+            if (allConfigs[i].WaveEnabled)
+            {
+                enabledConfigs.Add(allConfigs[i]);
+            }
+        }
+
+        enabledConfigs.Sort((a, b) => a.WaveNumber.CompareTo(b.WaveNumber));
+        waveConfigs = enabledConfigs.ToArray();
     }
 
     /// <summary>
