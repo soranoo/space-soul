@@ -85,7 +85,7 @@ public class UpgradeManager : SingletonBase<UpgradeManager>
                 break;
 
             case UpgradeType.RotationSpeed:
-                stats.IncreaseRotationSpeed(upgrade.StepValue);
+                stats.IncreaseRotationSpeedMultiplier(upgrade.StepValue);
                 IncrementLevel(upgrade);
                 break;
 

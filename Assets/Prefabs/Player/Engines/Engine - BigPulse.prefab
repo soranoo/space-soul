@@ -131,6 +131,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerEngine
   engineAnimator: {fileID: 4862037825271111672}
   engineSfx: {fileID: 11400000, guid: f09c73914a6b2b6469dc8b3434402b95, type: 2}
+  thrustForce: 4
+  rotationSpeed: 5
+  maxSpeed: 5
 --- !u!82 &-3740018824188255026
 AudioSource:
   m_ObjectHideFlags: 0

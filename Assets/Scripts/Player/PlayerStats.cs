@@ -7,9 +7,9 @@ using UnityEngine;
 public class PlayerStats
 {
     [Header("Movement")]
-    [SerializeField] private float thrustForce = 10f;
-    [SerializeField] private float rotationSpeed = 200f;
-    [SerializeField] private float maxSpeed = 8f;
+    [SerializeField] private float thrustForceMultiplier = 1f;
+    [SerializeField] private float rotationSpeedMultiplier = 1f;
+    [SerializeField] private float maxSpeedMultiplier = 1f;
 
     [Header("Combat")]
     [Tooltip("Multiplier applied to all weapon cooldowns. Lower = faster. 1 = normal.")]
@@ -21,19 +21,19 @@ public class PlayerStats
     [SerializeField] private float healthRegenRate = 0f;
 
     /// <summary>
-    /// Force applied when thrusting forward.
+    /// Multiplier applied to engine thrust force.
     /// </summary>
-    public float ThrustForce => thrustForce;
+    public float ThrustForceMultiplier => thrustForceMultiplier;
 
     /// <summary>
-    /// Rotation torque applied when turning.
+    /// Multiplier applied to engine rotation speed.
     /// </summary>
-    public float RotationSpeed => rotationSpeed;
+    public float RotationSpeedMultiplier => rotationSpeedMultiplier;
 
     /// <summary>
-    /// Maximum movement speed.
+    /// Multiplier applied to engine max speed.
     /// </summary>
-    public float MaxSpeed => maxSpeed;
+    public float MaxSpeedMultiplier => maxSpeedMultiplier;
 
     /// <summary>
     /// Multiplier applied to all weapon cooldowns (lower = faster firing).
@@ -51,27 +51,27 @@ public class PlayerStats
     public float HealthRegenRate => healthRegenRate;
 
     /// <summary>
-    /// Apply a modifier to thrust force.
+    /// Apply a multiplicative modifier to thrust force multiplier.
     /// </summary>
-    public void ModifyThrustForce(float multiplier)
+    public void ModifyThrustForceMultiplier(float multiplier)
     {
-        thrustForce *= multiplier;
+        thrustForceMultiplier = Mathf.Max(0f, thrustForceMultiplier * multiplier);
     }
 
     /// <summary>
-    /// Apply a modifier to rotation speed.
+    /// Apply a multiplicative modifier to rotation speed multiplier.
     /// </summary>
-    public void ModifyRotationSpeed(float multiplier)
+    public void ModifyRotationSpeedMultiplier(float multiplier)
     {
-        rotationSpeed *= multiplier;
+        rotationSpeedMultiplier = Mathf.Max(0f, rotationSpeedMultiplier * multiplier);
     }
 
     /// <summary>
-    /// Apply a modifier to max speed.
+    /// Apply a multiplicative modifier to max speed multiplier.
     /// </summary>
-    public void ModifyMaxSpeed(float multiplier)
+    public void ModifyMaxSpeedMultiplier(float multiplier)
     {
-        maxSpeed *= multiplier;
+        maxSpeedMultiplier = Mathf.Max(0f, maxSpeedMultiplier * multiplier);
     }
 
     /// <summary>
@@ -99,11 +99,11 @@ public class PlayerStats
     }
 
     /// <summary>
-    /// Increase rotation speed by a flat amount.
+    /// Increase rotation speed multiplier by a flat amount.
     /// </summary>
-    public void IncreaseRotationSpeed(float amount)
+    public void IncreaseRotationSpeedMultiplier(float amount)
     {
-        rotationSpeed += amount;
+        rotationSpeedMultiplier = Mathf.Max(0f, rotationSpeedMultiplier + amount);
     }
 
     /// <summary>

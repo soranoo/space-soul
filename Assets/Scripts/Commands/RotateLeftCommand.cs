@@ -6,17 +6,17 @@ using UnityEngine;
 public class RotateLeftCommand : ICommand
 {
     private readonly Rigidbody2D rigidbody;
-    private readonly PlayerStats stats;
+    private readonly PlayerController player;
 
-    public RotateLeftCommand(Rigidbody2D rigidbody, PlayerStats stats)
+    public RotateLeftCommand(Rigidbody2D rigidbody, PlayerController player)
     {
         this.rigidbody = rigidbody;
-        this.stats = stats;
+        this.player = player;
     }
 
     public bool CanExecute()
     {
-        return rigidbody != null && stats != null;
+        return rigidbody != null && player != null;
     }
 
     public void Execute()
@@ -26,6 +26,6 @@ public class RotateLeftCommand : ICommand
             return;
         }
 
-        rigidbody.AddTorque(stats.RotationSpeed);
+        rigidbody.AddTorque(player.GetCurrentRotationSpeed());
     }
 }

@@ -69,6 +69,8 @@ public class PlayerEngineController : MonoBehaviour
 
     public EngineType CurrentEngineType => currentEngineType;
 
+    public PlayerEngine CurrentEngine => currentEngine;
+
     private void SpawnAllEngines()
     {
         SpawnEngine(EngineType.Base, baseEnginePrefab.gameObject);

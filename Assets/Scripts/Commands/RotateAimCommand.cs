@@ -7,15 +7,15 @@ using UnityEngine;
 public class RotateAimCommand : ICommand
 {
     private readonly Transform transform;
-    private readonly PlayerStats stats;
+    private readonly PlayerController player;
     private readonly Camera mainCamera;
 
     private Vector2 aimScreenPosition;
 
-    public RotateAimCommand(Transform transform, PlayerStats stats)
+    public RotateAimCommand(Transform transform, PlayerController player)
     {
         this.transform = transform;
-        this.stats = stats;
+        this.player = player;
         mainCamera = Camera.main;
     }
 
@@ -51,7 +51,8 @@ public class RotateAimCommand : ICommand
 
         // Smoothly rotate towards target angle
         float currentAngle = transform.eulerAngles.z;
-        float newAngle = Mathf.LerpAngle(currentAngle, targetAngle, stats.RotationSpeed * Time.deltaTime);
+        float rotationSpeed = player != null ? player.GetCurrentRotationSpeed() : 0f;
+        float newAngle = Mathf.LerpAngle(currentAngle, targetAngle, rotationSpeed * Time.deltaTime);
 
         transform.rotation = Quaternion.Euler(0f, 0f, newAngle);
     }

@@ -13,6 +13,7 @@ public class PlayerController : MonoBehaviour
 
     [Header("Compoents")]
     [SerializeField] private InputHandler inputHandler;
+    [SerializeField] private PlayerEngineController engineController;
 
     private PowerUpController powerUpController;
     private Rigidbody2D rb;
@@ -49,6 +50,11 @@ public class PlayerController : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         powerUpController = GetComponent<PowerUpController>();
 
+        if (engineController == null)
+        {
+            engineController = GetComponentInChildren<PlayerEngineController>();
+        }
+
         if (powerUpController != null)
         {
             inputHandler = GetComponent<InputHandler>();
@@ -61,7 +67,7 @@ public class PlayerController : MonoBehaviour
 
         HealthChanged?.Invoke(currentHealth, stats.MaxHealth);
 
-        inputHandler.Initialize(this, rb, stats);
+        inputHandler.Initialize(this, rb);
     }
 
     private void FixedUpdate()
@@ -93,10 +99,44 @@ public class PlayerController : MonoBehaviour
 
     private void ClampVelocity()
     {
-        if (rb.linearVelocity.magnitude > stats.MaxSpeed)
+        float maxSpeed = GetCurrentMaxSpeed();
+        if (rb.linearVelocity.magnitude > maxSpeed)
         {
-            rb.linearVelocity = rb.linearVelocity.normalized * stats.MaxSpeed;
+            rb.linearVelocity = rb.linearVelocity.normalized * maxSpeed;
         }
+    }
+
+    public float GetCurrentThrustForce()
+    {
+        PlayerEngine engine = engineController != null ? engineController.CurrentEngine : null;
+        if (engine == null)
+        {
+            return 0f;
+        }
+
+        return engine.GetThrustForce(stats);
+    }
+
+    public float GetCurrentRotationSpeed()
+    {
+        PlayerEngine engine = engineController != null ? engineController.CurrentEngine : null;
+        if (engine == null)
+        {
+            return 0f;
+        }
+
+        return engine.GetRotationSpeed(stats);
+    }
+
+    public float GetCurrentMaxSpeed()
+    {
+        PlayerEngine engine = engineController != null ? engineController.CurrentEngine : null;
+        if (engine == null)
+        {
+            return 0f;
+        }
+
+        return engine.GetMaxSpeed(stats);
     }
 
     /// <summary>

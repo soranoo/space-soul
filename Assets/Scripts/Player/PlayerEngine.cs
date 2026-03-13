@@ -16,6 +16,11 @@ public class PlayerEngine : MonoBehaviour
     [Header("Audio")]
     [SerializeField] private AudioSettings engineSfx;
 
+    [Header("Movement")]
+    [SerializeField] private float thrustForce = 3f;
+    [SerializeField] private float rotationSpeed = 2f;
+    [SerializeField] private float maxSpeed = 8f;
+
     private AudioSource audioSource;
 
     private void Awake()
@@ -114,5 +119,23 @@ public class PlayerEngine : MonoBehaviour
         {
             audioSource.Stop();
         }
+    }
+
+    public float GetThrustForce(PlayerStats stats)
+    {
+        float mult = stats != null ? stats.ThrustForceMultiplier : 1f;
+        return Mathf.Max(0f, thrustForce * mult);
+    }
+
+    public float GetRotationSpeed(PlayerStats stats)
+    {
+        float mult = stats != null ? stats.RotationSpeedMultiplier : 1f;
+        return Mathf.Max(0f, rotationSpeed * mult);
+    }
+
+    public float GetMaxSpeed(PlayerStats stats)
+    {
+        float mult = stats != null ? stats.MaxSpeedMultiplier : 1f;
+        return Mathf.Max(0f, maxSpeed * mult);
     }
 }

@@ -20,9 +20,9 @@ public class SpeedBoostPowerUp : IPowerUp
         }
 
         PlayerStats stats = player.Stats;
-        stats.ModifyThrustForce(multiplier);
-        stats.ModifyRotationSpeed(multiplier);
-        stats.ModifyMaxSpeed(multiplier);
+        stats.ModifyThrustForceMultiplier(multiplier);
+        stats.ModifyRotationSpeedMultiplier(multiplier);
+        stats.ModifyMaxSpeedMultiplier(multiplier);
     }
 
     public void Deactivate(PlayerController player)
@@ -34,9 +34,9 @@ public class SpeedBoostPowerUp : IPowerUp
 
         float inverse = multiplier != 0f ? 1f / multiplier : 1f;
         PlayerStats stats = player.Stats;
-        stats.ModifyThrustForce(inverse);
-        stats.ModifyRotationSpeed(inverse);
-        stats.ModifyMaxSpeed(inverse);
+        stats.ModifyThrustForceMultiplier(inverse);
+        stats.ModifyRotationSpeedMultiplier(inverse);
+        stats.ModifyMaxSpeedMultiplier(inverse);
     }
 
     public float GetDuration()

@@ -89,12 +89,12 @@ public class InputHandler : MonoBehaviour
     /// <summary>
     /// Initialize commands with player references.
     /// </summary>
-    public void Initialize(PlayerController player, Rigidbody2D rigidbody, PlayerStats stats)
+    public void Initialize(PlayerController player, Rigidbody2D rigidbody)
     {
         this.player = player;
 
-        moveForwardCommand = new MoveForwardCommand(rigidbody, stats);
-        rotateAimCommand = new RotateAimCommand(player.transform, stats);
+        moveForwardCommand = new MoveForwardCommand(rigidbody, player);
+        rotateAimCommand = new RotateAimCommand(player.transform, player);
     }
 
     private void FixedUpdate()

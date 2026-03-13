@@ -6,17 +6,17 @@ using UnityEngine;
 public class MoveForwardCommand : ICommand
 {
     private readonly Rigidbody2D rigidbody;
-    private readonly PlayerStats stats;
+    private readonly PlayerController player;
 
-    public MoveForwardCommand(Rigidbody2D rigidbody, PlayerStats stats)
+    public MoveForwardCommand(Rigidbody2D rigidbody, PlayerController player)
     {
         this.rigidbody = rigidbody;
-        this.stats = stats;
+        this.player = player;
     }
 
     public bool CanExecute()
     {
-        return rigidbody != null && stats != null;
+        return rigidbody != null && player != null;
     }
 
     public void Execute()
@@ -26,7 +26,7 @@ public class MoveForwardCommand : ICommand
             return;
         }
 
-        Vector3 force = rigidbody.transform.up * stats.ThrustForce;
+        Vector3 force = rigidbody.transform.up * player.GetCurrentThrustForce();
         rigidbody.AddForce(force, ForceMode2D.Force);
     }
 }
