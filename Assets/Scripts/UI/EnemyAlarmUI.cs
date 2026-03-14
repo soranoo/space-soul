@@ -85,6 +85,11 @@ public class EnemyAlarmUI : MonoBehaviour
         {
             WaveManager.Instance.AlarmEnemySpawned += OnAlarmEnemySpawned;
         }
+
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.StateMachine.StateChanged += OnStateChanged;
+        }
     }
 
     private void OnDisable()
@@ -94,7 +99,20 @@ public class EnemyAlarmUI : MonoBehaviour
             WaveManager.Instance.AlarmEnemySpawned -= OnAlarmEnemySpawned;
         }
 
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.StateMachine.StateChanged -= OnStateChanged;
+        }
+
         StopAlarm();
+    }
+
+    private void OnStateChanged(IGameState previous, IGameState current)
+    {
+        if (current is GameOverState)
+        {
+            StopAlarm();
+        }
     }
 
     private void OnAlarmEnemySpawned(Enemy enemy)
