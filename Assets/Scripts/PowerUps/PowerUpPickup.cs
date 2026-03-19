@@ -112,7 +112,7 @@ public class PowerUpPickup : MonoBehaviour, IPoolable
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (!other.CompareTag("Player"))
+        if (!other.CompareTag(TagId.Player.AsString()))
         {
             return;
         }

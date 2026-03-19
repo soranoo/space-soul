@@ -6,7 +6,7 @@ using UnityEngine;
 /// </summary>
 public class Bullet : ProjectileBase
 {
-    [Header("Bullet Settings")]
+    [Header("Settings")]
     [SerializeField] private float speed = 15f;
     [SerializeField] private int baseDamage = 1;
 
@@ -43,7 +43,7 @@ public class Bullet : ProjectileBase
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.CompareTag("Enemy"))
+        if (other.CompareTag(TagId.Enemy.AsString()))
         {
             PlayHitSfx();
             DespawnSelf();

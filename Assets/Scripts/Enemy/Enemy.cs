@@ -1035,7 +1035,7 @@ public class Enemy : MonoBehaviour, IPoolable
         }
 
         // Handle collision with player
-        if (other.CompareTag("Player"))
+        if (other.CompareTag(TagId.Player.AsString()))
         {
             PlayerController player = other.GetComponent<PlayerController>();
             if (player == null)
@@ -1056,7 +1056,7 @@ public class Enemy : MonoBehaviour, IPoolable
         }
 
         // Handle collision with bullets
-        if (other.CompareTag("PlayerProjectile"))
+        if (other.CompareTag(TagId.PlayerProjectile.AsString()))
         {
             Bullet bullet = other.GetComponent<Bullet>();
             if (bullet != null)

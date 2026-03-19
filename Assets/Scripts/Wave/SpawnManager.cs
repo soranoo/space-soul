@@ -51,7 +51,7 @@ public class SpawnManager : MonoBehaviour
     /// </summary>
     public void FindPlayer()
     {
-        GameObject player = GameObject.FindWithTag("Player");
+        GameObject player = GameObject.FindWithTag(TagId.Player.AsString());
         if (player != null)
         {
             playerTransform = player.transform;
