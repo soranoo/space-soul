@@ -11,9 +11,9 @@ public class EnemyIdleState : BaseEnemyState
 
     public override void Update()
     {
-        if (enemy.PlayerTransform != null)
+        if (enemy.TryFindPlayerReference())
         {
-            stateMachine.ChangeState<EnemyChaseState>();
+            stateMachine.ChangeState(new EnemyChaseState(enemy, stateMachine));
         }
     }
 }

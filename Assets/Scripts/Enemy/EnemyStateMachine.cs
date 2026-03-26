@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 /// <summary>
 /// Controls individual enemy behavior states.
 /// Implements FSM pattern for enemy AI.
@@ -7,7 +5,6 @@ using System.Collections.Generic;
 public class EnemyStateMachine
 {
     private IEnemyState currentState;
-    private Dictionary<System.Type, IEnemyState> states;
 
     /// <summary>
     /// The currently active state.
@@ -19,46 +16,15 @@ public class EnemyStateMachine
     /// </summary>
     public EnemyStateMachine()
     {
-        states = new Dictionary<System.Type, IEnemyState>();
-    }
-
-    /// <summary>
-    /// Register a state with the state machine.
-    /// </summary>
-    /// <typeparam name="T">Type of state to register.</typeparam>
-    /// <param name="state">State instance.</param>
-    public void RegisterState<T>(T state) where T : IEnemyState
-    {
-        System.Type stateType = typeof(T);
-        if (!states.ContainsKey(stateType))
-        {
-            states[stateType] = state;
-        }
-    }
-
-    /// <summary>
-    /// Get a registered state by type.
-    /// </summary>
-    /// <typeparam name="T">Type of state to get.</typeparam>
-    /// <returns>The state instance, or null if not found.</returns>
-    public T GetState<T>() where T : class, IEnemyState
-    {
-        System.Type stateType = typeof(T);
-        if (states.TryGetValue(stateType, out IEnemyState state))
-        {
-            return state as T;
-        }
-        return null;
     }
 
     /// <summary>
     /// Transition to a new state.
     /// </summary>
-    /// <typeparam name="T">Type of state to transition to.</typeparam>
-    public void ChangeState<T>() where T : IEnemyState
+    /// <param name="newState">New state instance to activate.</param>
+    public void ChangeState(IEnemyState newState)
     {
-        System.Type stateType = typeof(T);
-        if (!states.TryGetValue(stateType, out IEnemyState newState))
+        if (newState == null)
         {
             return;
         }

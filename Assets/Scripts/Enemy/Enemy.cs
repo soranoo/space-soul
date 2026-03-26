@@ -235,12 +235,9 @@ public class Enemy : MonoBehaviour, IPoolable
     private void SetupStateMachine()
     {
         stateMachine = new EnemyStateMachine();
-        stateMachine.RegisterState(new EnemyIdleState(this, stateMachine));
-        stateMachine.RegisterState(new EnemyChaseState(this, stateMachine));
-        stateMachine.RegisterState(new EnemyAttackState(this, stateMachine));
 
         // Start in idle state
-        stateMachine.ChangeState<EnemyIdleState>();
+        stateMachine.ChangeState(new EnemyIdleState(this, stateMachine));
     }
 
     /// <summary>
@@ -253,6 +250,21 @@ public class Enemy : MonoBehaviour, IPoolable
         {
             playerTransform = player.transform;
         }
+    }
+
+    /// <summary>
+    /// Try to refresh the player reference if it is missing.
+    /// </summary>
+    /// <returns>True if a player reference is available.</returns>
+    public bool TryFindPlayerReference()
+    {
+        if (playerTransform != null)
+        {
+            return true;
+        }
+
+        FindPlayer();
+        return playerTransform != null;
     }
 
     /// <summary>
@@ -321,8 +333,13 @@ public class Enemy : MonoBehaviour, IPoolable
         {
             stateMachine.Update();
         }
+    }
 
-        // Update cooldowns
+    /// <summary>
+    /// Tick combat cooldowns. Called from state logic so combat timing stays state-driven.
+    /// </summary>
+    public void TickCombatCooldowns()
+    {
         if (attackCooldown > 0f)
         {
             attackCooldown -= Time.deltaTime;
@@ -332,7 +349,6 @@ public class Enemy : MonoBehaviour, IPoolable
         {
             spawnCooldown -= Time.deltaTime;
         }
-
     }
 
     /// <summary>

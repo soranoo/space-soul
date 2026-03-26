@@ -30,6 +30,8 @@ public class EnemyAttackState : BaseEnemyState
             return;
         }
 
+        enemy.TickCombatCooldowns();
+
         // Handle spawning behavior (can combine with other behaviors)
         if (enemy.Data.CanSpawnEnemies && enemy.CanSpawnEnemies())
         {
@@ -69,7 +71,7 @@ public class EnemyAttackState : BaseEnemyState
 
             if (distance > targetDistance * 1.5f)
             {
-                stateMachine.ChangeState<EnemyChaseState>();
+                stateMachine.ChangeState(new EnemyChaseState(enemy, stateMachine));
                 return;
             }
 
@@ -90,7 +92,7 @@ public class EnemyAttackState : BaseEnemyState
         // If too far, chase
         if (distance > targetDistance * 1.5f)
         {
-            stateMachine.ChangeState<EnemyChaseState>();
+            stateMachine.ChangeState(new EnemyChaseState(enemy, stateMachine));
             return;
         }
 

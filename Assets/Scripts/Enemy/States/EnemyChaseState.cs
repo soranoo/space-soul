@@ -21,11 +21,13 @@ public class EnemyChaseState : BaseEnemyState
             return;
         }
 
+        enemy.TickCombatCooldowns();
+
         // Check attack range based on behavior config
         bool shouldAttack = ShouldTransitionToAttack();
         if (shouldAttack)
         {
-            stateMachine.ChangeState<EnemyAttackState>();
+            stateMachine.ChangeState(new EnemyAttackState(enemy, stateMachine));
             return;
         }
 
