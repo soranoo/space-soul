@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 /// <summary>
 /// Handles pause menu UI and button actions.
@@ -65,13 +64,16 @@ public class PauseMenuUI : MonoBehaviour
 	public void OnMainMenuPressed()
 	{
 		UIManager.Instance.OnButtonClick();
-		GameManager.Instance.ReturnToMainMenu();
 
-		if (!string.IsNullOrWhiteSpace(mainMenuSceneName))
+		if (string.IsNullOrWhiteSpace(mainMenuSceneName))
 		{
-			Time.timeScale = 1f;
-			SceneManager.LoadScene(mainMenuSceneName);
+			Debug.LogError("Main menu scene name is not set on PauseMenuUI.");
+			return;
 		}
+
+		GameManager.Instance.ReturnToMainMenu();
+		Time.timeScale = 1f;
+		SceneTransitionManager.Instance.TryTransitionTo(mainMenuSceneName);
 	}
 
 	private void HandleStateChanged(IGameState previousState, IGameState newState)

@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 /// <summary>
 /// Handles game over UI visibility and button actions.
@@ -56,7 +55,11 @@ public class GameOverUI : MonoBehaviour
             return;
         }
 
-        GameManager.Instance?.RestartGame(gameplaySceneName);
+        Time.timeScale = 1f;
+        SceneTransitionManager.Instance.TryTransitionTo(gameplaySceneName, () =>
+        {
+            GameManager.Instance?.StartGame();
+        });
     }
 
     /// <summary>
@@ -66,16 +69,15 @@ public class GameOverUI : MonoBehaviour
     {
         UIManager.Instance.OnButtonClick();
 
-        GameManager.Instance.ReturnToMainMenu();
-
         if (string.IsNullOrWhiteSpace(mainMenuSceneName))
         {
             Debug.LogError("Main menu scene name is not set on GameOverUI.");
             return;
         }
 
+        GameManager.Instance.ReturnToMainMenu();
         Time.timeScale = 1f;
-        SceneManager.LoadScene(mainMenuSceneName);
+        SceneTransitionManager.Instance.TryTransitionTo(mainMenuSceneName);
     }
 
     private void HandleStateChanged(IGameState previousState, IGameState newState)
