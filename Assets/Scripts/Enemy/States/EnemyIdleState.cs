@@ -13,7 +13,7 @@ public class EnemyIdleState : BaseEnemyState
     {
         if (enemy.TryFindPlayerReference())
         {
-            stateMachine.ChangeState(new EnemyChaseState(enemy, stateMachine));
+            stateMachine.ChangeState<EnemyChaseState>();
         }
     }
 }

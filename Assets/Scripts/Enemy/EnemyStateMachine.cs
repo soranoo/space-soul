@@ -1,3 +1,6 @@
+using System;
+using System.Collections.Generic;
+
 /// <summary>
 /// Controls individual enemy behavior states.
 /// Implements FSM pattern for enemy AI.
@@ -5,6 +8,7 @@
 public class EnemyStateMachine
 {
     private IEnemyState currentState;
+    private readonly Dictionary<Type, IEnemyState> states;
 
     /// <summary>
     /// The currently active state.
@@ -14,17 +18,24 @@ public class EnemyStateMachine
     /// <summary>
     /// Creates a new enemy state machine.
     /// </summary>
-    public EnemyStateMachine()
+    /// <param name="enemy">Enemy context that states operate on.</param>
+    public EnemyStateMachine(Enemy enemy)
     {
+        states = new Dictionary<Type, IEnemyState>
+        {
+            { typeof(EnemyIdleState), new EnemyIdleState(enemy, this) },
+            { typeof(EnemyChaseState), new EnemyChaseState(enemy, this) },
+            { typeof(EnemyAttackState), new EnemyAttackState(enemy, this) }
+        };
     }
 
     /// <summary>
     /// Transition to a new state.
     /// </summary>
-    /// <param name="newState">New state instance to activate.</param>
-    public void ChangeState(IEnemyState newState)
+    /// <typeparam name="T">Type of cached state to activate.</typeparam>
+    public void ChangeState<T>() where T : IEnemyState
     {
-        if (newState == null)
+        if (!states.TryGetValue(typeof(T), out IEnemyState newState))
         {
             return;
         }

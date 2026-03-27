@@ -234,10 +234,10 @@ public class Enemy : MonoBehaviour, IPoolable
     /// </summary>
     private void SetupStateMachine()
     {
-        stateMachine = new EnemyStateMachine();
+        stateMachine = new EnemyStateMachine(this);
 
         // Start in idle state
-        stateMachine.ChangeState(new EnemyIdleState(this, stateMachine));
+        stateMachine.ChangeState<EnemyIdleState>();
     }
 
     /// <summary>

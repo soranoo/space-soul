@@ -27,7 +27,7 @@ public class EnemyChaseState : BaseEnemyState
         bool shouldAttack = ShouldTransitionToAttack();
         if (shouldAttack)
         {
-            stateMachine.ChangeState(new EnemyAttackState(enemy, stateMachine));
+            stateMachine.ChangeState<EnemyAttackState>();
             return;
         }
 
