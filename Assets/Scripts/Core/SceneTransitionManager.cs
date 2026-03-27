@@ -67,12 +67,6 @@ public class SceneTransitionManager : SingletonBase<SceneTransitionManager>
             return false;
         }
 
-        if (SceneManager.GetActiveScene().name == sceneName)
-        {
-            onLoaded?.Invoke();
-            return true;
-        }
-
         EnsureTransitionOverlay();
         isTransitioning = true;
         loadedPendingScene = false;
