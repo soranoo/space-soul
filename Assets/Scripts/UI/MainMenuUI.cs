@@ -6,7 +6,7 @@ using UnityEngine;
 public class MainMenuUI : MonoBehaviour
 {
     [Header("Scene Loading")]
-    [SerializeField] private string gameplaySceneName = "Gameplay";
+    [SerializeField] private SceneId gameplayScene = SceneId.Gameplay;
 
     [Header("Audio")]
     [SerializeField] private AudioSettings mainMenuBgmSettings;
@@ -25,15 +25,15 @@ public class MainMenuUI : MonoBehaviour
     public void OnStartGamePressed()
     {
         UIManager.Instance.OnButtonClick();
-        if (string.IsNullOrWhiteSpace(gameplaySceneName))
+        if (gameplayScene == SceneId.None)
         {
-            Debug.LogError("Gameplay scene name is not set on MainMenuUI.");
+            Debug.LogError("Gameplay scene is not set on MainMenuUI.");
             return;
         }
 
         Time.timeScale = 1f;
 
-        SceneTransitionManager.Instance.TryTransitionTo(gameplaySceneName, () =>
+        SceneTransitionManager.Instance.TryTransitionTo(gameplayScene, () =>
         {
             GameManager.Instance?.StartGame();
         });

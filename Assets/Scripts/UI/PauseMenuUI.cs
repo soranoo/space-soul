@@ -6,7 +6,7 @@ using UnityEngine;
 public class PauseMenuUI : MonoBehaviour
 {
 	[Header("Scene Loading")]
-	[SerializeField] private string mainMenuSceneName = "MainMenu";
+	[SerializeField] private SceneId mainMenuScene = SceneId.MainMenu;
 
 	[Header("UI")]
 	[SerializeField] private GameObject root;
@@ -65,15 +65,15 @@ public class PauseMenuUI : MonoBehaviour
 	{
 		UIManager.Instance.OnButtonClick();
 
-		if (string.IsNullOrWhiteSpace(mainMenuSceneName))
+		if (mainMenuScene == SceneId.None)
 		{
-			Debug.LogError("Main menu scene name is not set on PauseMenuUI.");
+			Debug.LogError("Main menu scene is not set on PauseMenuUI.");
 			return;
 		}
 
 		GameManager.Instance.ReturnToMainMenu();
 		Time.timeScale = 1f;
-		SceneTransitionManager.Instance.TryTransitionTo(mainMenuSceneName);
+		SceneTransitionManager.Instance.TryTransitionTo(mainMenuScene);
 	}
 
 	private void HandleStateChanged(IGameState previousState, IGameState newState)

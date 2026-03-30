@@ -6,8 +6,8 @@ using UnityEngine;
 public class GameOverUI : MonoBehaviour
 {
     [Header("Scene Loading")]
-    [SerializeField] private string gameplaySceneName = "Gameplay";
-    [SerializeField] private string mainMenuSceneName = "MainMenu";
+    [SerializeField] private SceneId gameplayScene = SceneId.Gameplay;
+    [SerializeField] private SceneId mainMenuScene = SceneId.MainMenu;
 
     [Header("UI")]
     [SerializeField] private GameObject root;
@@ -49,14 +49,14 @@ public class GameOverUI : MonoBehaviour
     {
         UIManager.Instance.OnButtonClick();
 
-        if (string.IsNullOrWhiteSpace(gameplaySceneName))
+        if (gameplayScene == SceneId.None)
         {
-            Debug.LogError("Gameplay scene name is not set on GameOverUI.");
+            Debug.LogError("Gameplay scene is not set on GameOverUI.");
             return;
         }
 
         Time.timeScale = 1f;
-        SceneTransitionManager.Instance.TryTransitionTo(gameplaySceneName, () =>
+        SceneTransitionManager.Instance.TryTransitionTo(gameplayScene, () =>
         {
             GameManager.Instance?.StartGame();
         });
@@ -69,15 +69,15 @@ public class GameOverUI : MonoBehaviour
     {
         UIManager.Instance.OnButtonClick();
 
-        if (string.IsNullOrWhiteSpace(mainMenuSceneName))
+        if (mainMenuScene == SceneId.None)
         {
-            Debug.LogError("Main menu scene name is not set on GameOverUI.");
+            Debug.LogError("Main menu scene is not set on GameOverUI.");
             return;
         }
 
         GameManager.Instance.ReturnToMainMenu();
         Time.timeScale = 1f;
-        SceneTransitionManager.Instance.TryTransitionTo(mainMenuSceneName);
+        SceneTransitionManager.Instance.TryTransitionTo(mainMenuScene);
     }
 
     private void HandleStateChanged(IGameState previousState, IGameState newState)

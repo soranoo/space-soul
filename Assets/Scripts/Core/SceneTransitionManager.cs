@@ -53,6 +53,21 @@ public class SceneTransitionManager : SingletonBase<SceneTransitionManager>
     /// <summary>
     /// Starts a scene transition.
     /// </summary>
+    public bool TryTransitionTo(SceneId sceneId, Action onLoaded = null)
+    {
+        string sceneName = sceneId.AsString();
+        if (string.IsNullOrWhiteSpace(sceneName))
+        {
+            Debug.LogError($"Cannot transition scene because SceneId '{sceneId}' is not mapped.");
+            return false;
+        }
+
+        return TryTransitionTo(sceneName, onLoaded);
+    }
+
+    /// <summary>
+    /// Starts a scene transition by scene name.
+    /// </summary>
     public bool TryTransitionTo(string sceneName, Action onLoaded = null)
     {
         if (string.IsNullOrWhiteSpace(sceneName))
