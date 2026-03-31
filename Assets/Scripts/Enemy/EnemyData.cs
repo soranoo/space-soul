@@ -14,15 +14,6 @@ public class SpawnEntry
     public int weight = 1;
 }
 
-/// <summary>
-/// Defines enemy type properties using the Type Object pattern.
-/// Enables data-driven enemy design with configurable behaviors.
-/// Combine settings to create different enemy archetypes:
-/// - Suicide: selfDestructOnContact=true, high speed, high contactDamage
-/// - Attacker: canFireProjectiles=true, set attackRange/fireRate
-/// - MotherShip: canSpawnEnemies=true, set spawnInterval/spawnData
-/// - Soldier: default chase behavior, no special flags
-/// </summary>
 [CreateAssetMenu(fileName = "NewEnemyData", menuName = "Game/Enemy Data")]
 public class EnemyData : ScriptableObject
 {
@@ -43,7 +34,6 @@ public class EnemyData : ScriptableObject
     [SerializeField] private int contactDamage = 1;
 
     [Header("Range")]
-
     [Tooltip("Preferred distance to maintain from player (0 = chase to contact).")]
     [SerializeField] private float preferredDistance = 0f;
 
@@ -67,13 +57,13 @@ public class EnemyData : ScriptableObject
     [Tooltip("Projectile speed.")]
     [SerializeField] private float projectileSpeed = 8f;
 
-    [Tooltip("Custom projectile prefab (uses default if null).")]
+    [Tooltip("Custom projectile prefab.")]
     [SerializeField] private GameObject projectilePrefab;
 
     [Tooltip("How this enemy decides when it is allowed to fire.")]
     [SerializeField] private RangedFireMode fireMode = RangedFireMode.OnlyInSafePosition;
 
-    [Header("Spawning Behavior")]
+    [Header("Spawning Behaviour")]
     [Tooltip("If true, enemy can spawn other enemies periodically.")]
     [SerializeField] private bool canSpawnEnemies = false;
 
@@ -83,17 +73,17 @@ public class EnemyData : ScriptableObject
     [Tooltip("Number of enemies to spawn at once.")]
     [SerializeField] private int spawnCount = 1;
 
-    [Tooltip("Maximum children this enemy can spawn in one life cycle. -1 = unlimited.")]
+    [Tooltip("Maximum children this enemy can spawn in one life cycle (-1 = unlimited).")]
     [SerializeField] private int maxSpawnChildren = 30;
 
-    [Tooltip("Weighted list of enemies to spawn.")]
+    [Tooltip("Weighted list of enemies to spawn (if canSpawnEnemies is true).")]
     [SerializeField] private SpawnEntry[] spawnList;
 
     [Header("Rewards")]
     [Tooltip("Points awarded when destroyed.")]
     [SerializeField] private int pointValue = 100;
 
-    [Tooltip("Chance to drop a power-up (0-1).")]
+    [Tooltip("Chance to drop a power-up.")]
     [Range(0f, 1f)]
     [SerializeField] private float powerUpDropChance = 0.1f;
 
@@ -118,7 +108,7 @@ public class EnemyData : ScriptableObject
     // Range Properties
     public float PreferredDistance => preferredDistance;
 
-    // Contact Behavior Properties
+    // Contact Behaviour Properties
     public bool SelfDestructOnContact => selfDestructOnContact;
 
     // Ranged Attack Properties
@@ -130,7 +120,7 @@ public class EnemyData : ScriptableObject
     public GameObject ProjectilePrefab => projectilePrefab;
     public RangedFireMode FireMode => fireMode;
 
-    // Spawning Behavior Properties
+    // Spawning Behaviour Properties
     public bool CanSpawnEnemies => canSpawnEnemies;
     public float SpawnInterval => spawnInterval;
     public int SpawnCount => spawnCount;
@@ -177,7 +167,14 @@ public class EnemyData : ScriptableObject
             }
         }
 
-        return spawnList[0]?.enemyData;
+        EnemyData enemyData = spawnList[0]?.enemyData;
+            
+        if (!enemyData)
+        {
+            Debug.LogError("Spawn list contains null entries or entries with null enemyData. Please check the spawn list for " + name);
+        }
+
+        return enemyData;
     }
 
     // Rewards Properties

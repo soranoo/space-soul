@@ -2,8 +2,7 @@ using System;
 using System.Collections.Generic;
 
 /// <summary>
-/// Controls individual enemy behavior states.
-/// Implements FSM pattern for enemy AI.
+/// Controls individual enemy behaviour states.
 /// </summary>
 public class EnemyStateMachine
 {

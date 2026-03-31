@@ -1,6 +1,5 @@
 /// <summary>
 /// Base class for enemy AI states.
-/// Provides common functionality and references.
 /// </summary>
 public abstract class BaseEnemyState : IEnemyState
 {

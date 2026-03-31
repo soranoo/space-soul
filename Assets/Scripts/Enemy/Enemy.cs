@@ -1,13 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.Collections;
 using UnityEngine;
 
-/// <summary>
-/// Base enemy behavior.
-/// Implements IPoolable for object pooling support.
-/// </summary>
 [RequireComponent(typeof(Rigidbody2D))]
 public class Enemy : MonoBehaviour, IPoolable
 {
@@ -58,7 +53,7 @@ public class Enemy : MonoBehaviour, IPoolable
 #if UNITY_EDITOR
     [Header("Damage Smoke Gizmos")]
     [SerializeField] private bool showDamageSmokeRectsGizmo = true;
-    [SerializeField] private Color damageSmokeRectGizmoColor = new Color(1f, 0.6f, 0.1f, 0.8f);
+    private Color damageSmokeRectGizmoColor = new Color(1f, 0.6f, 0.1f, 0.8f);
 #endif
 
     private Rigidbody2D rb;
@@ -76,7 +71,7 @@ public class Enemy : MonoBehaviour, IPoolable
     private float nextSmokeTriggerHealthPercent;
     private readonly List<PooledParticle> heldSmokeParticles = new List<PooledParticle>();
 
-    // Role-specific variables
+    // Role-specific
     private float attackCooldown;
     private float spawnCooldown;
     private int spawnedChildrenCount;
@@ -97,7 +92,7 @@ public class Enemy : MonoBehaviour, IPoolable
     public float EffectiveSpeed => effectiveSpeed;
 
     /// <summary>
-    /// Rotation speed in degrees per second used for attack-facing behavior.
+    /// Rotation speed in degrees per second used for attack-facing behaviour.
     /// </summary>
     public float RotationSpeed => rotationSpeed;
 
@@ -833,7 +828,7 @@ public class Enemy : MonoBehaviour, IPoolable
     [SerializeField] private AudioSettings selfDestructSfx;
 
     /// <summary>
-    /// Execute self-destruct behavior - deal damage and die.
+    /// Execute self-destruct behaviour - deal damage and die.
     /// </summary>
     public void ExecuteSelfDestruct(PlayerController player)
     {

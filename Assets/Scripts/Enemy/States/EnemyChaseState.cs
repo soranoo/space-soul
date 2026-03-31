@@ -2,17 +2,15 @@ using UnityEngine;
 
 /// <summary>
 /// Chase state - enemy pursues the player.
-/// Transitions to Attack based on configured behavior.
 /// </summary>
 public class EnemyChaseState : BaseEnemyState
 {
+    private bool shouldAttack = false;
+
     public EnemyChaseState(Enemy enemy, EnemyStateMachine stateMachine) 
         : base(enemy, stateMachine) { }
 
-    public override void Enter()
-    {
-        // Could trigger chase animation or sound here
-    }
+    public override void Enter() { }
 
     public override void Update()
     {
@@ -23,8 +21,8 @@ public class EnemyChaseState : BaseEnemyState
 
         enemy.TickCombatCooldowns();
 
-        // Check attack range based on behavior config
-        bool shouldAttack = ShouldTransitionToAttack();
+        // Check attack range based on behaviour config
+        shouldAttack = ShouldTransitionToAttack();
         if (shouldAttack)
         {
             stateMachine.ChangeState<EnemyAttackState>();
