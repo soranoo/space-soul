@@ -23,6 +23,11 @@ public class EnemyData : ScriptableObject
         WhenDetected
     }
 
+    [Header("Difficulty")]
+    [Tooltip("Difficulty value contributed by one instance of this enemy.")]
+    [Min(0.01f)]
+    [SerializeField] private float difficultyFactor = 1f;
+
     [Header("Basic Stats")]
     [Tooltip("Base health points for this enemy type.")]
     [SerializeField] private int baseHealth = 1;
@@ -101,6 +106,7 @@ public class EnemyData : ScriptableObject
     [SerializeField] private float damageTintDuration = 0.1f;
 
     // Basic Stats Properties
+    public float DifficultyFactor => difficultyFactor;
     public int BaseHealth => baseHealth;
     public float BaseSpeed => baseSpeed;
     public int ContactDamage => contactDamage;

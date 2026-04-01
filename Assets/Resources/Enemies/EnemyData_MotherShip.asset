@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3cde25d693330624f9e1273dd47188fe, type: 3}
   m_Name: EnemyData_MotherShip
   m_EditorClassIdentifier: Assembly-CSharp::EnemyData
+  difficultyFactor: 50
   baseHealth: 1000
   baseSpeed: 1
   contactDamage: 1

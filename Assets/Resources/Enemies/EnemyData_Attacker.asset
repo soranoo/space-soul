@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3cde25d693330624f9e1273dd47188fe, type: 3}
   m_Name: EnemyData_Attacker
   m_EditorClassIdentifier: Assembly-CSharp::EnemyData
+  difficultyFactor: 5
   baseHealth: 50
   baseSpeed: 3
   contactDamage: 1
@@ -32,5 +33,6 @@ MonoBehaviour:
   pointValue: 100
   powerUpDropChance: 1
   prefab: {fileID: 662773263525930302, guid: 009f89c9c2eee4b46b0598075a3a9b79, type: 3}
+  showAlarmOnSpawn: 0
   damageTintColor: {r: 1, g: 0, b: 0, a: 1}
   damageTintDuration: 0.1

@@ -12,9 +12,6 @@ public class WaveManager : SingletonBase<WaveManager>
     [Tooltip("Use procedural generation after configured waves.")]
     [SerializeField] private bool generateWavesAfterConfigs = true;
 
-    [Tooltip("Default enemy data for procedural waves.")]
-    [SerializeField] private EnemyData defaultEnemyData;
-
     [Header("References")]
     [SerializeField] private SpawnManager spawnManager;
     [SerializeField] private DifficultyScaler difficultyScaler;
@@ -28,9 +25,11 @@ public class WaveManager : SingletonBase<WaveManager>
     private int enemiesAlive;
     private int enemiesSpawned;
     private int totalEnemiesToSpawn;
+    private float currentWaveDifficulty;
     private bool isWaveActive;
     private bool isSpawning;
     private Coroutine spawnCoroutine;
+    private EnemyData[] proceduralEnemyComposition;
     private readonly Dictionary<Enemy, Enemy> childToSpawnerMap = new Dictionary<Enemy, Enemy>();
 
     /// <summary>
@@ -183,6 +182,7 @@ public class WaveManager : SingletonBase<WaveManager>
         isWaveActive = true;
         enemiesAlive = 0;
         enemiesSpawned = 0;
+        currentWaveDifficulty = 0f;
         totalEnemiesToSpawn = config.GetTotalEnemyCount();
 
         WaveStarted?.Invoke(currentWaveNumber);
@@ -200,20 +200,30 @@ public class WaveManager : SingletonBase<WaveManager>
     /// </summary>
     private void StartProceduralWave()
     {
-        if (defaultEnemyData == null)
+        if (difficultyScaler == null)
         {
-            Debug.LogError("WaveManager: No default enemy data for procedural waves.");
+            Debug.LogError("WaveManager: DifficultyScaler is required for procedural waves.");
             return;
         }
 
         isWaveActive = true;
         enemiesAlive = 0;
         enemiesSpawned = 0;
+        currentWaveDifficulty = 0f;
 
-        // Calculate procedural enemy count based on wave number
-        int baseCount = 5;
-        int additionalPerWave = 2;
-        totalEnemiesToSpawn = baseCount + (currentWaveNumber - 1) * additionalPerWave;
+        proceduralEnemyComposition = Array.Empty<EnemyData>();
+
+        float targetDifficulty = difficultyScaler.GetTargetWaveDifficulty(currentWaveNumber);
+        proceduralEnemyComposition = difficultyScaler.CalculateEnemyComposition(targetDifficulty);
+
+        if (proceduralEnemyComposition.Length == 0)
+        {
+            Debug.LogError("WaveManager: Procedural composition is empty. Configure availableEnemyData in DifficultyScaler.");
+            isWaveActive = false;
+            return;
+        }
+
+        totalEnemiesToSpawn = proceduralEnemyComposition.Length;
 
         WaveStarted?.Invoke(currentWaveNumber);
 
@@ -247,25 +257,37 @@ public class WaveManager : SingletonBase<WaveManager>
 
         // Spawn each enemy group
         EnemySpawnEntry[] spawns = config.EnemySpawns;
-        for (int i = 0; i < spawns.Length; i++)
+        if (spawns != null)
         {
-            EnemySpawnEntry entry = spawns[i];
-
-            // Delay for this group
-            if (entry.spawnDelay > 0f)
+            for (int i = 0; i < spawns.Length; i++)
             {
-                yield return new WaitForSeconds(entry.spawnDelay);
-            }
+                EnemySpawnEntry entry = spawns[i];
 
-            // Spawn enemies in this group
-            for (int j = 0; j < entry.count; j++)
-            {
-                SpawnEnemy(entry.enemyData, config, healthMult, speedMult);
-                yield return new WaitForSeconds(config.SpawnInterval);
+                if (entry == null || entry.enemyData == null || entry.count <= 0)
+                {
+                    continue;
+                }
+
+                // Delay for this group
+                if (entry.spawnDelay > 0f)
+                {
+                    yield return new WaitForSeconds(entry.spawnDelay);
+                }
+
+                // Spawn enemies in this group
+                for (int j = 0; j < entry.count; j++)
+                {
+                    SpawnEnemy(entry.enemyData, config, healthMult, speedMult);
+                    yield return new WaitForSeconds(config.SpawnInterval);
+                }
             }
         }
 
         isSpawning = false;
+        if (isWaveActive && enemiesAlive <= 0)
+        {
+            CompleteWave();
+        }
     }
 
     /// <summary>
@@ -288,14 +310,27 @@ public class WaveManager : SingletonBase<WaveManager>
             speedMult = difficultyScaler.GetSpeedMultiplier(currentWaveNumber);
         }
 
-        // Spawn all enemies
-        for (int i = 0; i < totalEnemiesToSpawn; i++)
+        if (proceduralEnemyComposition == null || proceduralEnemyComposition.Length == 0)
         {
-            SpawnEnemy(defaultEnemyData, null, healthMult, speedMult);
+            isSpawning = false;
+            if (isWaveActive && enemiesAlive <= 0)
+            {
+                CompleteWave();
+            }
+            yield break;
+        }
+
+        for (int i = 0; i < proceduralEnemyComposition.Length; i++)
+        {
+            SpawnEnemy(proceduralEnemyComposition[i], null, healthMult, speedMult);
             yield return new WaitForSeconds(0.5f);
         }
 
         isSpawning = false;
+        if (isWaveActive && enemiesAlive <= 0)
+        {
+            CompleteWave();
+        }
     }
 
     /// <summary>
@@ -303,6 +338,11 @@ public class WaveManager : SingletonBase<WaveManager>
     /// </summary>
     private void SpawnEnemy(EnemyData enemyData, WaveConfig config, float healthMult, float speedMult)
     {
+        if (enemyData == null)
+        {
+            return;
+        }
+
         Vector3 spawnPosition;
 
         if (spawnManager != null && config != null)
@@ -320,9 +360,9 @@ public class WaveManager : SingletonBase<WaveManager>
 
         Enemy enemy = null;
 
-        if (EnemyFactory.Instance != null)
+        if (difficultyScaler != null)
         {
-            enemy = EnemyFactory.Instance.CreateEnemy(
+            enemy = difficultyScaler.CreateEnemy(
                 enemyData,
                 spawnPosition,
                 Quaternion.identity,
@@ -331,11 +371,22 @@ public class WaveManager : SingletonBase<WaveManager>
                 speedMult
             );
         }
+        else if (enemyData.Prefab != null)
+        {
+            GameObject enemyObject = Instantiate(enemyData.Prefab, spawnPosition, Quaternion.identity);
+            enemy = enemyObject.GetComponent<Enemy>();
+
+            if (enemy != null)
+            {
+                enemy.Initialize(enemyData, healthMult, speedMult);
+            }
+        }
 
         if (enemy != null)
         {
             enemiesSpawned++;
             enemiesAlive++;
+            currentWaveDifficulty += Mathf.Max(0.01f, enemyData.DifficultyFactor);
             enemy.Died += OnEnemyDied;
 
             // Subscribe to spawner enemies' child spawn requests
@@ -375,9 +426,9 @@ public class WaveManager : SingletonBase<WaveManager>
 
             Enemy soldier = null;
 
-            if (EnemyFactory.Instance != null)
+            if (difficultyScaler != null)
             {
-                soldier = EnemyFactory.Instance.CreateEnemy(
+                soldier = difficultyScaler.CreateEnemy(
                     childData,
                     spawnPosition,
                     Quaternion.identity,
@@ -386,10 +437,21 @@ public class WaveManager : SingletonBase<WaveManager>
                     1f
                 );
             }
+            else if (childData.Prefab != null)
+            {
+                GameObject enemyObject = Instantiate(childData.Prefab, spawnPosition, Quaternion.identity);
+                soldier = enemyObject.GetComponent<Enemy>();
+
+                if (soldier != null)
+                {
+                    soldier.Initialize(childData, 1f, 1f);
+                }
+            }
 
             if (soldier != null)
             {
                 enemiesAlive++;
+                currentWaveDifficulty += Mathf.Max(0.01f, childData.DifficultyFactor);
                 soldier.Died += OnEnemyDied;
 
                 if (spawner != null)
@@ -549,6 +611,10 @@ public class WaveManager : SingletonBase<WaveManager>
     private void CompleteWave()
     {
         isWaveActive = false;
+        if (difficultyScaler != null)
+        {
+            difficultyScaler.SetLastWaveDifficulty(currentWaveDifficulty);
+        }
         WaveCompleted?.Invoke(currentWaveNumber);
     }
 
@@ -590,6 +656,8 @@ public class WaveManager : SingletonBase<WaveManager>
         enemiesAlive = 0;
         enemiesSpawned = 0;
         totalEnemiesToSpawn = 0;
+        currentWaveDifficulty = 0f;
+        proceduralEnemyComposition = Array.Empty<EnemyData>();
     }
 
     /// <summary>

@@ -108,7 +108,8 @@ public class WaveManagementWindow : EditorWindow
         }
 
         // Label
-        string label = $"Wave {config.WaveNumber}";
+        float waveDifficulty = DifficultyScaler.CalculateWaveDifficultyFromConfig(config);
+        string label = $"Wave {config.WaveNumber}  |  Diff {waveDifficulty:0.##}";
         if (!config.WaveEnabled) label += " (Disabled)";
 
         float deleteButtonWidth = 20f;
@@ -254,7 +255,10 @@ public class WaveManagementWindow : EditorWindow
         if (selectedIndex >= 0 && selectedIndex < waveConfigs.Count)
         {
             WaveConfig selected = waveConfigs[selectedIndex];
+            float definedDifficulty = DifficultyScaler.CalculateWaveDifficultyFromConfig(selected);
+
             EditorGUILayout.LabelField($"Editing: Wave {selected.WaveNumber}", EditorStyles.boldLabel);
+            EditorGUILayout.LabelField($"Defined Difficulty: {definedDifficulty:0.###}", EditorStyles.miniBoldLabel);
 
             string assetPath = AssetDatabase.GetAssetPath(selected);
             EditorGUILayout.LabelField(assetPath, EditorStyles.miniLabel);
