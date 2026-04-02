@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 /// <summary>
 /// Spawns and manages power-up timer items in the UI.
@@ -9,7 +10,7 @@ public class PowerUpsDisplayUI : MonoBehaviour
     [Header("References")]
     [SerializeField] private PowerUpController powerUpController;
     [SerializeField] private PowerUpDisplayItem itemPrefab;
-    [SerializeField] private Transform container;
+    [SerializeField] private RectTransform container;
 
     private readonly Dictionary<PowerUpType, PowerUpDisplayItem> items = new Dictionary<PowerUpType, PowerUpDisplayItem>();
     private readonly List<PowerUpController.PowerUpStatus> cachedStatuses = new List<PowerUpController.PowerUpStatus>();
@@ -102,6 +103,7 @@ public class PowerUpsDisplayUI : MonoBehaviour
         if (!items.TryGetValue(type, out PowerUpDisplayItem item) || item == null)
         {
             item = Instantiate(itemPrefab, container);
+            LayoutRebuilder.ForceRebuildLayoutImmediate(container);
             items[type] = item;
         }
 
