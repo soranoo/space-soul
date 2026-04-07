@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.Audio;
 
 /// <summary>
-/// Handles BGM playback and crossfades between requested tracks.
+/// BGM playback and crossfades between requested tracks.
 /// Track selection is driven by external systems.
 /// </summary>
 public class BgmManager : SingletonBase<BgmManager>
