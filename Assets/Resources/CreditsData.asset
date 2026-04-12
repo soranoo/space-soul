@@ -15,9 +15,37 @@ MonoBehaviour:
   sections:
   - title: Development
     items:
-    - role: Developer
-      name: Freeman
-  - title: Audio
-    items: []
+    - role: 
+      name: soranoo (Freeman)
   - title: Visual
-    items: []
+    items:
+    - role: 
+      name: Foozle (itch.io)
+  - title: Audio
+    items:
+    - role: 
+      name: NathanielThomasBrack
+    - role: 
+      name: Lesiakower
+    - role: 
+      name: DewAholic
+    - role: 
+      name: Lumora_Studios
+    - role: 
+      name: SRJA_Gaming
+    - role: 
+      name: JCI21
+    - role: 
+      name: Virtual_Vibes
+    - role: 
+      name: Kronos1001
+    - role: 
+      name: Universfield
+    - role: 
+      name: PorkMuncher
+    - role: 
+      name: APallot
+    - role: 
+      name: Lesiakower
+    - role: 
+      name: 8footdino_on_scratch
