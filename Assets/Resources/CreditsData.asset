@@ -13,17 +13,13 @@ MonoBehaviour:
   m_Name: CreditsData
   m_EditorClassIdentifier: Assembly-CSharp::CreditsData
   sections:
-  - title: Development
+  - title: 
     items:
-    - role: 
+    - role: Development
       name: soranoo (Freeman)
-  - title: Visual
-    items:
-    - role: 
+    - role: Visual
       name: Foozle (itch.io)
-  - title: Audio
-    items:
-    - role: 
+    - role: Audio
       name: NathanielThomasBrack
     - role: 
       name: Lesiakower
