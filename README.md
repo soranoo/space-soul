@@ -31,12 +31,17 @@ Give me a ⭐ if you like it.
 ## 📸 Screenshots
 
 ### Gameplay
-<!-- Add gameplay screenshots here -->
-*(Coming soon)*
+
+| [![Main Menu](docs/images/screenshot-main-menu.png)](docs/images/screenshot-main-menu.png)<br>Main Menu | [![Options Menu](docs/images/screenshot-options-menu.png)](docs/images/screenshot-options-menu.png)<br>Options Menu |
+| --- | --- |
+| [![In-Game 1](docs/images/screenshot-ingame-1.png)](docs/images/screenshot-ingame-1.png)<br>In-Game 1 | [![In-Game 2](docs/images/screenshot-ingame-2.png)](docs/images/screenshot-ingame-2.png)<br>In-Game 2 |
+| [![In-Game 3](docs/images/screenshot-ingame-3.png)](docs/images/screenshot-ingame-3.png)<br>In-Game 3 | [![In-Game 4](docs/images/screenshot-ingame-4.png)](docs/images/screenshot-ingame-4.png)<br>In-Game 4 |
 
 ### Editor Tools
-<!-- Add editor screenshots here -->
-*(Coming soon)*
+
+#### Wave Management Window
+
+[![Wave Management](docs/images/screenshot-wave-management.png)](docs/images/screenshot-wave-management.png)
 
 ## 🛠️ Development Environment
 
@@ -68,12 +73,15 @@ This project relies on the following non-Unity-built-in packages to function:
 Thanks to the following creators for their contributions to this project:
 
 **Visuals**
+
 - Assets by [Foozle](https://foozlecc.itch.io/): [Void Environment Pack](https://foozlecc.itch.io/void-environment-pack), [Void Main Ship](https://foozlecc.itch.io/void-main-ship), [Void Fleet Pack 2](https://foozlecc.itch.io/void-fleet-pack-2), [Void Pickups Pack](https://foozlecc.itch.io/void-pickups-pack), [Lucifer RPG UI](https://foozlecc.itch.io/lucifer-rpg-ui)
 
 **Fonts**
+
 - [Pixelify Sans](https://fonts.google.com/specimen/Pixelify+Sans) by [*eifetx*](https://github.com/eifetx)
 
 **Audio**
+
 - Music by [Foozle](https://foozlecc.itch.io/): [Eerie Space Music](https://foozlecc.itch.io/eerie-space-music) and [NathanielThomasBrack](https://pixabay.com/users/nathanielthomasbrack-189494/): [8-bit Loop](https://pixabay.com/sound-effects/musical-8-bit-loop-189494/)
 - Sound Effects from Pixabay:
   - [Power up](https://pixabay.com/sound-effects/film-special-effects-experimental-8-bit-sound-270302/) *(no author name)*
