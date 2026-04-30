@@ -161,12 +161,12 @@ public class WeaponController : MonoBehaviour
 
     protected void SpawnBullet(Vector3 position, Quaternion rotation, float damageMultiplier)
     {
-        Bullet bullet = null;
+        PlayerProjectile bullet = null;
 
         // Try to get from pool first
         if (bulletPrefab != null)
         {
-            Bullet prefabComponent = bulletPrefab.GetComponent<Bullet>();
+            PlayerProjectile prefabComponent = bulletPrefab.GetComponent<PlayerProjectile>();
             if (prefabComponent != null)
             {
                 bullet = PoolManager.Instance.Get(prefabComponent, position, rotation);
@@ -181,7 +181,7 @@ public class WeaponController : MonoBehaviour
         if (bullet == null && bulletPrefab != null)
         {
             GameObject bulletObject = Instantiate(bulletPrefab, position, rotation);
-            bullet = bulletObject.GetComponent<Bullet>();
+            bullet = bulletObject.GetComponent<PlayerProjectile>();
         }
 
         if (bullet != null)

@@ -5299,6 +5299,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Canvas - Metrics
       objectReference: {fileID: 0}
+    - target: {fileID: 7967117148408379837, guid: c04572a44f0263349bd4a6d9eb81a5e1, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -81.8999
+      objectReference: {fileID: 0}
+    - target: {fileID: 7967117148408379837, guid: c04572a44f0263349bd4a6d9eb81a5e1, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 30.400024
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

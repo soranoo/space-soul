@@ -4,7 +4,7 @@ using UnityEngine;
 /// Basic bullet behavior.
 /// Implements IPoolable for object pooling support.
 /// </summary>
-public class Bullet : ProjectileBase
+public class PlayerProjectile : ProjectileBase
 {
     [Header("Settings")]
     [SerializeField] private float speed = 15f;
