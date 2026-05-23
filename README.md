@@ -15,7 +15,7 @@ Give me a ⭐ if you like it.
   - [Gameplay](#gameplay)
   - [Editor Tools](#editor-tools)
 - [🛠️ Development Environment](#️-development-environment)
-- [🛠️ Editor Tools](#️-editor-tools)
+- [⚙️ Editor Tools](#️-editor-tools)
 - [📦 External Packages Used](#-external-packages-used)
 - [🌟 Credits](#-credits)
 - [📝 License](#-license)
@@ -50,7 +50,7 @@ Give me a ⭐ if you like it.
 - **IDE:** Visual Studio 2026
 - **AI Assistance:** GPT-3.5-Codex
 
-## 🛠️ Editor Tools
+## ⚙️ Editor Tools
 
 This project includes custom Unity Editor tools to streamline the development process, located in `Assets/Scripts/Editor`:
 
